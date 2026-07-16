@@ -14,32 +14,13 @@ const year = new Date().getFullYear();
 
 	<div class="site-footer__stage">
 		<div class="site-footer__tents" aria-hidden="true">
-			<svg viewBox="0 0 900 90" preserveAspectRatio="xMidYEnd meet" focusable="false">
-				<g class="site-footer__tent-group">
-					<path d="M40 82 L64 30 L88 82 Z" />
-					<path d="M120 82 L150 18 L180 82 Z" />
-					<path d="M212 82 L236 40 L260 82 Z" />
-					<path d="M292 82 L322 12 L352 82 Z" />
-					<path d="M384 82 L406 46 L428 82 Z" />
-					<path d="M462 82 L494 22 L526 82 Z" />
-					<path d="M560 82 L584 44 L608 82 Z" />
-					<path d="M640 82 L672 14 L704 82 Z" />
-					<path d="M736 82 L760 40 L784 82 Z" />
-					<path d="M812 82 L840 26 L868 82 Z" />
-				</g>
-				<g class="site-footer__tent-lines">
-					<path d="M64 30 L64 82 M40 82 L88 82" />
-					<path d="M150 18 L150 82 M120 82 L180 82" />
-					<path d="M236 40 L236 82 M212 82 L260 82" />
-					<path d="M322 12 L322 82 M292 82 L352 82" />
-					<path d="M406 46 L406 82 M384 82 L428 82" />
-					<path d="M494 22 L494 82 M462 82 L526 82" />
-					<path d="M584 44 L584 82 M560 82 L608 82" />
-					<path d="M672 14 L672 82 M640 82 L704 82" />
-					<path d="M760 40 L760 82 M736 82 L784 82" />
-					<path d="M840 26 L840 82 M812 82 L868 82" />
-				</g>
-			</svg>
+			<span class="site-footer__tent-icon site-footer__tent-icon--sm"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--lg"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--xs"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--xl"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--md"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--lg"></span>
+			<span class="site-footer__tent-icon site-footer__tent-icon--sm"></span>
 		</div>
 		<div class="site-footer__panel">
 			<nav class="site-footer__links" aria-label="Kontakti">
@@ -126,6 +107,7 @@ const year = new Date().getFullYear();
 		--footer-ink: var(--color-bark);
 		--footer-muted: #8a8170;
 		--footer-accent: #6b7a4a;
+		--footer-solid: #6b7a4a;
 		--footer-accent-soft: #a8b57e;
 		--footer-accent-line: #c9d1a8;
 
@@ -151,6 +133,7 @@ const year = new Date().getFullYear();
 
 	.site-footer__stage {
 		position: relative;
+		z-index: 0;
 		max-width: 1200px;
 		margin: 0 auto;
 	}
@@ -159,31 +142,53 @@ const year = new Date().getFullYear();
 		position: absolute;
 		left: 50%;
 		bottom: 100%;
-		width: min(780px, 68vw);
+		z-index: 2;
+		width: min(540px, 58vw);
 		height: 74px;
 		transform: translateX(-50%);
 		pointer-events: none;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		gap: clamp(0.45rem, 1.25vw, 1rem);
 	}
 
-	.site-footer__tents svg {
-		width: 100%;
-		height: 100%;
-		display: block;
+	.site-footer__tent-icon {
+		width: var(--tent-size);
+		height: var(--tent-size);
+		flex: 0 0 auto;
+		height: calc(var(--tent-size) * 0.835);
+		background: var(--footer-solid);
+		-webkit-mask: url("/icons/tent.svg") center top / var(--tent-size) var(--tent-size) no-repeat;
+		mask: url("/icons/tent.svg") center top / var(--tent-size) var(--tent-size) no-repeat;
+		opacity: var(--tent-opacity, 1);
 	}
 
-	.site-footer__tent-group path {
-		fill: var(--footer-accent);
+	.site-footer__tent-icon--xs {
+		--tent-size: 2rem;
+		--tent-opacity: 0.78;
 	}
 
-	.site-footer__tent-lines path {
-		fill: none;
-		stroke: var(--footer-accent-line);
-		stroke-width: 1.5;
-		stroke-linecap: round;
+	.site-footer__tent-icon--sm {
+		--tent-size: 2.55rem;
+		--tent-opacity: 0.86;
+	}
+
+	.site-footer__tent-icon--md {
+		--tent-size: 3.05rem;
+	}
+
+	.site-footer__tent-icon--lg {
+		--tent-size: 3.65rem;
+	}
+
+	.site-footer__tent-icon--xl {
+		--tent-size: 4.35rem;
 	}
 
 	.site-footer__panel {
 		position: relative;
+		z-index: 1;
 		border-radius: 28px;
 		padding: 2.65rem 2rem 0;
 		background:
@@ -195,8 +200,8 @@ const year = new Date().getFullYear();
 			),
 			radial-gradient(
 				120% 96% at 50% 0%,
-				var(--footer-accent) 0%,
-				var(--footer-accent) 38%,
+				var(--footer-solid) 0%,
+				var(--footer-solid) 38%,
 				rgba(107, 122, 74, 0.7) 58%,
 				rgba(107, 122, 74, 0) 84%
 			);
@@ -293,6 +298,7 @@ const year = new Date().getFullYear();
 	@media (max-width: 640px) {
 		.site-footer__meta,
 		.site-footer__bottom {
+			display: none;
 			flex-direction: column;
 			text-align: center;
 		}
@@ -301,8 +307,41 @@ const year = new Date().getFullYear();
 			text-align: center;
 		}
 
+		.site-footer__panel {
+			align-items: flex-start;
+		}
+
+		.site-footer__links {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.95rem;
+		}
+
 		.site-footer__tents {
+			bottom: 100%;
+			width: min(260px, 68vw);
 			height: 60px;
+			gap: 0.35rem;
+		}
+
+		.site-footer__tent-icon--xs {
+			--tent-size: 1.25rem;
+		}
+
+		.site-footer__tent-icon--sm {
+			--tent-size: 1.6rem;
+		}
+
+		.site-footer__tent-icon--md {
+			--tent-size: 1.85rem;
+		}
+
+		.site-footer__tent-icon--lg {
+			--tent-size: 2.1rem;
+		}
+
+		.site-footer__tent-icon--xl {
+			--tent-size: 2.4rem;
 		}
 	}
 </style>

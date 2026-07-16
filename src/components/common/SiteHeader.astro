@@ -1,0 +1,631 @@
+---
+import hugeIcons from '@iconify-json/hugeicons/icons.json';
+import Menu from '@lucide/astro/icons/menu';
+import Phone from '@lucide/astro/icons/phone';
+import X from '@lucide/astro/icons/x';
+
+type IconifyIcon = {
+	body: string;
+	height?: number;
+	width?: number;
+};
+
+const hugeIconSet = hugeIcons as {
+	height: number;
+	icons: Record<string, IconifyIcon>;
+	width: number;
+};
+
+const getHugeIcon = (name: string) => {
+	const icon = hugeIconSet.icons[name];
+
+	if (!icon) {
+		throw new Error(`Missing Huge Icons symbol: ${name}`);
+	}
+
+	return {
+		body: icon.body,
+		height: icon.height ?? hugeIconSet.height,
+		width: icon.width ?? hugeIconSet.width,
+	};
+};
+
+const customCategoryIcons = {
+	beanBag: {
+		body: `
+			<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45">
+				<path d="M7.1 20.25h9.8c2.08 0 3.45-1.42 3.15-3.48C19.36 11.93 16.63 6.5 12 6.5s-7.36 5.43-8.05 10.27c-.3 2.06 1.07 3.48 3.15 3.48Z" />
+				<path d="M8.15 18.05c1.7-.8 5.99-.8 7.7 0" />
+				<path d="M9.1 8.75c1.42 1.02 4.38 1.02 5.8 0" />
+				<path d="M12 6.75v11.1" />
+			</g>
+		`,
+		height: 24,
+		width: 24,
+	},
+	eventTent: {
+		body: `
+			<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45">
+				<path d="M2.75 10.25h18.5L17.5 5.5h-11l-3.75 4.75Z" />
+				<path d="M5 10.25v9.25" />
+				<path d="M9.65 10.25v9.25" />
+				<path d="M14.35 10.25v9.25" />
+				<path d="M19 10.25v9.25" />
+				<path d="M3.75 19.5h16.5" />
+				<path d="M7.8 10.25l2-4.75" />
+				<path d="M12 10.25V5.5" />
+				<path d="M16.2 10.25l-2-4.75" />
+			</g>
+		`,
+		height: 24,
+		width: 24,
+	},
+};
+
+const navItems = [
+	{ label: 'Noma', href: '#noma' },
+	{ label: 'Piegāde', href: '#piegade' },
+	{ label: 'Par mums', href: '#par-mums' },
+	{ label: 'Kontakti', href: '#kontakti' },
+];
+
+const rekvizitiItems = [
+	`© ${new Date().getFullYear()} Liepājas teltis`,
+	'Reģ. Nr. 00000000000',
+	'PVN Nr. LV00000000000',
+];
+
+const categoryItems = [
+	{ label: 'Teltis', href: '#teltis', icon: customCategoryIcons.eventTent, active: true },
+	{ label: 'Grīdas segumi', href: '#gridas-segumi', icon: getHugeIcon('floor-plan') },
+	{ label: 'Galdi & krēsli', href: '#galdi-kresli', icon: getHugeIcon('dining-table') },
+	{ label: 'Sildītāji', href: '#silditaji', icon: getHugeIcon('heater') },
+	{ label: 'Pufi', href: '#pufi', icon: customCategoryIcons.beanBag },
+	{ label: 'Pasākumu aksesuāri', href: '#aksesuari', icon: getHugeIcon('balloons') },
+];
+
+const showCategoryStrip = false;
+---
+
+<header class="site-header">
+	<div class="site-header__shell">
+		<div class="site-header__bar">
+			<a class="site-header__logo" href="/" aria-label="Liepājas teltis sākums">
+				<slot name="logo">
+					<span class="site-header__logo-placeholder">Logo</span>
+				</slot>
+			</a>
+
+			<nav class="site-header__nav" aria-label="Galvenā navigācija">
+				{
+					navItems.map((item) => (
+						<a href={item.href}>
+							{item.label}
+						</a>
+					))
+				}
+			</nav>
+
+			<a class="site-header__contact" href="tel:+37129373231">
+				<Phone aria-hidden="true" />
+				<span>
+					<small>Sazināties</small>
+					<strong>+371 29 373 231</strong>
+				</span>
+			</a>
+			<div class="site-header__mobile-menu">
+				<input id="site-header-mobile-menu" class="site-header__menu-toggle" type="checkbox" aria-hidden="true" tabindex="-1" />
+				<label class="site-header__menu-button" for="site-header-mobile-menu" aria-label="Toggle navigation" title="Menu">
+					<span class="site-header__menu-icon site-header__menu-icon--open">
+						<Menu aria-hidden="true" />
+					</span>
+					<span class="site-header__menu-icon site-header__menu-icon--close">
+						<X aria-hidden="true" />
+					</span>
+				</label>
+				<label class="site-header__mobile-backdrop" for="site-header-mobile-menu" aria-label="Close navigation"></label>
+				<nav class="site-header__mobile-panel" aria-label="Mobile navigation">
+					<ul class="site-header__mobile-list menu menu-vertical">
+						{
+							navItems.map((item) => (
+								<li>
+									<a href={item.href}>{item.label}</a>
+								</li>
+							))
+						}
+						<li class="site-header__mobile-contact">
+							<a href="tel:+37129373231">
+								<Phone aria-hidden="true" />
+								<span>+371 29 373 231</span>
+							</a>
+						</li>
+					</ul>
+					<div class="site-header__mobile-rekviziti" aria-label="Rekviziti">
+						<strong>Rekvizīti</strong>
+						{
+							rekvizitiItems.map((item) => (
+								<span>{item}</span>
+							))
+						}
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		{/* Category strip paused for now. Set showCategoryStrip to true to restore it. */}
+		{
+			showCategoryStrip && (
+				<nav class="site-header__categories" aria-label="Nomas kategorijas">
+					{categoryItems.map((item) => {
+						return (
+							<a class={item.active ? 'is-active' : undefined} href={item.href}>
+								<svg
+									aria-hidden="true"
+									class="site-header__category-icon"
+									viewBox={`0 0 ${item.icon.width} ${item.icon.height}`}
+									set:html={item.icon.body}
+								/>
+								<span>{item.label}</span>
+							</a>
+						);
+					})}
+				</nav>
+			)
+		}
+	</div>
+</header>
+
+<script>
+	const mobileMenuToggle = document.querySelector<HTMLInputElement>('#site-header-mobile-menu');
+	const mobileMenuLinks = document.querySelectorAll<HTMLAnchorElement>('.site-header__mobile-panel a');
+
+	mobileMenuLinks.forEach((link) => {
+		link.addEventListener('click', () => {
+			if (mobileMenuToggle) {
+				mobileMenuToggle.checked = false;
+			}
+		});
+	});
+</script>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 30;
+		padding: 0 clamp(1rem, 3vw, 1.5rem) 0.65rem;
+		background: linear-gradient(180deg, var(--color-background) 0%, rgba(246, 241, 231, 0) 100%);
+	}
+
+	.site-header:has(.site-header__menu-toggle:checked) {
+		z-index: 90;
+	}
+
+	.site-header__shell {
+		max-width: 1200px;
+		margin: 0 auto;
+		overflow: hidden;
+		display: grid;
+		gap: 0;
+		background: #6B7A4A;
+		border: 1px solid rgba(255, 255, 255, 0.16);
+		border-top: 0;
+		border-radius: 0 0 1.65rem 1.65rem;
+		box-shadow: var(--shadow-strong);
+	}
+
+	.site-header__bar {
+		width: 100%;
+		min-height: 4.35rem;
+		margin: 0;
+		padding: 0.72rem clamp(1rem, 3vw, 1.7rem);
+		display: grid;
+		grid-template-columns: minmax(10rem, 1fr) auto minmax(10rem, 1fr);
+		align-items: center;
+		gap: 1rem;
+		color: var(--color-surface);
+		background:
+			radial-gradient(
+				95% 85% at 50% 100%,
+				rgba(203, 183, 154, 0.3) 0%,
+				rgba(203, 183, 154, 0.14) 34%,
+				transparent 68%
+			),
+			#6B7A4A;
+		border-radius: 0 0 1.65rem 1.65rem;
+	}
+
+	.site-header__logo,
+	.site-header__contact,
+	.site-header__menu-button,
+	.site-header__mobile-list a,
+	.site-header__nav a,
+	.site-header__categories a {
+		text-decoration: none;
+		transition:
+			color 0.2s ease,
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			opacity 0.22s ease,
+			transform 0.2s ease;
+	}
+
+	.site-header__logo {
+		justify-self: start;
+		min-width: 8rem;
+		color: var(--color-surface);
+	}
+
+	.site-header__logo-placeholder {
+		display: inline-flex;
+		min-height: 2.35rem;
+		align-items: center;
+		padding: 0.36rem 0.78rem;
+		color: rgba(255, 255, 255, 0.86);
+		border: 1px dashed rgba(203, 183, 154, 0.56);
+		border-radius: 999px;
+		font-size: 0.78rem;
+		font-weight: 750;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.site-header__nav {
+		justify-self: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(0.45rem, 1.5vw, 0.95rem);
+	}
+
+	.site-header__nav a {
+		display: inline-flex;
+		min-height: 2.15rem;
+		align-items: center;
+		padding: 0.42rem 0.78rem;
+		color: rgba(255, 255, 255, 0.9);
+		border-radius: 999px;
+		font-size: 0.94rem;
+		font-weight: 600;
+		opacity: 0.95;
+	}
+
+	.site-header__contact {
+		justify-self: end;
+		display: inline-flex;
+		min-height: 2.15rem;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.34rem 0;
+		color: var(--color-surface);
+		opacity: 0.95;
+	}
+
+	.site-header__contact svg {
+		width: 1rem;
+		height: 1rem;
+		flex: 0 0 auto;
+		stroke-width: 2.3;
+	}
+
+	.site-header__contact span {
+		display: grid;
+		gap: 0.03rem;
+		line-height: 1.05;
+	}
+
+	.site-header__contact small {
+		color: rgba(255, 255, 255, 0.64);
+		font-size: 0.64rem;
+		font-weight: 650;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.site-header__contact strong {
+		position: relative;
+		display: inline-flex;
+		color: var(--color-surface);
+		font-size: 0.86rem;
+		font-weight: 650;
+		white-space: nowrap;
+	}
+
+	.site-header__contact strong::after {
+		position: absolute;
+		right: 0;
+		bottom: -0.18rem;
+		left: 0;
+		height: 1px;
+		background: currentColor;
+		content: "";
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.22s ease;
+	}
+
+	.site-header__nav a:hover {
+		color: var(--color-background);
+		opacity: 1;
+		transform: translateY(-3px);
+	}
+
+	.site-header__contact:hover {
+		color: var(--color-background);
+		opacity: 1;
+	}
+
+	.site-header__contact:hover strong::after {
+		transform: scaleX(1);
+	}
+
+	.site-header__mobile-menu {
+		position: relative;
+		justify-self: end;
+		display: none;
+	}
+
+	.site-header__menu-toggle {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.site-header__mobile-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 50;
+		background: rgba(75, 64, 56, 0.18);
+		-webkit-backdrop-filter: blur(7px);
+		backdrop-filter: blur(7px);
+		cursor: pointer;
+		opacity: 0;
+		pointer-events: none;
+		transition:
+			opacity 0.28s ease,
+			visibility 0s linear 0.28s;
+		visibility: hidden;
+	}
+
+	.site-header__menu-button {
+		width: 2.65rem;
+		height: 2.65rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: transparent;
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+		position: relative;
+		z-index: 70;
+	}
+
+	.site-header__menu-icon {
+		grid-area: 1 / 1;
+		display: grid;
+		place-items: center;
+		transition:
+			opacity 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.site-header__menu-icon--close {
+		opacity: 0;
+		transform: scale(0.72) rotate(-45deg);
+	}
+
+	.site-header__menu-toggle:checked + .site-header__menu-button .site-header__menu-icon--open {
+		opacity: 0;
+		transform: scale(0.72) rotate(45deg);
+	}
+
+	.site-header__menu-toggle:checked + .site-header__menu-button .site-header__menu-icon--close {
+		opacity: 1;
+		transform: scale(1) rotate(0);
+	}
+
+	.site-header__menu-icon svg {
+		width: 1.35rem;
+		height: 1.35rem;
+		stroke-width: 2.2;
+	}
+
+	.site-header__menu-button:hover {
+		color: var(--color-background);
+		background: transparent;
+	}
+
+	.site-header__menu-toggle:checked + .site-header__menu-button,
+	.site-header__menu-toggle:checked + .site-header__menu-button:hover {
+		color: var(--color-bark);
+		background: transparent;
+	}
+
+	.site-header__menu-toggle:checked ~ .site-header__mobile-backdrop {
+		opacity: 1;
+		pointer-events: auto;
+		transition: opacity 0.28s ease;
+		visibility: visible;
+	}
+
+	.site-header__mobile-panel {
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 60;
+		width: calc(100vw - clamp(3.25rem, 16vw, 5.5rem));
+		max-width: 26rem;
+		height: 100vh;
+		height: 100dvh;
+		padding: 5.25rem clamp(1rem, 4vw, 1.35rem) 1.35rem;
+		overflow-y: auto;
+		background: var(--color-surface);
+		border: 1px solid rgba(75, 64, 56, 0.12);
+		border-block: 0;
+		border-right: 0;
+		border-radius: 1.4rem 0 0 1.4rem;
+		box-shadow: var(--shadow-strong);
+		overflow-x: hidden;
+		pointer-events: none;
+		transform: translateX(100%);
+		transition:
+			transform 0.3s ease,
+			visibility 0s linear 0.3s;
+		visibility: hidden;
+	}
+
+	.site-header__menu-toggle:checked ~ .site-header__mobile-panel {
+		pointer-events: auto;
+		transform: translateX(0);
+		transition: transform 0.3s ease;
+		visibility: visible;
+	}
+
+	.site-header__mobile-list {
+		width: 100%;
+		padding: 0;
+		color: var(--color-text);
+	}
+
+	.site-header__mobile-list a {
+		min-height: 3.2rem;
+		padding-inline: 0.9rem;
+		color: var(--color-text);
+		border-radius: 0.75rem;
+		font-size: 1.08rem;
+		font-weight: 700;
+	}
+
+	.site-header__mobile-list a:hover {
+		color: var(--color-link-hover);
+		background: var(--color-background-soft);
+	}
+
+	.site-header__mobile-contact {
+		margin-top: 0.55rem;
+		padding-top: 0.65rem;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.site-header__mobile-contact a {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+	}
+
+	.site-header__mobile-contact svg {
+		width: 1rem;
+		height: 1rem;
+		flex: 0 0 auto;
+		stroke-width: 2.3;
+	}
+
+	.site-header__mobile-rekviziti {
+		margin-top: 1rem;
+		padding: 1rem 0.9rem 0;
+		display: grid;
+		gap: 0.38rem;
+		color: var(--color-text-muted);
+		border-top: 1px solid var(--color-border);
+		font-size: 0.85rem;
+		line-height: 1.35;
+	}
+
+	.site-header__mobile-rekviziti strong {
+		margin-bottom: 0.1rem;
+		color: var(--color-text);
+		font-size: 0.95rem;
+	}
+
+	.site-header__categories {
+		width: 100%;
+		min-height: 2.25rem;
+		margin: -1px 0 0;
+		padding: 0.28rem clamp(0.8rem, 2.2vw, 1.35rem);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: clamp(0.45rem, 1.8vw, 1.45rem);
+		background: rgba(241, 232, 211, 1);
+		border-top: 0;
+		border-radius: 0 0 1.65rem 1.65rem;
+	}
+
+	.site-header__categories a {
+		display: inline-flex;
+		min-height: 1.65rem;
+		align-items: center;
+		gap: 0.42rem;
+		padding: 0.18rem 0.16rem;
+		color: var(--color-bark);
+		font-size: 0.8rem;
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	.site-header__category-icon {
+		width: 1.35rem;
+		height: 1.35rem;
+		flex: 0 0 auto;
+		stroke-width: 1.65;
+	}
+
+	.site-header__categories a.is-active {
+		color: #6B7A4A;
+	}
+
+	.site-header__categories a:hover {
+		color: var(--color-text-muted);
+		transform: translateY(-1px);
+	}
+
+	@media (max-width: 900px) {
+		.site-header__shell {
+			overflow: visible;
+		}
+
+		.site-header__bar {
+			grid-template-columns: minmax(7rem, 1fr) auto;
+		}
+
+		.site-header__nav,
+		.site-header__contact {
+			display: none;
+		}
+
+		.site-header__mobile-menu {
+			display: block;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.site-header {
+			padding-inline: 0.75rem;
+		}
+
+		.site-header__bar {
+			padding: 0.72rem 0.9rem;
+		}
+
+		.site-header__logo {
+			min-width: 0;
+		}
+
+		.site-header__categories {
+			justify-content: flex-start;
+			overflow-x: auto;
+			scrollbar-width: none;
+		}
+
+		.site-header__categories::-webkit-scrollbar {
+			display: none;
+		}
+
+		.site-header__categories a {
+			flex: 0 0 auto;
+		}
+	}
+</style>
