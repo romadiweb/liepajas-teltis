@@ -1,0 +1,14 @@
+---
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+	<main id="top" class="page-shell" aria-label="Liepājas Teltis">
+		<FloatingActions />
+		<ScrollToTop />
+	</main>
+	<SiteFooter />
+</BaseLayout>

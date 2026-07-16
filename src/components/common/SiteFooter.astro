@@ -1,0 +1,308 @@
+---
+import Mail from '@lucide/astro/icons/mail';
+import Phone from '@lucide/astro/icons/phone';
+import { siFacebook, siInstagram, siTiktok } from 'simple-icons';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" aria-labelledby="footer-title">
+	<div class="site-footer__meta">
+		<span>No piekrastes līdz svinību vietai</span>
+		<span class="site-footer__tagline">Uzticams atbalsts jūsu pasākumam</span>
+	</div>
+
+	<div class="site-footer__stage">
+		<div class="site-footer__tents" aria-hidden="true">
+			<svg viewBox="0 0 900 90" preserveAspectRatio="xMidYEnd meet" focusable="false">
+				<g class="site-footer__tent-group">
+					<path d="M40 82 L64 30 L88 82 Z" />
+					<path d="M120 82 L150 18 L180 82 Z" />
+					<path d="M212 82 L236 40 L260 82 Z" />
+					<path d="M292 82 L322 12 L352 82 Z" />
+					<path d="M384 82 L406 46 L428 82 Z" />
+					<path d="M462 82 L494 22 L526 82 Z" />
+					<path d="M560 82 L584 44 L608 82 Z" />
+					<path d="M640 82 L672 14 L704 82 Z" />
+					<path d="M736 82 L760 40 L784 82 Z" />
+					<path d="M812 82 L840 26 L868 82 Z" />
+				</g>
+				<g class="site-footer__tent-lines">
+					<path d="M64 30 L64 82 M40 82 L88 82" />
+					<path d="M150 18 L150 82 M120 82 L180 82" />
+					<path d="M236 40 L236 82 M212 82 L260 82" />
+					<path d="M322 12 L322 82 M292 82 L352 82" />
+					<path d="M406 46 L406 82 M384 82 L428 82" />
+					<path d="M494 22 L494 82 M462 82 L526 82" />
+					<path d="M584 44 L584 82 M560 82 L608 82" />
+					<path d="M672 14 L672 82 M640 82 L704 82" />
+					<path d="M760 40 L760 82 M736 82 L784 82" />
+					<path d="M840 26 L840 82 M812 82 L868 82" />
+				</g>
+			</svg>
+		</div>
+		<div class="site-footer__panel">
+			<nav class="site-footer__links" aria-label="Kontakti">
+				<a href="tel:+37129373231">
+					<Phone class="site-footer__icon" aria-hidden="true" />
+					<slot name="mobile">+371 29 373 231</slot>
+				</a>
+				<a href="mailto:info@liepajasteltis.lv">
+					<Mail class="site-footer__icon" aria-hidden="true" />
+					<slot name="email">info@liepajasteltis.lv</slot>
+				</a>
+				<slot name="facebook">
+					<a href="#">
+						<svg
+							class="site-footer__brand-icon"
+							aria-hidden="true"
+							viewBox="0 0 24 24"
+							focusable="false"
+							width="16"
+							height="16"
+							fill="currentColor"
+						>
+							<path d={siFacebook.path} />
+						</svg>
+						Facebook
+					</a>
+				</slot>
+				<slot name="instagram">
+					<a href="#">
+						<svg
+							class="site-footer__brand-icon"
+							aria-hidden="true"
+							viewBox="0 0 24 24"
+							focusable="false"
+							width="16"
+							height="16"
+							fill="currentColor"
+						>
+							<path d={siInstagram.path} />
+						</svg>
+						Instagram
+					</a>
+				</slot>
+				<slot name="tiktok">
+					<a href="#">
+						<svg
+							class="site-footer__brand-icon"
+							aria-hidden="true"
+							viewBox="0 0 24 24"
+							focusable="false"
+							width="16"
+							height="16"
+							fill="currentColor"
+						>
+							<path d={siTiktok.path} />
+						</svg>
+						TikTok
+					</a>
+				</slot>
+			</nav>
+
+			<div class="site-footer__wordmark" aria-hidden="true">
+				<span>Liepājas teltis</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="site-footer__bottom">
+		<span>Mājaslapu veidoja - <a class="underline" href="https://www.romadi.lv/" target="_blank" rel="noopener noreferrer">Romadi</a></span>
+		<div class="site-footer__rekviziti">
+			<slot name="rekviziti">
+				<span>© {year} Liepājas teltis</span>
+				<span>Reģ. Nr. 00000000000</span>
+				<span>PVN Nr. LV00000000000</span>
+			</slot>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		/* Linen Olive palette - matches the rest of the site */
+		--footer-bg: var(--color-background);
+		--footer-ink: var(--color-bark);
+		--footer-muted: #8a8170;
+		--footer-accent: #6b7a4a;
+		--footer-accent-soft: #a8b57e;
+		--footer-accent-line: #c9d1a8;
+
+		background: var(--footer-bg);
+		color: var(--footer-ink);
+		padding: 3rem 1.5rem 2rem;
+		font-family: inherit;
+	}
+
+	.site-footer__meta {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		max-width: 1200px;
+		margin: 0 auto 1.25rem;
+		font-size: 0.85rem;
+		color: var(--footer-muted);
+	}
+
+	.site-footer__tagline {
+		text-align: right;
+	}
+
+	.site-footer__stage {
+		position: relative;
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	.site-footer__tents {
+		position: absolute;
+		left: 50%;
+		bottom: 100%;
+		width: min(780px, 68vw);
+		height: 74px;
+		transform: translateX(-50%);
+		pointer-events: none;
+	}
+
+	.site-footer__tents svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.site-footer__tent-group path {
+		fill: var(--footer-accent);
+	}
+
+	.site-footer__tent-lines path {
+		fill: none;
+		stroke: var(--footer-accent-line);
+		stroke-width: 1.5;
+		stroke-linecap: round;
+	}
+
+	.site-footer__panel {
+		position: relative;
+		border-radius: 28px;
+		padding: 2.65rem 2rem 0;
+		background:
+			linear-gradient(
+				180deg,
+				rgba(246, 241, 231, 0) 0%,
+				rgba(246, 241, 231, 0) 64%,
+				var(--footer-bg) 100%
+			),
+			radial-gradient(
+				120% 96% at 50% 0%,
+				var(--footer-accent) 0%,
+				var(--footer-accent) 38%,
+				rgba(107, 122, 74, 0.7) 58%,
+				rgba(107, 122, 74, 0) 84%
+			);
+		color: #fff;
+		overflow: hidden;
+		min-height: 360px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.site-footer__links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1.75rem;
+		font-size: 0.95rem;
+	}
+
+	.site-footer__links :global(a),
+	.site-footer__links a {
+		color: #fff;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		opacity: 0.95;
+		transition:
+			color 0.22s ease,
+			opacity 0.22s ease,
+			transform 0.22s ease;
+	}
+
+	.site-footer__links :global(a:hover),
+	.site-footer__links a:hover {
+		color: var(--footer-accent-line);
+		opacity: 1;
+		transform: translateY(-3px);
+	}
+
+	.site-footer__icon {
+		width: 1.05rem;
+		height: 1.05rem;
+		flex: 0 0 auto;
+		stroke-width: 2.2;
+	}
+
+	.site-footer__brand-icon {
+		width: 1rem;
+		height: 1rem;
+		flex: 0 0 auto;
+		fill: currentColor;
+		display: inline-block;
+		overflow: visible;
+	}
+
+	.site-footer__wordmark {
+		margin-top: auto;
+		width: 100%;
+		text-align: center;
+		overflow: hidden;
+		-webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 92%);
+		mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 92%);
+	}
+
+	.site-footer__wordmark span {
+		display: block;
+		font-weight: 700;
+		font-size: clamp(4rem, 16vw, 12rem);
+		line-height: 0.9;
+		letter-spacing: -0.04em;
+		color: rgba(255, 255, 255, 0.5);
+		transform: translateY(5%);
+		white-space: nowrap;
+	}
+
+	.site-footer__bottom {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1rem;
+		max-width: 1200px;
+		margin: 1.5rem auto 0;
+		font-size: 0.8rem;
+		color: var(--footer-muted);
+	}
+
+	.site-footer__rekviziti {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	@media (max-width: 640px) {
+		.site-footer__meta,
+		.site-footer__bottom {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.site-footer__tagline {
+			text-align: center;
+		}
+
+		.site-footer__tents {
+			height: 60px;
+		}
+	}
+</style>

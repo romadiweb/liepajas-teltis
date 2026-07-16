@@ -1,0 +1,78 @@
+---
+import ArrowUp from '@lucide/astro/icons/arrow-up';
+---
+
+<button class="scroll-to-top" type="button" aria-label="Atgriezties lapas augšā" data-scroll-to-top>
+	<ArrowUp aria-hidden="true" />
+</button>
+
+<script>
+	const button = document.querySelector<HTMLButtonElement>('[data-scroll-to-top]');
+
+	const updateVisibility = () => {
+		button?.classList.toggle('scroll-to-top--visible', window.scrollY > 320);
+	};
+
+	button?.addEventListener('click', () => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	});
+
+	updateVisibility();
+	window.addEventListener('scroll', updateVisibility, { passive: true });
+</script>
+
+<style>
+	.scroll-to-top {
+		position: fixed;
+		right: clamp(1rem, 2vw, 1.5rem);
+		bottom: clamp(1rem, 2vw, 1.5rem);
+		z-index: 21;
+		display: grid;
+		width: 3.25rem;
+		height: 3.25rem;
+		place-items: center;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border: 1px solid rgba(255, 255, 255, 0.16);
+		border-radius: 999px;
+		box-shadow: var(--shadow-strong);
+		cursor: pointer;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(0.5rem);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease,
+			color 180ms ease,
+			background-color 180ms ease,
+			border-color 180ms ease;
+	}
+
+	.scroll-to-top--visible {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateY(0);
+	}
+
+	.scroll-to-top:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+		border-color: var(--color-flax);
+		transform: translateY(-2px);
+	}
+
+	.scroll-to-top svg {
+		width: 1.35rem;
+		height: 1.35rem;
+		stroke-width: 2.4;
+	}
+
+	@media (max-width: 640px) {
+		.scroll-to-top {
+			right: 0.875rem;
+			bottom: 0.875rem;
+			width: 3rem;
+			height: 3rem;
+		}
+	}
+</style>
