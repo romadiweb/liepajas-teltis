@@ -1,0 +1,18 @@
+---
+import ProductCategoryLayout from '../layouts/ProductCategoryLayout.astro';
+import { getProductsByPageSlug } from '../lib/tentProducts';
+
+const products = await getProductsByPageSlug('galdi-un-kresli');
+const filters = [
+	{ label: 'Visi galdi un krēsli', active: true },
+	...Array.from(new Set(products.map((product) => product.category))).map((label) => ({ label })),
+];
+---
+
+<ProductCategoryLayout
+	breadcrumbCurrent="Galdi un krēsli"
+	description="Galdi un krēsli svinībām, banketiem un āra pasākumiem dažādos viesu skaitos."
+	filters={filters}
+	products={products}
+	title="Galdi un krēsli"
+/>

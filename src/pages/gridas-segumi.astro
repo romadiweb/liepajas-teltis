@@ -1,0 +1,18 @@
+---
+import ProductCategoryLayout from '../layouts/ProductCategoryLayout.astro';
+import { getProductsByPageSlug } from '../lib/tentProducts';
+
+const products = await getProductsByPageSlug('gridas-segumi');
+const filters = [
+	{ label: 'Visi grīdas segumi', active: true },
+	...Array.from(new Set(products.map((product) => product.category))).map((label) => ({ label })),
+];
+---
+
+<ProductCategoryLayout
+	breadcrumbCurrent="Grīdas segumi"
+	description="Grīdas segumi teltīm un pasākumu zonām, lai norises vieta būtu ērta, stabila un sakopta."
+	filters={filters}
+	products={products}
+	title="Grīdas segumi"
+/>

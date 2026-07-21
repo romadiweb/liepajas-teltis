@@ -1,0 +1,18 @@
+---
+import ProductCategoryLayout from '../layouts/ProductCategoryLayout.astro';
+import { getProductsByPageSlug } from '../lib/tentProducts';
+
+const products = await getProductsByPageSlug('pufi');
+const filters = [
+	{ label: 'Visi pufi', active: true },
+	...Array.from(new Set(products.map((product) => product.category))).map((label) => ({ label })),
+];
+---
+
+<ProductCategoryLayout
+	breadcrumbCurrent="Pufi"
+	description="Pufi un mīkstās sēdvietas atpūtas zonām, fotosienām un neformālām pasākuma vietām."
+	filters={filters}
+	products={products}
+	title="Pufi"
+/>

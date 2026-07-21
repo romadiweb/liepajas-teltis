@@ -83,16 +83,6 @@ const getStringArray = (row: ProductRow, keys: string[]) => {
 	return [];
 };
 
-const isTentRow = (row: ProductRow) => {
-	const page = getString(row, ['page', 'page_slug', 'category_slug', 'collection', 'product_group']).toLowerCase();
-
-	if (!page) {
-		return true;
-	}
-
-	return page === 'teltis' || page === 'telts' || page === 'tents';
-};
-
 const sortRows = (rows: ProductRow[]) =>
 	[...rows].sort((first, second) => {
 		const firstOrder = Number(first.sort_order ?? first.order ?? 0);
@@ -128,16 +118,21 @@ const mapProductRow = (row: ProductRow): ProductItem | null => {
 	};
 };
 
-export async function getTentProducts() {
+export async function getProductsByPageSlug(pageSlug: string) {
 	const tableName = import.meta.env.SUPABASE_PRODUCTS_TABLE || 'products';
 	const rows = await fetchSupabaseRows<ProductRow>(tableName, {
 		params: {
 			is_active: 'eq.true',
-			page_slug: 'eq.teltis',
+			page_slug: `eq.${pageSlug}`,
 			order: 'sort_order.asc',
 		},
 	});
-	const products = sortRows(rows).filter(isTentRow).map(mapProductRow).filter(Boolean) as ProductItem[];
+
+	const products = sortRows(rows).map(mapProductRow).filter(Boolean) as ProductItem[];
 
 	return products;
+}
+
+export async function getTentProducts() {
+	return getProductsByPageSlug('teltis');
 }
