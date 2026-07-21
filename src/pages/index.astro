@@ -3,10 +3,17 @@ import ArrowRight from '@lucide/astro/icons/arrow-right';
 import Armchair from '@lucide/astro/icons/armchair';
 import Award from '@lucide/astro/icons/award';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CalendarDays from '@lucide/astro/icons/calendar-days';
 import FloatingActions from '../components/common/FloatingActions.astro';
 import Heater from '@lucide/astro/icons/heater';
 import Layers from '@lucide/astro/icons/layers';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import MessageCircle from '@lucide/astro/icons/message-circle';
+import PackageCheck from '@lucide/astro/icons/package-check';
+import Phone from '@lucide/astro/icons/phone';
 import ScrollToTop from '../components/common/ScrollToTop.astro';
+import Send from '@lucide/astro/icons/send';
 import ShieldCheck from '@lucide/astro/icons/shield-check';
 import SiteFooter from '../components/common/SiteFooter.astro';
 import SiteHeader from '../components/common/SiteHeader.astro';
@@ -14,6 +21,7 @@ import Sparkles from '@lucide/astro/icons/sparkles';
 import Table from '@lucide/astro/icons/table';
 import Tent from '@lucide/astro/icons/tent';
 import Truck from '@lucide/astro/icons/truck';
+import UserRound from '@lucide/astro/icons/user-round';
 
 const heroImage =
 	'https://images.unsplash.com/photo-1679984740405-6e15c2df8680?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=1800';
@@ -50,7 +58,7 @@ const categoryItems = [
 		href: '#kontakti',
 		icon: Layers,
 		image:
-			'https://images.unsplash.com/photo-1651065697481-bc08bb5ad40d?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
+			'https://images.unsplash.com/photo-1724125082683-49b0e812046f?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Grīdas segumi',
 	},
 	{
@@ -74,7 +82,7 @@ const categoryItems = [
 		href: '#kontakti',
 		icon: Armchair,
 		image:
-			'https://images.unsplash.com/photo-1761534602786-ebebdd9e9c0d?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
+			'https://images.unsplash.com/photo-1776008107357-0c18d761ca72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Pufi',
 	},
 	{
@@ -84,6 +92,27 @@ const categoryItems = [
 		image:
 			'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Pasākumu aksesuāri',
+	},
+];
+
+const contactLinks = [
+	{
+		href: 'tel:+37129373231',
+		icon: Phone,
+		label: 'Zvaniet',
+		value: '+371 29 373 231',
+	},
+	{
+		href: 'mailto:info@liepajasteltis.lv',
+		icon: Mail,
+		label: 'E-pasts',
+		value: 'info@liepajasteltis.lv',
+	},
+	{
+		href: '#kontakti',
+		icon: MapPin,
+		label: 'Bāze',
+		value: 'Liepāja - visa Latvija',
 	},
 ];
 
@@ -162,6 +191,130 @@ const categoryItems = [
 						))
 					}
 				</div>
+			</div>
+		</section>
+
+		<section class="contact-section" id="pieteikums" aria-labelledby="contact-title">
+			<div class="contact-section__inner">
+				<div class="contact-section__info">
+					<div>
+						<p class="contact-section__eyebrow">Sazināties</p>
+						<h2 id="contact-title">Pastāstiet par savu <span>pasākumu</span></h2>
+						<p class="contact-section__lead">
+							Aizpildiet pieteikuma formu vai zvaniet - atbildēsim 24 stundu laikā ar piedāvājumu, kas
+							pielāgots jūsu svinībām.
+						</p>
+					</div>
+
+					<div class="contact-section__links" aria-label="Kontaktinformācija">
+						{
+							contactLinks.map(({ href, icon: Icon, label, value }) => (
+								<a href={href} class="contact-link">
+									<span class="contact-link__icon">
+										<Icon aria-hidden="true" />
+									</span>
+									<span>
+										<strong>{label}</strong>
+										<span>{value}</span>
+									</span>
+								</a>
+							))
+						}
+					</div>
+				</div>
+
+				<form class="contact-form" name="noma-pieteikums" method="post" data-netlify="true">
+					<input type="hidden" name="form-name" value="noma-pieteikums" />
+
+					<fieldset class="fieldset contact-form__field">
+						<label class="fieldset-legend" for="contact-name">Vārds, uzvārds</label>
+						<div class="contact-form__control">
+							<UserRound aria-hidden="true" />
+							<input
+								class="input contact-form__input"
+								id="contact-name"
+								name="vards_uzvards"
+								type="text"
+								autocomplete="name"
+								required
+							/>
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset contact-form__field">
+						<label class="fieldset-legend" for="contact-phone">Telefona numurs</label>
+						<div class="contact-form__control">
+							<Phone aria-hidden="true" />
+							<input
+								class="input contact-form__input"
+								id="contact-phone"
+								name="telefona_numurs"
+								type="tel"
+								autocomplete="tel"
+								required
+							/>
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset contact-form__field contact-form__field--full">
+						<label class="fieldset-legend" for="contact-email">Epasts</label>
+						<div class="contact-form__control">
+							<Mail aria-hidden="true" />
+							<input
+								class="input contact-form__input"
+								id="contact-email"
+								name="epasts"
+								type="email"
+								autocomplete="email"
+								required
+							/>
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset contact-form__field">
+						<label class="fieldset-legend" for="contact-date">Pasākuma datums</label>
+						<div class="contact-form__control contact-form__control--date">
+							<CalendarDays aria-hidden="true" />
+							<input class="input contact-form__input" id="contact-date" name="pasakuma_datums" type="date" required />
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset contact-form__field">
+						<label class="fieldset-legend" for="contact-location">Pasākuma norises vieta</label>
+						<div class="contact-form__control">
+							<MapPin aria-hidden="true" />
+							<input
+								class="input contact-form__input"
+								id="contact-location"
+								name="pasakuma_norises_vieta"
+								type="text"
+								required
+							/>
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset contact-form__field contact-form__field--full">
+						<label class="fieldset-legend" for="contact-inventory">Vēlamais inventārs</label>
+						<div class="contact-form__control contact-form__control--textarea">
+							<PackageCheck aria-hidden="true" />
+							<textarea
+								class="textarea contact-form__textarea"
+								id="contact-inventory"
+								name="velamais_inventars"
+								rows="5"
+								required
+							></textarea>
+						</div>
+					</fieldset>
+
+					<div class="contact-form__footer">
+						<p>Nosūtot formu, piekrītat, ka sazināsimies par jūsu pieteikumu.</p>
+						<button class="btn contact-form__button" type="submit">
+							<span>Nosūtīt pieteikumu</span>
+							<Send aria-hidden="true" />
+						</button>
+					</div>
+				</form>
 			</div>
 		</section>
 	</main>
@@ -299,14 +452,14 @@ const categoryItems = [
 	.landing-hero__dots {
 		position: absolute;
 		z-index: 1;
-		right: min(44vw, 31rem);
-		bottom: clamp(5.7rem, 10vw, 8.4rem);
-		width: 8.1rem;
-		height: 7.2rem;
-		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.3) 1.25px, transparent 1.35px);
+		right: min(29vw, 23rem);
+		bottom: clamp(0.6rem, 1.6vw, 1.45rem);
+		width: clamp(12rem, 18vw, 15.5rem);
+		height: clamp(9.4rem, 13.8vw, 12.2rem);
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.34) 1.35px, transparent 1.55px);
 		background-position: 0 0;
-		background-size: 0.83rem 0.83rem;
-		opacity: 0.85;
+		background-size: 0.92rem 0.92rem;
+		opacity: 0.82;
 	}
 
 	.landing-hero__media {
@@ -498,6 +651,275 @@ const categoryItems = [
 		transform: translateX(4px);
 	}
 
+	.contact-section {
+		position: relative;
+		padding: clamp(4.6rem, 8vw, 7.2rem) clamp(1.2rem, 4vw, 2rem) clamp(4.8rem, 8vw, 7.6rem);
+		background: var(--color-background);
+		overflow: hidden;
+	}
+
+	.contact-section::before {
+		position: absolute;
+		inset: -1.4rem -3.4rem auto auto;
+		width: min(34rem, 56vw);
+		height: min(22rem, 34vw);
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.34) 1.35px, transparent 1.55px);
+		background-size: 0.92rem 0.92rem;
+		content: "";
+		opacity: 0.82;
+		pointer-events: none;
+	}
+
+	.contact-section__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 1160px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(18rem, 0.78fr) minmax(31rem, 1.08fr);
+		gap: clamp(2.4rem, 7vw, 5.6rem);
+		align-items: start;
+	}
+
+	.contact-section__info {
+		min-height: 38.5rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 3rem;
+	}
+
+	.contact-section__eyebrow {
+		margin: 0 0 1.1rem;
+		color: var(--color-primary);
+		font-size: 0.74rem;
+		font-weight: 850;
+		letter-spacing: 0.24em;
+		line-height: 1.3;
+		text-transform: uppercase;
+	}
+
+	.contact-section h2 {
+		max-width: 8.9em;
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(3rem, 6.2vw, 5.35rem);
+		font-weight: 500;
+		letter-spacing: 0;
+		line-height: 0.98;
+	}
+
+	.contact-section h2 span {
+		color: var(--color-primary);
+	}
+
+	.contact-section__lead {
+		max-width: 31rem;
+		margin: clamp(1.25rem, 2vw, 1.55rem) 0 0;
+		color: var(--color-text-muted);
+		font-size: clamp(1rem, 1.4vw, 1.12rem);
+		font-weight: 500;
+		line-height: 1.62;
+	}
+
+	.contact-section__links {
+		display: grid;
+		gap: 1.15rem;
+	}
+
+	.contact-link {
+		width: fit-content;
+		display: grid;
+		grid-template-columns: 3rem minmax(0, 1fr);
+		align-items: center;
+		gap: 1rem;
+		color: var(--color-bark);
+		text-decoration: none;
+	}
+
+	.contact-link:hover {
+		color: var(--color-bark);
+		transform: translateX(4px);
+	}
+
+	.contact-link__icon {
+		width: 3rem;
+		height: 3rem;
+		display: grid;
+		place-items: center;
+		color: #5f6f3c;
+		background: rgba(138, 146, 113, 0.13);
+		border: 1px solid rgba(138, 146, 113, 0.16);
+		border-radius: 999px;
+	}
+
+	.contact-link__icon svg {
+		width: 1.12rem;
+		height: 1.12rem;
+		stroke-width: 2;
+	}
+
+	.contact-link strong {
+		display: block;
+		color: var(--color-text-muted);
+		font-size: 0.69rem;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		line-height: 1.2;
+		text-transform: uppercase;
+	}
+
+	.contact-link span span {
+		display: block;
+		margin-top: 0.28rem;
+		color: #11130f;
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	.contact-form {
+		position: relative;
+		padding: clamp(1.7rem, 3vw, 2.35rem);
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.25rem 1.2rem;
+		background: rgba(255, 255, 255, 0.78);
+		border: 1px solid rgba(185, 167, 143, 0.48);
+		border-radius: 30px;
+		box-shadow: 0 26px 58px rgba(75, 64, 56, 0.12);
+		backdrop-filter: blur(6px);
+	}
+
+	.contact-form__field {
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		gap: 0.48rem;
+	}
+
+	.contact-form__field--full,
+	.contact-form__footer {
+		grid-column: 1 / -1;
+	}
+
+	.contact-form .fieldset-legend {
+		padding: 0;
+		color: #344234;
+		font-size: 0.72rem;
+		font-weight: 500;
+		letter-spacing: 0.22em;
+		line-height: 1.25;
+		text-transform: uppercase;
+	}
+
+	.contact-form__control {
+		position: relative;
+		display: flex;
+		align-items: center;
+		color: var(--color-text-muted);
+	}
+
+	.contact-form__control > svg {
+		position: absolute;
+		left: 1rem;
+		z-index: 1;
+		width: 1rem;
+		height: 1rem;
+		color: #7f8a64;
+		pointer-events: none;
+		stroke-width: 2;
+	}
+
+	.contact-form__input,
+	.contact-form__textarea {
+		width: 100%;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.88);
+		border: 1px solid rgba(185, 167, 143, 0.62);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 2px 8px rgba(75, 64, 56, 0.08);
+		font-size: 0.96rem;
+	}
+
+	.contact-form__input {
+		min-height: 2.75rem;
+		padding-inline: 2.55rem 1rem;
+		border-radius: 999px;
+	}
+
+	.contact-form__input[type="date"] {
+		color-scheme: light;
+		background: rgba(246, 241, 231, 0.96);
+	}
+
+	.contact-form__control--textarea {
+		align-items: flex-start;
+	}
+
+	.contact-form__control--textarea > svg {
+		top: 0.95rem;
+	}
+
+	.contact-form__textarea {
+		min-height: 6.6rem;
+		padding: 0.9rem 1rem 0.9rem 2.55rem;
+		border-radius: 18px;
+		line-height: 1.45;
+		resize: vertical;
+	}
+
+	.contact-form__input:focus,
+	.contact-form__textarea:focus {
+		border-color: #8a9271;
+		outline: none;
+		box-shadow: var(--focus-ring), 0 2px 10px rgba(75, 64, 56, 0.1);
+	}
+
+	.contact-form__footer {
+		margin-top: 0.5rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 1.2rem;
+	}
+
+	.contact-form__footer p {
+		max-width: 17rem;
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: 0.8rem;
+		font-weight: 500;
+		line-height: 1.4;
+	}
+
+	.contact-form__button {
+		min-height: 3.15rem;
+		padding-inline: 1.7rem;
+		display: inline-flex;
+		gap: 0.72rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border: 0;
+		border-radius: 999px;
+		box-shadow: 0 12px 22px rgba(138, 146, 113, 0.24);
+		font-size: 0.82rem;
+		font-weight: 850;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.contact-form__button:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+		transform: translateY(-2px);
+	}
+
+	.contact-form__button svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
 	@media (prefers-reduced-motion: no-preference) {
 		.reveal-ready .categories-section__intro,
 		.reveal-ready .category-card {
@@ -572,11 +994,30 @@ const categoryItems = [
 		}
 
 		.landing-hero__dots {
-			right: clamp(1.2rem, 5vw, 3rem);
-			bottom: clamp(17rem, 46vw, 24rem);
+			right: clamp(2.4rem, 9vw, 6.2rem);
+			bottom: clamp(1.4rem, 4vw, 2.6rem);
+			width: clamp(9.5rem, 22vw, 13rem);
+			height: clamp(7.4rem, 17vw, 10rem);
 		}
 
 		.categories-section__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.contact-section__inner {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.contact-section__info {
+			min-height: 0;
+		}
+
+		.contact-section h2 {
+			max-width: 11em;
+		}
+
+		.contact-section__links {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
@@ -655,11 +1096,12 @@ const categoryItems = [
 		}
 
 		.landing-hero__dots {
-			right: clamp(1.05rem, 8vw, 2.1rem);
-			bottom: 6.9rem;
-			width: 4.8rem;
-			height: 4.4rem;
-			background-size: 0.64rem 0.64rem;
+			right: clamp(-3rem, -6vw, -1.4rem);
+			bottom: 2.35rem;
+			width: clamp(7.2rem, 30vw, 8.4rem);
+			height: clamp(5.8rem, 24vw, 6.8rem);
+			background-size: 0.72rem 0.72rem;
+			opacity: 0.7;
 		}
 
 		.categories-section {
@@ -714,6 +1156,100 @@ const categoryItems = [
 		.category-card__body svg {
 			width: 0.82rem;
 			height: 0.82rem;
+		}
+
+		.contact-section {
+			padding: 3.6rem 1.05rem 4.2rem;
+		}
+
+		.contact-section::before {
+			inset: -1rem -5rem auto auto;
+			width: 20rem;
+			height: 13rem;
+			opacity: 0.56;
+		}
+
+		.contact-section__inner {
+			gap: 1.65rem;
+		}
+
+		.contact-section__info {
+			gap: 1.6rem;
+		}
+
+		.contact-section__eyebrow {
+			margin-bottom: 0.75rem;
+			font-size: 0.62rem;
+		}
+
+		.contact-section h2 {
+			font-size: clamp(2.45rem, 12.5vw, 3.2rem);
+			line-height: 1.02;
+		}
+
+		.contact-section__lead {
+			max-width: 21rem;
+			font-size: 0.9rem;
+			line-height: 1.56;
+		}
+
+		.contact-section__links {
+			grid-template-columns: 1fr;
+			gap: 0.78rem;
+		}
+
+		.contact-link {
+			grid-template-columns: 2.55rem minmax(0, 1fr);
+			gap: 0.78rem;
+		}
+
+		.contact-link__icon {
+			width: 2.55rem;
+			height: 2.55rem;
+		}
+
+		.contact-link strong {
+			font-size: 0.6rem;
+		}
+
+		.contact-link span span {
+			font-size: 0.92rem;
+		}
+
+		.contact-form {
+			grid-template-columns: 1fr;
+			gap: 0.92rem;
+			padding: 1rem;
+			border-radius: 20px;
+		}
+
+		.contact-form .fieldset-legend {
+			font-size: 0.62rem;
+			letter-spacing: 0.16em;
+		}
+
+		.contact-form__input {
+			min-height: 2.85rem;
+		}
+
+		.contact-form__textarea {
+			min-height: 6.25rem;
+		}
+
+		.contact-form__footer {
+			grid-template-columns: 1fr;
+			gap: 0.95rem;
+		}
+
+		.contact-form__footer p {
+			max-width: none;
+		}
+
+		.contact-form__button {
+			width: 100%;
+			min-height: 3.05rem;
+			justify-content: center;
+			font-size: 0.72rem;
 		}
 	}
 </style>
