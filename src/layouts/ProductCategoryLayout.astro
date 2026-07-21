@@ -1,11 +1,16 @@
 ---
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
+import ChevronLeft from '@lucide/astro/icons/chevron-left';
 import ChevronRight from '@lucide/astro/icons/chevron-right';
 import Clock3 from '@lucide/astro/icons/clock-3';
+import Euro from '@lucide/astro/icons/euro';
+import Maximize2 from '@lucide/astro/icons/maximize-2';
 import MessageCircleQuestionMark from '@lucide/astro/icons/message-circle-question-mark';
 import Ruler from '@lucide/astro/icons/ruler';
 import RulerDimensionLine from '@lucide/astro/icons/ruler-dimension-line';
+import ShoppingBag from '@lucide/astro/icons/shopping-bag';
+import UserRound from '@lucide/astro/icons/user-round';
 import Users from '@lucide/astro/icons/users';
 import X from '@lucide/astro/icons/x';
 import BaseLayout from './BaseLayout.astro';
@@ -20,15 +25,20 @@ type FilterItem = {
 };
 
 type ProductItem = {
+	additionalInfo?: string;
 	badge?: string;
 	capacity: string;
 	category: string;
 	description?: string;
+	galleryImages: string[];
 	href?: string;
+	id: string;
 	image: string;
 	installTime: string;
+	priceCents: number;
 	size: string;
 	title: string;
+	variant?: string;
 };
 
 interface Props {
@@ -42,16 +52,19 @@ interface Props {
 const { breadcrumbCurrent, description, filters, products, title } = Astro.props;
 const allFilterLabel = filters[0]?.label;
 const modalProducts = products.map((product) => ({
+	additionalInfo: product.additionalInfo ?? '',
 	capacity: product.capacity,
 	category: product.category,
-	description:
-		product.description ??
-		`${product.title} ir piemērota izvēle pasākumiem, kur nepieciešams pārdomāts izmērs, stabila konstrukcija un sakopts vizuālais iespaids. Pielāgosim komplektāciju jūsu viesu skaitam, norises vietai un vēlamajam inventāram.`,
+	description: product.description ?? '',
+	galleryImages: product.galleryImages.length > 0 ? product.galleryImages : [product.image],
 	href: product.href ?? '#kontakti',
+	id: product.id,
 	image: product.image,
 	installTime: product.installTime,
+	priceCents: product.priceCents,
 	size: product.size,
 	title: product.title,
+	variant: product.variant ?? '',
 }));
 ---
 
@@ -165,32 +178,109 @@ const modalProducts = products.map((product) => ({
 					<X aria-hidden="true" />
 				</button>
 				<div class="product-modal__media">
+					<div class="product-modal__image-stage" data-product-modal-image-stage>
 					<img data-product-modal-image src="" alt="" />
+					<button class="product-modal__image-button product-modal__image-button--prev" data-product-modal-prev type="button" aria-label="Iepriekšējais attēls">
+						<ChevronLeft aria-hidden="true" />
+					</button>
+					<button class="product-modal__image-button product-modal__image-button--next" data-product-modal-next type="button" aria-label="Nākamais attēls">
+						<ChevronRight aria-hidden="true" />
+					</button>
+					<button class="product-modal__fullscreen-button" data-product-modal-fullscreen-open type="button" aria-label="Atvērt attēlu pilnekrānā">
+						<Maximize2 aria-hidden="true" />
+					</button>
+					<span class="product-modal__image-count" data-product-modal-image-count></span>
+					</div>
+					<div class="product-modal__thumbs-shell">
+						<button class="product-modal__thumb-nav" data-product-modal-thumbs-prev type="button" aria-label="Ritināt attēlus pa kreisi">
+							<ChevronLeft aria-hidden="true" />
+						</button>
+						<div class="product-modal__thumbs" data-product-modal-thumbs aria-label="Produkta attēlu saraksts"></div>
+						<button class="product-modal__thumb-nav" data-product-modal-thumbs-next type="button" aria-label="Ritināt attēlus pa labi">
+							<ChevronRight aria-hidden="true" />
+						</button>
+					</div>
 				</div>
 				<div class="product-modal__content">
 					<p class="product-modal__eyebrow" data-product-modal-category></p>
 					<h2 id="product-modal-title" data-product-modal-title></h2>
-					<p class="product-modal__description" data-product-modal-description></p>
-					<dl class="product-modal__specs">
+					<div class="product-modal__tabs" role="tablist" aria-label="Produkta informācija">
+						<button class="is-active" data-product-modal-tab="basic" role="tab" type="button" aria-selected="true">Pamata informācija</button>
+						<button data-product-modal-tab="extra" role="tab" type="button" aria-selected="false">Papildus informācija</button>
+					</div>
+					<p class="product-modal__description" data-product-modal-description data-product-modal-basic></p>
+					<dl class="product-modal__specs" data-product-modal-basic>
 						<div>
+							<RulerDimensionLine aria-hidden="true" />
 							<dt>Izmērs</dt>
 							<dd data-product-modal-size></dd>
 						</div>
 						<div>
+							<UserRound aria-hidden="true" />
 							<dt>Ietilpība</dt>
 							<dd data-product-modal-capacity></dd>
 						</div>
 						<div>
+							<Clock3 aria-hidden="true" />
 							<dt>Uzstādīšana</dt>
 							<dd data-product-modal-install></dd>
 						</div>
+						<div>
+							<Euro aria-hidden="true" />
+							<dt>Cena</dt>
+							<dd data-product-modal-price></dd>
+						</div>
 					</dl>
-					<a class="product-modal__cta" data-product-modal-cta href="#kontakti">
-						<span>Pieteikt nomu</span>
-						<ArrowRight aria-hidden="true" />
-					</a>
+					<div class="product-modal__dates" data-product-modal-basic aria-label="Nomas periods">
+						<label>
+							<span>No</span>
+							<input data-product-modal-date-start type="date" />
+						</label>
+						<label>
+							<span>Līdz</span>
+							<input data-product-modal-date-end type="date" />
+						</label>
+					</div>
+					<div class="product-modal__tab-panel" data-product-modal-panel="extra" role="tabpanel" hidden>
+						<p class="product-modal__description" data-product-modal-additional></p>
+					</div>
+					<div class="product-modal__actions">
+						<button class="product-modal__cta" data-product-modal-add type="button">
+							<span>Pievienot grozam</span>
+							<ShoppingBag aria-hidden="true" />
+						</button>
+						<div class="product-modal__quantity" aria-label="Daudzums">
+							<button data-product-modal-quantity-decrease type="button" aria-label="Samazināt daudzumu">-</button>
+							<span data-product-modal-quantity>1</span>
+							<button data-product-modal-quantity-increase type="button" aria-label="Palielināt daudzumu">+</button>
+						</div>
+					</div>
 				</div>
 			</section>
+			<div class="product-modal__fullscreen" data-product-modal-fullscreen hidden role="dialog" aria-modal="true" aria-label="Produkta attēls pilnekrānā">
+				<button class="product-modal__fullscreen-backdrop" data-product-modal-fullscreen-close type="button" aria-label="Aizvērt pilnekrāna attēlu"></button>
+				<div class="product-modal__fullscreen-stage">
+					<img data-product-modal-fullscreen-image src="" alt="" />
+					<button class="product-modal__fullscreen-close" data-product-modal-fullscreen-close type="button" aria-label="Aizvērt">
+						<X aria-hidden="true" />
+					</button>
+					<button class="product-modal__fullscreen-nav product-modal__fullscreen-nav--prev" data-product-modal-fullscreen-prev type="button" aria-label="Iepriekšējais attēls">
+						<ChevronLeft aria-hidden="true" />
+					</button>
+					<button class="product-modal__fullscreen-nav product-modal__fullscreen-nav--next" data-product-modal-fullscreen-next type="button" aria-label="Nākamais attēls">
+						<ChevronRight aria-hidden="true" />
+					</button>
+				</div>
+				<div class="product-modal__fullscreen-thumbs-shell">
+					<button class="product-modal__thumb-nav" data-product-modal-fullscreen-thumbs-prev type="button" aria-label="Ritināt attēlus pa kreisi">
+						<ChevronLeft aria-hidden="true" />
+					</button>
+					<div class="product-modal__thumbs" data-product-modal-fullscreen-thumbs aria-label="Pilnekrāna attēlu saraksts"></div>
+					<button class="product-modal__thumb-nav" data-product-modal-fullscreen-thumbs-next type="button" aria-label="Ritināt attēlus pa labi">
+						<ChevronRight aria-hidden="true" />
+					</button>
+				</div>
+			</div>
 		</div>
 		<SiteFooter />
 		<FloatingActions />
@@ -650,7 +740,7 @@ const modalProducts = products.map((product) => ({
 		position: relative;
 		z-index: 1;
 		width: min(100%, 980px);
-		max-height: min(84vh, 720px);
+		height: min(84vh, 720px);
 		display: grid;
 		grid-template-columns: minmax(19rem, 0.92fr) minmax(0, 1fr);
 		overflow: hidden;
@@ -700,7 +790,12 @@ const modalProducts = products.map((product) => ({
 	}
 
 	.product-modal__media {
+		position: relative;
 		min-height: 26rem;
+		display: grid;
+		grid-template-rows: minmax(0, 1fr) auto;
+		gap: 0.75rem;
+		padding: 0.75rem;
 		background: var(--color-background-soft);
 	}
 
@@ -709,6 +804,192 @@ const modalProducts = products.map((product) => ({
 		height: 100%;
 		display: block;
 		object-fit: cover;
+	}
+
+	.product-modal__image-stage {
+		position: relative;
+		min-width: 0;
+		min-height: 0;
+		overflow: hidden;
+		border-radius: 18px;
+	}
+
+	.product-modal__image-stage img {
+		border-radius: inherit;
+	}
+
+	.product-modal__image-stage.is-changing img,
+	.product-modal__fullscreen-stage.is-changing img {
+		animation: product-image-enter 240ms ease both;
+	}
+
+	@keyframes product-image-enter {
+		from {
+			opacity: 0;
+			transform: translateX(1.15rem) scale(1.01);
+		}
+
+		to {
+			opacity: 1;
+			transform: translateX(0) scale(1);
+		}
+	}
+
+	.product-modal__image-button,
+	.product-modal__fullscreen-button,
+	.product-modal__fullscreen-close,
+	.product-modal__fullscreen-nav {
+		display: grid;
+		place-items: center;
+		color: var(--color-bark);
+		background: rgba(246, 241, 231, 0.88);
+		border: 1px solid rgba(222, 212, 198, 0.9);
+		border-radius: 999px;
+		cursor: pointer;
+		opacity: 0.78;
+		box-shadow: 0 10px 28px rgba(75, 64, 56, 0.1);
+		transition:
+			background-color 160ms ease,
+			opacity 160ms ease,
+			transform 160ms ease;
+	}
+
+	.product-modal__image-button:hover,
+	.product-modal__fullscreen-button:hover,
+	.product-modal__fullscreen-close:hover,
+	.product-modal__fullscreen-nav:hover {
+		background: var(--color-background-soft);
+		opacity: 1;
+		transform: translateY(-1px);
+	}
+
+	.product-modal__image-button {
+		position: absolute;
+		top: 50%;
+		z-index: 2;
+		width: 2.55rem;
+		height: 2.55rem;
+		transform: translateY(-50%);
+	}
+
+	.product-modal__image-button:hover {
+		transform: translateY(calc(-50% - 1px));
+	}
+
+	.product-modal__image-button--prev {
+		left: 0.9rem;
+	}
+
+	.product-modal__image-button--next {
+		right: 0.9rem;
+	}
+
+	.product-modal__thumbs-shell {
+		min-width: 0;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	.product-modal__thumbs {
+		min-width: 0;
+		display: flex;
+		gap: 0.55rem;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+	}
+
+	.product-modal__thumbs::-webkit-scrollbar {
+		display: none;
+	}
+
+	:global(.product-modal__thumb) {
+		width: 4.8rem;
+		height: 4.8rem;
+		flex: 0 0 auto;
+		padding: 0;
+		overflow: hidden;
+		background: transparent;
+		border: 2px solid transparent;
+		border-radius: 14px;
+		cursor: pointer;
+		opacity: 0.72;
+		box-shadow: 0 0 0 0 rgba(107, 122, 74, 0);
+		transition:
+			border-color 160ms ease,
+			box-shadow 160ms ease,
+			opacity 160ms ease,
+			transform 160ms ease;
+	}
+
+	:global(.product-modal__thumb.is-viewed) {
+		box-shadow: inset 0 0 0 2px rgba(107, 122, 74, 0.24);
+	}
+
+	:global(.product-modal__thumb:hover),
+	:global(.product-modal__thumb.is-active) {
+		border-color: #6b7a4a;
+		box-shadow:
+			inset 0 0 0 2px var(--color-surface),
+			inset 0 0 0 4px rgba(107, 122, 74, 0.82);
+		opacity: 1;
+		transform: none;
+	}
+
+	.product-modal__fullscreen-thumbs-shell :global(.product-modal__thumb.is-active) {
+		border-color: rgba(246, 241, 231, 0.95);
+		box-shadow:
+			inset 0 0 0 2px rgba(107, 122, 74, 0.96),
+			inset 0 0 0 4px rgba(246, 241, 231, 0.76);
+	}
+
+	:global(.product-modal__thumb img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 11px;
+	}
+
+	.product-modal__thumb-nav {
+		width: 2rem;
+		height: 2rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.46);
+		border: 1px solid rgba(222, 212, 198, 0.75);
+		border-radius: 999px;
+		cursor: pointer;
+		opacity: 0.72;
+	}
+
+	.product-modal__thumb-nav:hover {
+		opacity: 1;
+		background: rgba(255, 255, 255, 0.72);
+	}
+
+	.product-modal__fullscreen-button {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		z-index: 2;
+		width: 2.45rem;
+		height: 2.45rem;
+	}
+
+	.product-modal__image-count {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
+		z-index: 2;
+		padding: 0.32rem 0.55rem;
+		color: var(--color-surface);
+		background: rgba(42, 48, 35, 0.72);
+		border-radius: 999px;
+		font-size: 0.74rem;
+		font-weight: 720;
 	}
 
 	.product-modal__content {
@@ -738,6 +1019,62 @@ const modalProducts = products.map((product) => ({
 		line-height: 1.02;
 	}
 
+	.product-modal__tabs {
+		margin-top: clamp(1rem, 2vw, 1.35rem);
+		display: flex;
+		align-items: center;
+		gap: clamp(0.8rem, 2vw, 1.35rem);
+		border-bottom: 1px solid rgba(222, 212, 198, 0.86);
+	}
+
+	.product-modal__tabs button {
+		position: relative;
+		padding: 0 0 0.72rem;
+		color: var(--color-text-muted);
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.82rem;
+		font-weight: 760;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.product-modal__tabs button::after {
+		position: absolute;
+		right: 0;
+		bottom: -1px;
+		left: 0;
+		height: 2px;
+		background: #6b7a4a;
+		border-radius: 999px;
+		content: "";
+		opacity: 0;
+		transform: scaleX(0.55);
+		transition:
+			opacity 160ms ease,
+			transform 160ms ease;
+	}
+
+	.product-modal__tabs button.is-active {
+		color: var(--color-bark);
+	}
+
+	.product-modal__tabs button.is-active::after {
+		opacity: 1;
+		transform: scaleX(1);
+	}
+
+	.product-modal__tab-panel[hidden],
+	[data-product-modal-basic][hidden] {
+		display: none;
+	}
+
+	.product-modal__tab-panel {
+		min-height: 17rem;
+	}
+
 	.product-modal__description {
 		max-width: 34rem;
 		margin: clamp(1rem, 2vw, 1.35rem) 0 0;
@@ -750,16 +1087,30 @@ const modalProducts = products.map((product) => ({
 	.product-modal__specs {
 		margin: clamp(1.25rem, 2vw, 1.65rem) 0 0;
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 0.75rem;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.7rem), 1fr));
+		gap: 0.65rem;
 	}
 
 	.product-modal__specs div {
 		min-width: 0;
+		overflow-wrap: anywhere;
 		padding: 0.85rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: start;
+		column-gap: 0.58rem;
 		background: rgba(237, 228, 215, 0.58);
 		border: 1px solid rgba(222, 212, 198, 0.78);
 		border-radius: 12px;
+	}
+
+	.product-modal__specs svg {
+		grid-row: 1 / span 2;
+		width: 1.05rem;
+		height: 1.05rem;
+		margin-top: 0.08rem;
+		color: #6b7a4a;
+		stroke-width: 2;
 	}
 
 	.product-modal__specs dt {
@@ -780,10 +1131,56 @@ const modalProducts = products.map((product) => ({
 		line-height: 1.35;
 	}
 
-	.product-modal__cta {
-		width: fit-content;
-		min-height: 3rem;
+	.product-modal__dates {
+		margin-top: 1rem;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.75rem;
+	}
+
+	.product-modal__dates label {
+		display: grid;
+		gap: 0.38rem;
+	}
+
+	.product-modal__dates span {
+		color: var(--color-text-muted);
+		font-size: 0.66rem;
+		font-weight: 780;
+		letter-spacing: 0.12em;
+		line-height: 1.2;
+		text-transform: uppercase;
+	}
+
+	.product-modal__dates input {
+		min-height: 2.75rem;
+		width: 100%;
+		padding: 0 0.82rem;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.68);
+		border: 1px solid rgba(222, 212, 198, 0.9);
+		border-radius: 10px;
+		font: inherit;
+		font-size: 0.9rem;
+	}
+
+	.product-modal__dates input:focus {
+		outline: 2px solid rgba(107, 122, 74, 0.35);
+		outline-offset: 2px;
+	}
+
+	.product-modal__actions {
+		width: min(100%, 29rem);
 		margin-top: clamp(1.35rem, 2.4vw, 1.8rem);
+		display: grid;
+		grid-template-columns: minmax(11.5rem, 1fr) auto;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.product-modal__cta {
+		width: 100%;
+		min-height: 3rem;
 		padding: 0 1.35rem;
 		display: inline-flex;
 		align-items: center;
@@ -791,7 +1188,10 @@ const modalProducts = products.map((product) => ({
 		gap: 0.7rem;
 		color: var(--color-surface);
 		background: #6b7a4a;
+		border: 0;
 		border-radius: 999px;
+		cursor: pointer;
+		font: inherit;
 		font-size: 0.8rem;
 		font-weight: 830;
 		text-decoration: none;
@@ -808,6 +1208,133 @@ const modalProducts = products.map((product) => ({
 		width: 0.95rem;
 		height: 0.95rem;
 		stroke-width: 2.25;
+	}
+
+	.product-modal__quantity {
+		min-height: 3rem;
+		display: inline-grid;
+		grid-template-columns: 2.35rem 2.2rem 2.35rem;
+		align-items: center;
+		justify-items: center;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.64);
+		border: 1px solid rgba(107, 122, 74, 0.32);
+		border-radius: 999px;
+		font-size: 0.85rem;
+		font-weight: 760;
+	}
+
+	.product-modal__quantity button {
+		width: 100%;
+		height: 100%;
+		display: grid;
+		place-items: center;
+		color: #6b7a4a;
+		background: transparent;
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+		font: inherit;
+		font-size: 1rem;
+		line-height: 1;
+	}
+
+	.product-modal__quantity button:hover {
+		background: rgba(107, 122, 74, 0.12);
+	}
+
+	.product-modal__quantity button:disabled {
+		cursor: default;
+		opacity: 0.42;
+	}
+
+	.product-modal__quantity button:disabled:hover {
+		background: transparent;
+	}
+
+	.product-modal__fullscreen[hidden] {
+		display: none;
+	}
+
+	.product-modal__fullscreen {
+		position: fixed;
+		inset: 0;
+		z-index: 5;
+		display: grid;
+		grid-template-rows: minmax(0, 1fr) auto;
+		place-items: center;
+		gap: 1rem;
+		padding: clamp(1rem, 3vw, 2rem);
+	}
+
+	.product-modal__fullscreen-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(35, 31, 27, 0.72);
+		border: 0;
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+		cursor: pointer;
+	}
+
+	.product-modal__fullscreen-stage {
+		position: relative;
+		z-index: 1;
+		width: min(calc(100% - 7rem), 72rem);
+		height: min(78vh, 46rem);
+		display: grid;
+		place-items: center;
+		margin-top: 2.6rem;
+	}
+
+	.product-modal__fullscreen-stage img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.product-modal__fullscreen-thumbs-shell {
+		position: relative;
+		z-index: 1;
+		width: min(calc(100% - 7rem), 50rem);
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.65rem;
+		background: rgba(246, 241, 231, 0.12);
+		border: 1px solid rgba(246, 241, 231, 0.18);
+		border-radius: 18px;
+		-webkit-backdrop-filter: blur(8px);
+		backdrop-filter: blur(8px);
+	}
+
+	.product-modal__fullscreen-close {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		width: 2.75rem;
+		height: 2.75rem;
+	}
+
+	.product-modal__fullscreen-nav {
+		position: absolute;
+		top: 50%;
+		width: 3rem;
+		height: 3rem;
+		transform: translateY(-50%);
+	}
+
+	.product-modal__fullscreen-nav:hover {
+		transform: translateY(calc(-50% - 1px));
+	}
+
+	.product-modal__fullscreen-nav--prev {
+		left: -4rem;
+	}
+
+	.product-modal__fullscreen-nav--next {
+		right: -4rem;
 	}
 
 	@media (max-width: 860px) {
@@ -849,16 +1376,38 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__window {
 			grid-template-columns: 1fr;
+			height: min(88vh, 760px);
 			max-height: 88vh;
 		}
 
 		.product-modal__media {
 			min-height: 15rem;
-			max-height: 34vh;
+			max-height: 42vh;
 		}
 
 		.product-modal__specs {
 			grid-template-columns: 1fr;
+		}
+
+		.product-modal__fullscreen-stage {
+			width: min(100%, 72rem);
+		}
+
+		.product-modal__fullscreen-thumbs-shell {
+			width: min(100%, 50rem);
+		}
+
+		.product-modal__fullscreen-close {
+			top: -3.25rem;
+			right: 0;
+		}
+
+		.product-modal__fullscreen-nav--prev {
+			left: 0.5rem;
+		}
+
+		.product-modal__fullscreen-nav--next {
+			right: 0.5rem;
 		}
 	}
 
@@ -954,23 +1503,141 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__media {
 			min-height: 12.5rem;
+			padding: 0.55rem;
 		}
 
 		.product-modal__content {
+			display: flex;
+			flex-direction: column;
 			padding: 1.15rem;
 		}
 
+		.product-modal__fullscreen-button {
+			top: auto;
+			right: auto;
+			bottom: 0.82rem;
+			left: 0.82rem;
+			width: 2.25rem;
+			height: 2.25rem;
+		}
+
+		.product-modal__content h2 {
+			order: 1;
+			max-width: none;
+			font-size: clamp(1.45rem, 8vw, 2rem);
+			line-height: 1.05;
+		}
+
+		.product-modal__tabs {
+			order: 3;
+			margin-top: 0.85rem;
+			gap: 0.75rem;
+			overflow-x: auto;
+			scrollbar-width: none;
+		}
+
+		.product-modal__tabs::-webkit-scrollbar {
+			display: none;
+		}
+
+		.product-modal__tabs button {
+			flex: 0 0 auto;
+			font-size: 0.68rem;
+		}
+
 		.product-modal__eyebrow {
+			order: 0;
+			margin-bottom: 0.35rem;
 			font-size: 0.62rem;
 		}
 
 		.product-modal__description {
+			order: 4;
+			margin-top: 0.75rem;
 			font-size: 0.9rem;
 			line-height: 1.58;
 		}
 
-		.product-modal__cta {
+		.product-modal__specs {
+			order: 4;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 0.45rem;
+			margin-top: 0.75rem;
+		}
+
+		.product-modal__specs div {
+			grid-template-columns: auto minmax(0, 1fr);
+			column-gap: 0.42rem;
+			padding: 0.58rem;
+			border-radius: 10px;
+		}
+
+		.product-modal__specs svg {
+			width: 0.86rem;
+			height: 0.86rem;
+			margin-top: 0.05rem;
+		}
+
+		.product-modal__specs dt {
+			margin-bottom: 0.16rem;
+			font-size: 0.54rem;
+			letter-spacing: 0.09em;
+		}
+
+		.product-modal__specs dd {
+			font-size: 0.76rem;
+			line-height: 1.22;
+		}
+
+		.product-modal__dates {
+			order: 4;
+			grid-template-columns: 1fr;
+			gap: 0.5rem;
+			margin-top: 0.7rem;
+		}
+
+		.product-modal__dates span {
+			font-size: 0.58rem;
+		}
+
+		.product-modal__dates input {
+			min-height: 2.35rem;
+			font-size: 0.78rem;
+		}
+
+		.product-modal__tab-panel {
+			order: 4;
+			min-height: 10rem;
+		}
+
+		:global(.product-modal__thumb) {
+			width: 3.8rem;
+			height: 3.8rem;
+			border-radius: 11px;
+		}
+
+		:global(.product-modal__thumb img) {
+			border-radius: 8px;
+		}
+
+		.product-modal__actions {
+			order: 2;
 			width: 100%;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 0.55rem;
+			margin-top: 0.85rem;
+		}
+
+		.product-modal__cta {
+			min-height: 2.55rem;
+			padding-inline: 0.9rem;
+			font-size: 0.72rem;
+		}
+
+		.product-modal__quantity {
+			min-height: 2.55rem;
+			grid-template-columns: 1.95rem 1.7rem 1.95rem;
+			font-size: 0.78rem;
 		}
 
 		.product-category__cta {
@@ -986,14 +1653,19 @@ const modalProducts = products.map((product) => ({
 
 <script>
 	type ProductModalItem = {
+		additionalInfo: string;
 		capacity: string;
 		category: string;
 		description: string;
+		galleryImages: string[];
 		href: string;
+		id: string;
 		image: string;
 		installTime: string;
+		priceCents: number;
 		size: string;
 		title: string;
+		variant: string;
 	};
 
 	const productFilterButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-filter]');
@@ -1003,15 +1675,47 @@ const modalProducts = products.map((product) => ({
 	const productModalWindow = document.querySelector<HTMLElement>('.product-modal__window');
 	const productModalCloseButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-modal-close]');
 	const productModalImage = document.querySelector<HTMLImageElement>('[data-product-modal-image]');
+	const productModalImageCount = document.querySelector<HTMLElement>('[data-product-modal-image-count]');
+	const productModalPrev = document.querySelector<HTMLButtonElement>('[data-product-modal-prev]');
+	const productModalNext = document.querySelector<HTMLButtonElement>('[data-product-modal-next]');
+	const productModalThumbs = document.querySelector<HTMLElement>('[data-product-modal-thumbs]');
+	const productModalThumbsPrev = document.querySelector<HTMLButtonElement>('[data-product-modal-thumbs-prev]');
+	const productModalThumbsNext = document.querySelector<HTMLButtonElement>('[data-product-modal-thumbs-next]');
+	const productModalFullscreenOpen = document.querySelector<HTMLButtonElement>('[data-product-modal-fullscreen-open]');
+	const productModalFullscreen = document.querySelector<HTMLElement>('[data-product-modal-fullscreen]');
+	const productModalImageStage = document.querySelector<HTMLElement>('[data-product-modal-image-stage]');
+	const productModalFullscreenStage = document.querySelector<HTMLElement>('.product-modal__fullscreen-stage');
+	const productModalFullscreenImage = document.querySelector<HTMLImageElement>('[data-product-modal-fullscreen-image]');
+	const productModalFullscreenCloseButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-modal-fullscreen-close]');
+	const productModalFullscreenPrev = document.querySelector<HTMLButtonElement>('[data-product-modal-fullscreen-prev]');
+	const productModalFullscreenNext = document.querySelector<HTMLButtonElement>('[data-product-modal-fullscreen-next]');
+	const productModalFullscreenThumbs = document.querySelector<HTMLElement>('[data-product-modal-fullscreen-thumbs]');
+	const productModalFullscreenThumbsPrev = document.querySelector<HTMLButtonElement>('[data-product-modal-fullscreen-thumbs-prev]');
+	const productModalFullscreenThumbsNext = document.querySelector<HTMLButtonElement>('[data-product-modal-fullscreen-thumbs-next]');
 	const productModalCategory = document.querySelector<HTMLElement>('[data-product-modal-category]');
 	const productModalTitle = document.querySelector<HTMLElement>('[data-product-modal-title]');
 	const productModalDescription = document.querySelector<HTMLElement>('[data-product-modal-description]');
+	const productModalAdditional = document.querySelector<HTMLElement>('[data-product-modal-additional]');
+	const productModalTabs = document.querySelectorAll<HTMLButtonElement>('[data-product-modal-tab]');
+	const productModalBasicNodes = document.querySelectorAll<HTMLElement>('[data-product-modal-basic]');
+	const productModalExtraPanel = document.querySelector<HTMLElement>('[data-product-modal-panel="extra"]');
 	const productModalSize = document.querySelector<HTMLElement>('[data-product-modal-size]');
 	const productModalCapacity = document.querySelector<HTMLElement>('[data-product-modal-capacity]');
 	const productModalInstall = document.querySelector<HTMLElement>('[data-product-modal-install]');
-	const productModalCta = document.querySelector<HTMLAnchorElement>('[data-product-modal-cta]');
+	const productModalPrice = document.querySelector<HTMLElement>('[data-product-modal-price]');
+	const productModalDateStart = document.querySelector<HTMLInputElement>('[data-product-modal-date-start]');
+	const productModalDateEnd = document.querySelector<HTMLInputElement>('[data-product-modal-date-end]');
+	const productModalAdd = document.querySelector<HTMLButtonElement>('[data-product-modal-add]');
+	const productModalQuantity = document.querySelector<HTMLElement>('[data-product-modal-quantity]');
+	const productModalQuantityDecrease = document.querySelector<HTMLButtonElement>('[data-product-modal-quantity-decrease]');
+	const productModalQuantityIncrease = document.querySelector<HTMLButtonElement>('[data-product-modal-quantity-increase]');
 	const modalProducts: ProductModalItem[] = productModalData?.textContent ? JSON.parse(productModalData.textContent) : [];
+	const modalCurrencyFormatter = new Intl.NumberFormat('lv-LV', { currency: 'EUR', style: 'currency' });
 	let lastFocusedProductElement: HTMLElement | null = null;
+	let activeModalProduct: ProductModalItem | null = null;
+	let activeGalleryIndex = 0;
+	let activeModalQuantity = 1;
+	let viewedGalleryIndexes = new Set<number>();
 
 	productFilterButtons.forEach((button) => {
 		button.addEventListener('click', () => {
@@ -1035,11 +1739,177 @@ const modalProducts = products.map((product) => ({
 		}
 	};
 
+	const formatModalCapacity = (capacity: string) => {
+		const match = capacity.match(/(\d+)/);
+
+		if (match) {
+			return `${match[1]} pers.`;
+		}
+
+		return capacity.replace(/^Līdz\s+/i, '').replace(/\bpersonām\b/i, 'pers.');
+	};
+
+	const setModalQuantity = (quantity: number) => {
+		activeModalQuantity = Math.min(99, Math.max(1, quantity));
+
+		if (productModalQuantity) {
+			productModalQuantity.textContent = String(activeModalQuantity);
+		}
+
+		if (productModalQuantityDecrease) {
+			productModalQuantityDecrease.disabled = activeModalQuantity <= 1;
+		}
+	};
+
+	const getActiveGallery = () => activeModalProduct?.galleryImages?.filter(Boolean) ?? [];
+
+	const animateGalleryImage = () => {
+		[productModalImageStage, productModalFullscreenStage].forEach((stage) => {
+			if (!stage) return;
+			stage.classList.remove('is-changing');
+			void stage.offsetWidth;
+			stage.classList.add('is-changing');
+		});
+	};
+
+	const updateGalleryImage = () => {
+		const gallery = getActiveGallery();
+		const imageUrl = gallery[activeGalleryIndex] ?? activeModalProduct?.image ?? '';
+		const hasMultipleImages = gallery.length > 1;
+		viewedGalleryIndexes.add(activeGalleryIndex);
+
+		if (productModalImage && activeModalProduct) {
+			productModalImage.src = imageUrl;
+			productModalImage.alt = activeModalProduct.title;
+		}
+
+		if (productModalFullscreenImage && activeModalProduct) {
+			productModalFullscreenImage.src = imageUrl;
+			productModalFullscreenImage.alt = activeModalProduct.title;
+		}
+
+		if (productModalImageCount) {
+			productModalImageCount.textContent = gallery.length > 0 ? `${activeGalleryIndex + 1}/${gallery.length}` : '';
+			productModalImageCount.hidden = !hasMultipleImages;
+		}
+
+		productModalPrev?.toggleAttribute('hidden', !hasMultipleImages);
+		productModalNext?.toggleAttribute('hidden', !hasMultipleImages);
+		productModalFullscreenPrev?.toggleAttribute('hidden', !hasMultipleImages);
+		productModalFullscreenNext?.toggleAttribute('hidden', !hasMultipleImages);
+
+		productModalThumbs?.querySelectorAll<HTMLButtonElement>('[data-product-modal-thumb]').forEach((button) => {
+			const isActive = Number(button.dataset.productModalThumb) === activeGalleryIndex;
+			button.classList.toggle('is-active', isActive);
+			button.classList.toggle('is-viewed', viewedGalleryIndexes.has(Number(button.dataset.productModalThumb)));
+			button.setAttribute('aria-current', String(isActive));
+
+			if (isActive) {
+				button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+			}
+		});
+
+		productModalFullscreenThumbs?.querySelectorAll<HTMLButtonElement>('[data-product-modal-thumb]').forEach((button) => {
+			const isActive = Number(button.dataset.productModalThumb) === activeGalleryIndex;
+			button.classList.toggle('is-active', isActive);
+			button.classList.toggle('is-viewed', viewedGalleryIndexes.has(Number(button.dataset.productModalThumb)));
+			button.setAttribute('aria-current', String(isActive));
+
+			if (isActive) {
+				button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+			}
+		});
+
+		animateGalleryImage();
+	};
+
+	const renderThumbs = (container: HTMLElement | null) => {
+		const gallery = getActiveGallery();
+
+		if (!container) {
+			return;
+		}
+
+		container.replaceChildren();
+
+		gallery.forEach((imageUrl, index) => {
+			const button = document.createElement('button');
+			const image = document.createElement('img');
+
+			button.className = 'product-modal__thumb';
+			button.type = 'button';
+			button.dataset.productModalThumb = String(index);
+			button.setAttribute('aria-label', `Atvērt attēlu ${index + 1}`);
+			image.src = imageUrl;
+			image.alt = activeModalProduct?.title ?? '';
+			button.append(image);
+			button.addEventListener('click', () => {
+				activeGalleryIndex = index;
+				updateGalleryImage();
+				button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+			});
+			container.append(button);
+		});
+	};
+
+	const renderGalleryThumbs = () => {
+		const gallery = getActiveGallery();
+		const shouldShowNav = gallery.length > 4;
+
+		productModalThumbsPrev?.toggleAttribute('hidden', !shouldShowNav);
+		productModalThumbsNext?.toggleAttribute('hidden', !shouldShowNav);
+		productModalFullscreenThumbsPrev?.toggleAttribute('hidden', !shouldShowNav);
+		productModalFullscreenThumbsNext?.toggleAttribute('hidden', !shouldShowNav);
+		renderThumbs(productModalThumbs);
+		renderThumbs(productModalFullscreenThumbs);
+	};
+
+	const moveGallery = (direction: 1 | -1) => {
+		const gallery = getActiveGallery();
+
+		if (gallery.length <= 1) {
+			return;
+		}
+
+		activeGalleryIndex = (activeGalleryIndex + direction + gallery.length) % gallery.length;
+		updateGalleryImage();
+	};
+
+	const setProductModalTab = (tab: string) => {
+		const isExtra = tab === 'extra';
+
+		productModalTabs.forEach((button) => {
+			const isActive = button.dataset.productModalTab === tab;
+			button.classList.toggle('is-active', isActive);
+			button.setAttribute('aria-selected', String(isActive));
+		});
+
+		productModalBasicNodes.forEach((node) => {
+			node.hidden = isExtra;
+		});
+
+		if (productModalExtraPanel) {
+			productModalExtraPanel.hidden = !isExtra;
+		}
+	};
+
+	const openFullscreenImage = () => {
+		if (!productModalFullscreen) return;
+		updateGalleryImage();
+		productModalFullscreen.hidden = false;
+	};
+
+	const closeFullscreenImage = () => {
+		if (!productModalFullscreen) return;
+		productModalFullscreen.hidden = true;
+	};
+
 	const closeProductModal = () => {
 		if (!productModal || productModal.hidden) {
 			return;
 		}
 
+		closeFullscreenImage();
 		productModal.classList.remove('is-open');
 		document.body.classList.remove('product-modal-open');
 		window.setTimeout(() => {
@@ -1056,22 +1926,24 @@ const modalProducts = products.map((product) => ({
 			return;
 		}
 
+		activeModalProduct = product;
+		activeGalleryIndex = 0;
+		viewedGalleryIndexes = new Set([0]);
+		setModalQuantity(1);
 		lastFocusedProductElement = trigger;
+		setProductModalTab('basic');
 		setText(productModalCategory, product.category);
 		setText(productModalTitle, product.title);
 		setText(productModalDescription, product.description);
+		setText(productModalAdditional, product.additionalInfo || 'Papildu informāciju precizēsim, pielāgojot piedāvājumu jūsu pasākumam.');
 		setText(productModalSize, product.size);
-		setText(productModalCapacity, product.capacity);
-		setText(productModalInstall, product.installTime.replace(/^Uzstādīšanas laiks:\s*/i, ''));
-
-		if (productModalImage) {
-			productModalImage.src = product.image;
-			productModalImage.alt = product.title;
-		}
-
-		if (productModalCta) {
-			productModalCta.href = product.href;
-		}
+		setText(productModalCapacity, formatModalCapacity(product.capacity));
+		setText(productModalInstall, product.installTime.replace(/^.*?:\s*/, ''));
+		setText(productModalPrice, modalCurrencyFormatter.format(product.priceCents / 100));
+		if (productModalDateStart) productModalDateStart.value = '';
+		if (productModalDateEnd) productModalDateEnd.value = '';
+		renderGalleryThumbs();
+		updateGalleryImage();
 
 		productModal.hidden = false;
 		document.body.classList.add('product-modal-open');
@@ -1098,12 +1970,83 @@ const modalProducts = products.map((product) => ({
 		button.addEventListener('click', closeProductModal);
 	});
 
-	productModalCta?.addEventListener('click', () => {
+	productModalTabs.forEach((button) => {
+		button.addEventListener('click', () => {
+			setProductModalTab(button.dataset.productModalTab ?? 'basic');
+		});
+	});
+
+	productModalPrev?.addEventListener('click', () => moveGallery(-1));
+	productModalNext?.addEventListener('click', () => moveGallery(1));
+	productModalThumbsPrev?.addEventListener('click', () => {
+		productModalThumbs?.scrollBy({ behavior: 'smooth', left: -220 });
+	});
+	productModalThumbsNext?.addEventListener('click', () => {
+		productModalThumbs?.scrollBy({ behavior: 'smooth', left: 220 });
+	});
+	productModalFullscreenThumbsPrev?.addEventListener('click', () => {
+		productModalFullscreenThumbs?.scrollBy({ behavior: 'smooth', left: -220 });
+	});
+	productModalFullscreenThumbsNext?.addEventListener('click', () => {
+		productModalFullscreenThumbs?.scrollBy({ behavior: 'smooth', left: 220 });
+	});
+	productModalFullscreenPrev?.addEventListener('click', () => moveGallery(-1));
+	productModalFullscreenNext?.addEventListener('click', () => moveGallery(1));
+	productModalFullscreenOpen?.addEventListener('click', openFullscreenImage);
+	productModalFullscreenCloseButtons.forEach((button) => {
+		button.addEventListener('click', closeFullscreenImage);
+	});
+
+	productModalDateStart?.addEventListener('change', () => {
+		if (!productModalDateEnd || !productModalDateStart) return;
+		productModalDateEnd.min = productModalDateStart.value;
+
+		if (productModalDateEnd.value && productModalDateStart.value > productModalDateEnd.value) {
+			productModalDateEnd.value = productModalDateStart.value;
+		}
+	});
+
+	productModalQuantityDecrease?.addEventListener('click', () => {
+		setModalQuantity(activeModalQuantity - 1);
+	});
+
+	productModalQuantityIncrease?.addEventListener('click', () => {
+		setModalQuantity(activeModalQuantity + 1);
+	});
+
+	productModalAdd?.addEventListener('click', () => {
+		if (activeModalProduct && window.LiepajasCart) {
+			const startDate = productModalDateStart?.value || '';
+			const endDate = productModalDateEnd?.value || '';
+			const cartLineId = [activeModalProduct.id, startDate, endDate].filter(Boolean).join('::') || activeModalProduct.id;
+
+			window.LiepajasCart.addItem(
+				{
+					endDate,
+					id: cartLineId,
+					image: activeModalProduct.image,
+					priceCents: activeModalProduct.priceCents,
+					productId: activeModalProduct.id,
+					quantity: activeModalQuantity,
+					size: activeModalProduct.size,
+					startDate,
+					title: activeModalProduct.title,
+					variant: activeModalProduct.variant,
+				},
+				{ open: true },
+			);
+		}
+
 		closeProductModal();
 	});
 
 	document.addEventListener('keydown', (event) => {
 		if (event.key === 'Escape') {
+			if (productModalFullscreen && !productModalFullscreen.hidden) {
+				closeFullscreenImage();
+				return;
+			}
+
 			closeProductModal();
 		}
 	});

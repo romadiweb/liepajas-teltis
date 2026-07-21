@@ -1,0 +1,428 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Minus from '@lucide/astro/icons/minus';
+import Plus from '@lucide/astro/icons/plus';
+import Trash2 from '@lucide/astro/icons/trash-2';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+---
+
+<BaseLayout title="Nomas saraksts | Liepājas teltis" description="Apskatiet izvēlēto nomas inventāru un nosūtiet rezervācijas pieprasījumu.">
+	<div class="page-shell cart-page">
+		<SiteHeader />
+		<main class="cart-page__main" aria-labelledby="cart-page-title">
+			<section class="cart-page__intro">
+				<p>Saraksts</p>
+				<h1 id="cart-page-title">Nomas saraksts</h1>
+				<span>Šis nav maksājuma grozs - nosūtiet pieprasījumu, un mēs precizēsim pieejamību, piegādi un gala piedāvājumu.</span>
+			</section>
+
+			<section class="cart-page__layout">
+				<div class="cart-page__items" data-cart-page-items></div>
+				<div class="cart-page__empty" data-cart-page-empty>
+					<h2>Saraksts vēl ir tukšs</h2>
+					<p>Atveriet produktu kartītes un pievienojiet nepieciešamo inventāru nomas sarakstam.</p>
+					<a href="/teltis">Apskatīt teltis</a>
+				</div>
+
+				<aside class="cart-page__summary" aria-label="Saraksta kopsavilkums">
+					<h2>Kopsavilkums</h2>
+					<div>
+						<span>Vienības</span>
+						<strong data-cart-page-count>0</strong>
+					</div>
+					<div>
+						<span>Summa</span>
+						<strong data-cart-page-total>€0.00</strong>
+					</div>
+					<a href="/#pieteikums">
+						<span>Veikt rezervācijas pieprasījumu</span>
+						<ArrowRight aria-hidden="true" />
+					</a>
+				</aside>
+			</section>
+		</main>
+		<SiteFooter />
+		<FloatingActions />
+		<ScrollToTop />
+	</div>
+</BaseLayout>
+
+<template data-cart-page-item-template>
+	<article class="cart-page__item">
+		<img data-cart-page-item-image src="" alt="" />
+		<div class="cart-page__item-body">
+			<h2 data-cart-page-item-title></h2>
+			<p data-cart-page-item-variant></p>
+			<span data-cart-page-item-price></span>
+		</div>
+		<div class="cart-page__stepper">
+			<button data-cart-page-decrease type="button" aria-label="Samazināt daudzumu">
+				<Minus aria-hidden="true" />
+			</button>
+			<span data-cart-page-item-quantity></span>
+			<button data-cart-page-increase type="button" aria-label="Palielināt daudzumu">
+				<Plus aria-hidden="true" />
+			</button>
+		</div>
+		<button class="cart-page__remove" data-cart-page-remove type="button" aria-label="Izņemt no saraksta">
+			<Trash2 aria-hidden="true" />
+		</button>
+	</article>
+</template>
+
+<style>
+	.cart-page__main {
+		width: min(100%, 1200px);
+		margin: 0 auto;
+		padding: clamp(2.2rem, 5vw, 4.5rem) clamp(1rem, 3vw, 1.5rem) 4rem;
+	}
+
+	.cart-page__intro {
+		max-width: 42rem;
+		margin-bottom: clamp(1.7rem, 3vw, 2.5rem);
+	}
+
+	.cart-page__intro p {
+		margin: 0 0 0.75rem;
+		color: var(--color-primary);
+		font-size: 0.74rem;
+		font-weight: 820;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.cart-page__intro h1 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: clamp(2.8rem, 6vw, 5rem);
+		font-weight: 500;
+		letter-spacing: 0;
+		line-height: 0.98;
+	}
+
+	.cart-page__intro span {
+		display: block;
+		margin-top: 1rem;
+		color: var(--color-text-muted);
+		font-size: 1rem;
+		font-weight: 500;
+		line-height: 1.62;
+	}
+
+	.cart-page__layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+		gap: clamp(1.2rem, 3vw, 2rem);
+		align-items: start;
+	}
+
+	.cart-page__items {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.cart-page__empty,
+	.cart-page__summary,
+	.cart-page__item {
+		background: rgba(255, 255, 255, 0.68);
+		border: 1px solid rgba(222, 212, 198, 0.86);
+		border-radius: 16px;
+		box-shadow: var(--shadow-soft);
+	}
+
+	.cart-page__empty {
+		padding: 1.4rem;
+	}
+
+	.cart-page__empty[hidden] {
+		display: none;
+	}
+
+	.cart-page__empty h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: 1.2rem;
+		letter-spacing: 0;
+	}
+
+	.cart-page__empty p {
+		margin: 0.55rem 0 1rem;
+		color: var(--color-text-muted);
+		font-weight: 500;
+		line-height: 1.5;
+	}
+
+	.cart-page__empty a {
+		color: var(--color-primary-hover);
+		font-weight: 780;
+	}
+
+	.cart-page__item {
+		padding: 1rem;
+		display: grid;
+		grid-template-columns: 7rem minmax(0, 1fr) auto auto;
+		gap: 1rem;
+		align-items: center;
+	}
+
+	.cart-page__item img {
+		width: 7rem;
+		height: 5.5rem;
+		object-fit: cover;
+		border-radius: 8px;
+	}
+
+	.cart-page__item h2 {
+		margin: 0;
+		color: #14201a;
+		font-size: 1.05rem;
+		font-weight: 760;
+		letter-spacing: 0;
+	}
+
+	.cart-page__item p {
+		margin: 0.45rem 0;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 560;
+	}
+
+	.cart-page__item-body > span {
+		color: var(--color-bark);
+		font-size: 0.92rem;
+		font-weight: 720;
+	}
+
+	.cart-page__stepper {
+		display: grid;
+		grid-template-columns: 2rem 2rem 2rem;
+		align-items: center;
+		justify-items: center;
+		border: 1px solid #89bf2b;
+		border-radius: 999px;
+	}
+
+	.cart-page__stepper button,
+	.cart-page__remove {
+		display: grid;
+		place-items: center;
+		color: var(--color-text-muted);
+		background: transparent;
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.cart-page__stepper button {
+		width: 2rem;
+		height: 2rem;
+	}
+
+	.cart-page__remove {
+		width: 2.25rem;
+		height: 2.25rem;
+	}
+
+	.cart-page__stepper button:hover,
+	.cart-page__remove:hover {
+		color: var(--color-bark);
+		background: var(--color-background-soft);
+	}
+
+	.cart-page__stepper svg,
+	.cart-page__remove svg {
+		width: 0.9rem;
+		height: 0.9rem;
+		stroke-width: 2;
+	}
+
+	.cart-page__summary {
+		position: sticky;
+		top: 6rem;
+		padding: 1.3rem;
+		display: grid;
+		gap: 1rem;
+	}
+
+	.cart-page__summary h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: 1.15rem;
+		letter-spacing: 0;
+	}
+
+	.cart-page__summary div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		color: var(--color-text-muted);
+		font-weight: 650;
+	}
+
+	.cart-page__summary strong {
+		color: var(--color-bark);
+	}
+
+	.cart-page__summary a {
+		min-height: 3.25rem;
+		padding: 0.7rem 1rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.65rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border-radius: 999px;
+		font-size: 0.9rem;
+		font-weight: 820;
+		text-align: center;
+		text-decoration: none;
+	}
+
+	.cart-page__summary a:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+	}
+
+	.cart-page__summary svg {
+		width: 0.95rem;
+		height: 0.95rem;
+	}
+
+	@media (max-width: 820px) {
+		.cart-page__layout {
+			grid-template-columns: 1fr;
+		}
+
+		.cart-page__summary {
+			position: static;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.cart-page__item {
+			grid-template-columns: 5rem minmax(0, 1fr) auto;
+			align-items: start;
+		}
+
+		.cart-page__item img {
+			width: 5rem;
+			height: 5rem;
+		}
+
+		.cart-page__stepper {
+			grid-column: 2 / -1;
+			width: fit-content;
+		}
+	}
+</style>
+
+<script>
+	type CartPageItem = {
+		endDate?: string;
+		id: string;
+		image: string;
+		priceCents: number;
+		productId?: string;
+		quantity: number;
+		size?: string;
+		startDate?: string;
+		title: string;
+		variant?: string;
+	};
+
+	const CART_STORAGE_KEY = 'liepajas-teltis-cart';
+	const formatter = new Intl.NumberFormat('lv-LV', { currency: 'EUR', style: 'currency' });
+	const itemContainer = document.querySelector<HTMLElement>('[data-cart-page-items]');
+	const emptyState = document.querySelector<HTMLElement>('[data-cart-page-empty]');
+	const template = document.querySelector<HTMLTemplateElement>('[data-cart-page-item-template]');
+	const countNode = document.querySelector<HTMLElement>('[data-cart-page-count]');
+	const totalNode = document.querySelector<HTMLElement>('[data-cart-page-total]');
+	let pageItems: CartPageItem[] = [];
+
+	const formatPageItemMeta = (item: CartPageItem) => {
+		const details = [item.variant || item.size].filter(Boolean);
+
+		if (item.startDate || item.endDate) {
+			details.push(`Periods: ${item.startDate || '...'} - ${item.endDate || '...'}`);
+		}
+
+		return details.join(' - ');
+	};
+
+	const readPageCart = () => {
+		try {
+			const parsed = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) ?? '[]');
+			return Array.isArray(parsed) ? parsed : [];
+		} catch {
+			return [];
+		}
+	};
+
+	const writePageCart = () => {
+		localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(pageItems));
+		window.dispatchEvent(new CustomEvent('liepajas-cart-updated', { detail: { items: pageItems } }));
+	};
+
+	const renderPageCart = () => {
+		if (!itemContainer || !template) return;
+		itemContainer.replaceChildren();
+		emptyState?.toggleAttribute('hidden', pageItems.length > 0);
+
+		pageItems.forEach((item) => {
+			const fragment = template.content.cloneNode(true) as DocumentFragment;
+			const image = fragment.querySelector<HTMLImageElement>('[data-cart-page-item-image]');
+			const title = fragment.querySelector<HTMLElement>('[data-cart-page-item-title]');
+			const variant = fragment.querySelector<HTMLElement>('[data-cart-page-item-variant]');
+			const price = fragment.querySelector<HTMLElement>('[data-cart-page-item-price]');
+			const quantity = fragment.querySelector<HTMLElement>('[data-cart-page-item-quantity]');
+			const decrease = fragment.querySelector<HTMLButtonElement>('[data-cart-page-decrease]');
+			const increase = fragment.querySelector<HTMLButtonElement>('[data-cart-page-increase]');
+			const remove = fragment.querySelector<HTMLButtonElement>('[data-cart-page-remove]');
+
+			if (image) {
+				image.src = item.image;
+				image.alt = item.title;
+			}
+
+			if (title) title.textContent = item.title;
+			if (variant) variant.textContent = formatPageItemMeta(item);
+			if (price) price.textContent = formatter.format(item.priceCents / 100);
+			if (quantity) quantity.textContent = String(item.quantity);
+			decrease?.addEventListener('click', () => updatePageQuantity(item.id, item.quantity - 1));
+			increase?.addEventListener('click', () => updatePageQuantity(item.id, item.quantity + 1));
+			remove?.addEventListener('click', () => removePageItem(item.id));
+			itemContainer.append(fragment);
+		});
+
+		const count = pageItems.reduce((sum, item) => sum + item.quantity, 0);
+		const total = pageItems.reduce((sum, item) => sum + item.quantity * item.priceCents, 0);
+		if (countNode) countNode.textContent = String(count);
+		if (totalNode) totalNode.textContent = formatter.format(total / 100);
+	};
+
+	function updatePageQuantity(id: string, quantity: number) {
+		if (quantity <= 0) {
+			removePageItem(id);
+			return;
+		}
+
+		pageItems = pageItems.map((item) => (item.id === id ? { ...item, quantity } : item));
+		writePageCart();
+		renderPageCart();
+	}
+
+	function removePageItem(id: string) {
+		pageItems = pageItems.filter((item) => item.id !== id);
+		writePageCart();
+		renderPageCart();
+	}
+
+	pageItems = readPageCart();
+	renderPageCart();
+</script>

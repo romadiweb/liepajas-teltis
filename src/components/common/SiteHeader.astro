@@ -2,6 +2,7 @@
 import hugeIcons from '@iconify-json/hugeicons/icons.json';
 import Menu from '@lucide/astro/icons/menu';
 import Phone from '@lucide/astro/icons/phone';
+import ShoppingBag from '@lucide/astro/icons/shopping-bag';
 import X from '@lucide/astro/icons/x';
 
 type IconifyIcon = {
@@ -106,13 +107,23 @@ const showCategoryStrip = false;
 				}
 			</nav>
 
-			<a class="site-header__contact" href="tel:+37129373231">
+			<div class="site-header__actions">
+				<button class="site-header__cart" data-cart-open type="button" aria-label="Atvērt nomas sarakstu">
+					<ShoppingBag aria-hidden="true" />
+					<span data-cart-count hidden>0</span>
+				</button>
+				<a class="site-header__contact" href="tel:+37129373231">
 				<Phone aria-hidden="true" />
 				<span>
 					<small>Sazināties</small>
 					<strong>+371 29 373 231</strong>
 				</span>
-			</a>
+				</a>
+			</div>
+			<button class="site-header__mobile-cart" data-cart-open type="button" aria-label="Atvērt nomas sarakstu">
+				<ShoppingBag aria-hidden="true" />
+				<span data-cart-count hidden>0</span>
+			</button>
 			<div class="site-header__mobile-menu">
 				<input id="site-header-mobile-menu" class="site-header__menu-toggle" type="checkbox" aria-hidden="true" tabindex="-1" />
 				<label class="site-header__menu-button" for="site-header-mobile-menu" aria-label="Toggle navigation" title="Menu">
@@ -134,6 +145,11 @@ const showCategoryStrip = false;
 							))
 						}
 						<li class="site-header__mobile-contact">
+							<button data-cart-open type="button">
+								<ShoppingBag aria-hidden="true" />
+								<span>Nomas saraksts</span>
+								<span class="site-header__mobile-cart-count" data-cart-count hidden>0</span>
+							</button>
 							<a href="tel:+37129373231">
 								<Phone aria-hidden="true" />
 								<span>+371 29 373 231</span>
@@ -178,9 +194,18 @@ const showCategoryStrip = false;
 <script>
 	const mobileMenuToggle = document.querySelector<HTMLInputElement>('#site-header-mobile-menu');
 	const mobileMenuLinks = document.querySelectorAll<HTMLAnchorElement>('.site-header__mobile-panel a');
+	const mobileMenuButtons = document.querySelectorAll<HTMLButtonElement>('.site-header__mobile-panel button');
 
 	mobileMenuLinks.forEach((link) => {
 		link.addEventListener('click', () => {
+			if (mobileMenuToggle) {
+				mobileMenuToggle.checked = false;
+			}
+		});
+	});
+
+	mobileMenuButtons.forEach((button) => {
+		button.addEventListener('click', () => {
 			if (mobileMenuToggle) {
 				mobileMenuToggle.checked = false;
 			}
@@ -237,7 +262,10 @@ const showCategoryStrip = false;
 
 	.site-header__logo,
 	.site-header__contact,
+	.site-header__cart,
+	.site-header__mobile-cart,
 	.site-header__menu-button,
+	.site-header__mobile-list button,
 	.site-header__mobile-list a,
 	.site-header__nav a,
 	.site-header__categories a {
@@ -291,7 +319,6 @@ const showCategoryStrip = false;
 	}
 
 	.site-header__contact {
-		justify-self: end;
 		display: inline-flex;
 		min-height: 2.15rem;
 		align-items: center;
@@ -299,6 +326,96 @@ const showCategoryStrip = false;
 		padding: 0.34rem 0;
 		color: var(--color-surface);
 		opacity: 0.95;
+	}
+
+	.site-header__actions {
+		justify-self: end;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.8rem;
+	}
+
+	.site-header__cart {
+		position: relative;
+		width: 2.45rem;
+		height: 2.45rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: transparent;
+		cursor: pointer;
+	}
+
+	.site-header__cart:hover {
+		color: var(--color-background);
+		border-color: rgba(255, 255, 255, 0.34);
+		transform: translateY(-2px);
+	}
+
+	.site-header__cart svg {
+		width: 1.05rem;
+		height: 1.05rem;
+		stroke-width: 2.25;
+	}
+
+	.site-header__cart span {
+		position: absolute;
+		top: -0.36rem;
+		right: -0.3rem;
+		min-width: 1.08rem;
+		height: 1.08rem;
+		padding: 0 0.22rem;
+		display: inline-grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: #86c425;
+		border: 1px solid rgba(255, 255, 255, 0.78);
+		border-radius: 999px;
+		font-size: 0.64rem;
+		font-weight: 820;
+		line-height: 1;
+	}
+
+	.site-header__mobile-cart {
+		position: relative;
+		width: 2.65rem;
+		height: 2.65rem;
+		display: none;
+		place-items: center;
+		color: var(--color-surface);
+		background: transparent;
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.site-header__mobile-cart:hover {
+		color: var(--color-background);
+		transform: translateY(-2px);
+	}
+
+	.site-header__mobile-cart svg {
+		width: 1.22rem;
+		height: 1.22rem;
+		stroke-width: 2.25;
+	}
+
+	.site-header__mobile-cart > span {
+		position: absolute;
+		top: 0.3rem;
+		right: 0.26rem;
+		min-width: 1.08rem;
+		height: 1.08rem;
+		padding: 0 0.22rem;
+		display: inline-grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: #86c425;
+		border: 1px solid rgba(255, 255, 255, 0.78);
+		border-radius: 999px;
+		font-size: 0.64rem;
+		font-weight: 820;
+		line-height: 1;
 	}
 
 	.site-header__contact svg {
@@ -499,9 +616,40 @@ const showCategoryStrip = false;
 		font-weight: 700;
 	}
 
-	.site-header__mobile-list a:hover {
+	.site-header__mobile-list button {
+		width: 100%;
+		min-height: 3.2rem;
+		padding-inline: 0.9rem;
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		color: var(--color-text);
+		background: transparent;
+		border: 0;
+		border-radius: 0.75rem;
+		font: inherit;
+		font-size: 1.08rem;
+		font-weight: 700;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.site-header__mobile-list a:hover,
+	.site-header__mobile-list button:hover {
 		color: var(--color-link-hover);
 		background: var(--color-background-soft);
+	}
+
+	.site-header__mobile-cart-count {
+		margin-left: auto;
+		min-width: 1.35rem;
+		height: 1.35rem;
+		display: inline-grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border-radius: 999px;
+		font-size: 0.72rem;
 	}
 
 	.site-header__mobile-contact {
@@ -588,12 +736,17 @@ const showCategoryStrip = false;
 		}
 
 		.site-header__bar {
-			grid-template-columns: minmax(7rem, 1fr) auto;
+			grid-template-columns: minmax(7rem, 1fr) auto auto;
+			gap: 0.2rem;
 		}
 
 		.site-header__nav,
-		.site-header__contact {
+		.site-header__actions {
 			display: none;
+		}
+
+		.site-header__mobile-cart {
+			display: grid;
 		}
 
 		.site-header__mobile-menu {
