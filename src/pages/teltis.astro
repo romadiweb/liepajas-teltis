@@ -1,0 +1,89 @@
+---
+import ProductCategoryLayout from '../layouts/ProductCategoryLayout.astro';
+
+const filters = [
+	{ label: 'Visas teltis', active: true },
+	{ label: 'Stieptās teltis' },
+	{ label: 'Klasiskās teltis' },
+	{ label: 'Paviljoni' },
+	{ label: 'Ar sienām' },
+];
+
+const products = [
+	{
+		badge: 'Populārākā',
+		capacity: 'Līdz 120 personām',
+		category: 'Stieptās teltis',
+		description:
+			'Plaša un vizuāli silta stieptā telts svinībām, kāzām un vasaras pasākumiem. Elastīgā konstrukcija labi pielāgojas zālienam vai nedaudz sarežģītākai norises vietai, saglabājot atvērtu, vieglu un elegantu sajūtu.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1679984740405-6e15c2df8680?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 2-3 h',
+		size: '150 m²',
+		title: 'Stieptā telts 10x15 m',
+	},
+	{
+		capacity: 'Līdz 80 personām',
+		category: 'Klasiskās teltis',
+		description:
+			'Klasiska izmēra pasākumu telts ar sakoptu siluetu un stabilu segumu. Piemērota banketiem, ģimenes svinībām un korporatīviem notikumiem, kur nepieciešama prognozējama platība galdiem, krēsliem un dejām.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1560448075-bb485b067938?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 2 h',
+		size: '96 m²',
+		title: 'Klasiskā telts 8x12 m',
+	},
+	{
+		capacity: 'Līdz 20 personām',
+		category: 'Paviljoni',
+		description:
+			'Kompakts paviljons nelielām zonām, servisa punktiem, sagaidīšanai vai mierīgai atpūtas vietai pasākuma teritorijā. Ātri uzstādāms un viegli kombinējams ar lielākām teltīm.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 30-60 min',
+		size: '25 m²',
+		title: 'Paviljons 5x5 m',
+	},
+	{
+		capacity: 'Līdz 160 personām',
+		category: 'Klasiskās teltis',
+		description:
+			'Ietilpīga klasiskā telts lielākām svinībām un pasākumiem ar skaidru plānojumu. Tā dod pietiekami daudz vietas ēdināšanas zonai, viesu sēdvietām, dekorācijām un papildaprīkojumam.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 3-4 h',
+		size: '200 m²',
+		title: 'Klasiskā telts 10x20 m',
+	},
+	{
+		capacity: 'Līdz 250 personām',
+		category: 'Stieptās teltis',
+		description:
+			'Liela stieptā telts notikumiem, kuros svarīga gan ietilpība, gan atmosfēra. Piemērota plašām svinībām, festivāla zonām vai premium āra pasākumiem ar izteiksmīgu vizuālo noskaņu.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 4 h',
+		size: '300 m²',
+		title: 'Stieptā telts 15x20 m',
+	},
+	{
+		capacity: 'Līdz 60 personām',
+		category: 'Ar sienām',
+		description:
+			'Telts ar sienām pasākumiem, kuros vajadzīga papildu aizsardzība pret vēju, lietu vai vēsāku vakaru. Labs risinājums ēdināšanai, sēdvietām un svinībām mainīgos laikapstākļos.',
+		href: '#kontakti',
+		image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=900',
+		installTime: 'Uzstādīšanas laiks: 1.5-2 h',
+		size: '72 m²',
+		title: 'Telts ar sienām 6x12 m',
+	},
+];
+---
+
+<ProductCategoryLayout
+	breadcrumbCurrent="Teltis"
+	description="Kvalitatīvas un elegantas teltis jebkuram pasākumam - no nelielām svinībām līdz lieliem notikumiem."
+	filters={filters}
+	products={products}
+	title="Teltis"
+/>
