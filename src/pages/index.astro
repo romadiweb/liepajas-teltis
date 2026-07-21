@@ -524,6 +524,19 @@ const contactLinks = [
 		transform: translateX(-50%);
 	}
 
+	.categories-section::after {
+		position: absolute;
+		left: max(1.2rem, calc(50% - 39rem));
+		top: clamp(7rem, 15vw, 12rem);
+		width: clamp(8rem, 18vw, 13rem);
+		height: clamp(6rem, 12vw, 9rem);
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.32) 1.25px, transparent 1.5px);
+		background-size: 0.78rem 0.78rem;
+		content: "";
+		opacity: 0.72;
+		pointer-events: none;
+	}
+
 	.categories-section__inner {
 		position: relative;
 		z-index: 1;
@@ -1130,6 +1143,15 @@ const contactLinks = [
 
 		.categories-section {
 			padding: 3rem 0.9rem 3.6rem;
+		}
+
+		.categories-section::after {
+			left: -2.2rem;
+			top: 5.3rem;
+			width: 8.5rem;
+			height: 6.5rem;
+			background-size: 0.7rem 0.7rem;
+			opacity: 0.52;
 		}
 
 		.categories-section__intro {

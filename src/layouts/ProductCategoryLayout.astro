@@ -76,7 +76,7 @@ const modalProducts = products.map((product) => ({
 		<SiteHeader />
 		<main class="product-category" aria-labelledby="product-category-title">
 			<section class="product-category__hero">
-				<nav class="product-category__breadcrumbs" aria-label="Lapas ceļš">
+				<nav class="breadcrumb-trail product-category__breadcrumbs" aria-label="Lapas ceļš">
 					<a href="/">Sākums</a>
 					<ChevronRight aria-hidden="true" />
 					<span>{breadcrumbCurrent}</span>
@@ -321,26 +321,6 @@ const modalProducts = products.map((product) => ({
 
 	.product-category__hero {
 		padding: clamp(0.65rem, 1.5vw, 1.2rem) clamp(0.1rem, 1vw, 0.2rem) clamp(1.6rem, 3vw, 2.4rem);
-	}
-
-	.product-category__breadcrumbs {
-		display: flex;
-		align-items: center;
-		gap: 0.42rem;
-		color: var(--color-text-muted);
-		font-size: 0.74rem;
-		font-weight: 500;
-	}
-
-	.product-category__breadcrumbs a {
-		color: var(--color-text-muted);
-		text-decoration: none;
-	}
-
-	.product-category__breadcrumbs svg {
-		width: 0.74rem;
-		height: 0.74rem;
-		stroke-width: 2;
 	}
 
 	.product-category__intro {

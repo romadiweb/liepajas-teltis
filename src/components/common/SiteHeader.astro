@@ -1,5 +1,6 @@
 ---
 import hugeIcons from '@iconify-json/hugeicons/icons.json';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
 import Menu from '@lucide/astro/icons/menu';
 import Phone from '@lucide/astro/icons/phone';
 import ShoppingBag from '@lucide/astro/icons/shopping-bag';
@@ -63,12 +64,16 @@ const customCategoryIcons = {
 	},
 };
 
-const navItems = [
-	{ label: 'Noma', href: '#noma' },
-	{ label: 'Piegāde', href: '#piegade' },
-	{ label: 'Par mums', href: '#par-mums' },
-	{ label: 'Kontakti', href: '#kontakti' },
-];
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const isActiveNavItem = (href: string) => {
+	if (!href.startsWith('/')) {
+		return false;
+	}
+
+	const normalizedHref = href.replace(/\/$/, '') || '/';
+	return currentPath === normalizedHref;
+};
 
 const rekvizitiItems = [
 	`© ${new Date().getFullYear()} Liepājas teltis`,
@@ -77,15 +82,24 @@ const rekvizitiItems = [
 ];
 
 const categoryItems = [
-	{ label: 'Teltis', href: '#teltis', icon: customCategoryIcons.eventTent, active: true },
-	{ label: 'Grīdas segumi', href: '#gridas-segumi', icon: getHugeIcon('floor-plan') },
-	{ label: 'Galdi & krēsli', href: '#galdi-kresli', icon: getHugeIcon('dining-table') },
-	{ label: 'Sildītāji', href: '#silditaji', icon: getHugeIcon('heater') },
-	{ label: 'Pufi', href: '#pufi', icon: customCategoryIcons.beanBag },
-	{ label: 'Pasākumu aksesuāri', href: '#aksesuari', icon: getHugeIcon('balloons') },
+	{ label: 'Teltis', href: '/teltis', icon: customCategoryIcons.eventTent },
+	{ label: 'Grīdas segumi', href: '/gridas-segumi', icon: getHugeIcon('floor-plan') },
+	{ label: 'Galdi un krēsli', href: '/galdi-un-kresli', icon: getHugeIcon('dining-table') },
+	{ label: 'Āra sildītāji', href: '/ara-silditaji', icon: getHugeIcon('heater') },
+	{ label: 'Pufi', href: '/pufi', icon: customCategoryIcons.beanBag },
+	{ label: 'Pasākumu aksesuāri', href: '#kontakti', icon: getHugeIcon('balloons') },
+];
+
+const navItems = [
+	{ label: 'Noma', href: '/#kategorijas', hasDropdown: true },
+	{ label: 'Piegāde', href: '/#piegade' },
+	{ label: 'Par mums', href: '/#par-mums' },
+	{ label: 'Kontakti', href: '/kontakti' },
 ];
 
 const showCategoryStrip = false;
+
+const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item.href));
 ---
 
 <header class="site-header">
@@ -99,11 +113,36 @@ const showCategoryStrip = false;
 
 			<nav class="site-header__nav" aria-label="Galvenā navigācija">
 				{
-					navItems.map((item) => (
-						<a href={item.href}>
-							{item.label}
-						</a>
-					))
+					navItems.map((item) =>
+						item.hasDropdown ? (
+							<div class="site-header__nav-dropdown">
+								<a
+									class:list={{ 'is-active': isRentalCategoryActive }}
+									href={item.href}
+									aria-current={isRentalCategoryActive ? 'page' : undefined}
+								>
+									<span>{item.label}</span>
+									<ChevronDown class="site-header__dropdown-indicator" aria-hidden="true" />
+								</a>
+								<div class="site-header__dropdown-panel" aria-label="Nomas kategorijas">
+									{categoryItems.map((category) => (
+										<a class:list={{ 'is-active': isActiveNavItem(category.href) }} href={category.href}>
+											<svg
+												aria-hidden="true"
+												viewBox={`0 0 ${category.icon.width} ${category.icon.height}`}
+												set:html={category.icon.body}
+											/>
+											<span>{category.label}</span>
+										</a>
+									))}
+								</div>
+							</div>
+						) : (
+							<a class:list={{ 'is-active': isActiveNavItem(item.href) }} href={item.href} aria-current={isActiveNavItem(item.href) ? 'page' : undefined}>
+								{item.label}
+							</a>
+						),
+					)
 				}
 			</nav>
 
@@ -140,7 +179,18 @@ const showCategoryStrip = false;
 						{
 							navItems.map((item) => (
 								<li>
-									<a href={item.href}>{item.label}</a>
+									<a class:list={{ 'is-active': isActiveNavItem(item.href) }} href={item.href} aria-current={isActiveNavItem(item.href) ? 'page' : undefined}>{item.label}</a>
+									{
+										item.hasDropdown && (
+											<ul class="site-header__mobile-sublist" aria-label="Nomas kategorijas">
+												{categoryItems.map((category) => (
+													<li>
+														<a class:list={{ 'is-active': isActiveNavItem(category.href) }} href={category.href}>{category.label}</a>
+													</li>
+												))}
+											</ul>
+										)
+									}
 								</li>
 							))
 						}
@@ -174,7 +224,7 @@ const showCategoryStrip = false;
 				<nav class="site-header__categories" aria-label="Nomas kategorijas">
 					{categoryItems.map((item) => {
 						return (
-							<a class={item.active ? 'is-active' : undefined} href={item.href}>
+							<a class={isActiveNavItem(item.href) ? 'is-active' : undefined} href={item.href}>
 								<svg
 									aria-hidden="true"
 									class="site-header__category-icon"
@@ -217,7 +267,7 @@ const showCategoryStrip = false;
 	.site-header {
 		position: sticky;
 		top: 0;
-		z-index: 30;
+		z-index: 80;
 		padding: 0 clamp(1rem, 3vw, 1.5rem) 0.65rem;
 		background: linear-gradient(180deg, var(--color-background) 0%, rgba(246, 241, 231, 0) 100%);
 	}
@@ -229,7 +279,7 @@ const showCategoryStrip = false;
 	.site-header__shell {
 		max-width: 1200px;
 		margin: 0 auto;
-		overflow: hidden;
+		overflow: visible;
 		display: grid;
 		gap: 0;
 		background: #6B7A4A;
@@ -240,6 +290,7 @@ const showCategoryStrip = false;
 	}
 
 	.site-header__bar {
+		position: relative;
 		width: 100%;
 		min-height: 4.35rem;
 		margin: 0;
@@ -267,7 +318,9 @@ const showCategoryStrip = false;
 	.site-header__menu-button,
 	.site-header__mobile-list button,
 	.site-header__mobile-list a,
-	.site-header__nav a,
+	.site-header__nav > a,
+	.site-header__nav-dropdown > a,
+	.site-header__dropdown-panel a,
 	.site-header__categories a {
 		text-decoration: none;
 		transition:
@@ -300,13 +353,16 @@ const showCategoryStrip = false;
 
 	.site-header__nav {
 		justify-self: center;
+		align-self: stretch;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: clamp(0.45rem, 1.5vw, 0.95rem);
 	}
 
-	.site-header__nav a {
+	.site-header__nav > a,
+	.site-header__nav-dropdown > a {
+		position: relative;
 		display: inline-flex;
 		min-height: 2.15rem;
 		align-items: center;
@@ -316,6 +372,137 @@ const showCategoryStrip = false;
 		font-size: 0.94rem;
 		font-weight: 600;
 		opacity: 0.95;
+	}
+
+	.site-header__nav > a::after,
+	.site-header__nav-dropdown > a::after {
+		position: absolute;
+		right: 0.72rem;
+		bottom: 0.18rem;
+		left: 0.72rem;
+		height: 2px;
+		background: currentColor;
+		border-radius: 999px;
+		content: "";
+		opacity: 0;
+		transform: scaleX(0.42);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease;
+	}
+
+	.site-header__nav > a.is-active,
+	.site-header__nav-dropdown > a.is-active {
+		color: rgba(255, 255, 255, 0.9);
+		background: transparent;
+		opacity: 1;
+	}
+
+	.site-header__nav > a.is-active::after,
+	.site-header__nav > a:hover::after,
+	.site-header__nav-dropdown > a.is-active::after,
+	.site-header__nav-dropdown > a:hover::after {
+		opacity: 0.86;
+		transform: scaleX(1);
+	}
+
+	.site-header__nav-dropdown {
+		position: relative;
+		align-self: stretch;
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.site-header__nav-dropdown::before {
+		position: absolute;
+		top: 100%;
+		right: -9rem;
+		left: -9rem;
+		height: 1.7rem;
+		content: "";
+	}
+
+	.site-header__dropdown-indicator {
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-left: 0.18rem;
+		flex: 0 0 auto;
+		stroke-width: 2.2;
+		transition: transform 180ms ease;
+	}
+
+	.site-header__nav-dropdown:hover .site-header__dropdown-indicator,
+	.site-header__nav-dropdown:focus-within .site-header__dropdown-indicator {
+		transform: rotate(180deg);
+	}
+
+	.site-header__dropdown-panel {
+		position: absolute;
+		top: calc(100% + 0.72rem - 1px);
+		left: 50%;
+		z-index: 100;
+		width: max-content;
+		min-width: 17.5rem;
+		padding: 0.62rem;
+		display: grid;
+		gap: 0.18rem;
+		background: rgba(255, 255, 255, 0.96);
+		border: 1px solid rgba(222, 212, 198, 0.88);
+		border-top: 0;
+		border-radius: 0 0 1rem 1rem;
+		box-shadow: 0 18px 40px rgba(75, 64, 56, 0.16);
+		opacity: 0;
+		pointer-events: none;
+		transform: translate(-50%, -0.25rem);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease,
+			visibility 0s linear 180ms;
+		visibility: hidden;
+	}
+
+	.site-header__nav-dropdown:hover .site-header__dropdown-panel,
+	.site-header__nav-dropdown:focus-within .site-header__dropdown-panel {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(-50%, 0);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease;
+		visibility: visible;
+	}
+
+	.site-header__dropdown-panel a {
+		min-height: 2.65rem;
+		padding: 0.48rem 0.62rem;
+		display: grid;
+		grid-template-columns: 1.75rem minmax(0, 1fr);
+		align-items: center;
+		gap: 0.58rem;
+		color: var(--color-bark);
+		border-radius: 0.72rem;
+		font-size: 0.88rem;
+		font-weight: 680;
+		line-height: 1.2;
+		opacity: 1;
+	}
+
+	.site-header__dropdown-panel a::after {
+		display: none;
+	}
+
+	.site-header__dropdown-panel a:hover,
+	.site-header__dropdown-panel a.is-active {
+		color: var(--color-bark);
+		background: var(--color-background-soft);
+		transform: none;
+	}
+
+	.site-header__dropdown-panel svg {
+		width: 1.16rem;
+		height: 1.16rem;
+		color: #6B7A4A;
+		stroke-width: 1.85;
 	}
 
 	.site-header__contact {
@@ -461,10 +648,16 @@ const showCategoryStrip = false;
 		transition: transform 0.22s ease;
 	}
 
-	.site-header__nav a:hover {
-		color: var(--color-background);
+	.site-header__nav > a:hover,
+	.site-header__nav-dropdown > a:hover {
+		color: rgba(255, 255, 255, 0.9);
 		opacity: 1;
 		transform: translateY(-3px);
+	}
+
+	.site-header__nav > a.is-active:hover,
+	.site-header__nav-dropdown > a.is-active:hover {
+		transform: none;
 	}
 
 	.site-header__contact:hover {
@@ -608,12 +801,67 @@ const showCategoryStrip = false;
 	}
 
 	.site-header__mobile-list a {
+		position: relative;
 		min-height: 3.2rem;
 		padding-inline: 0.9rem;
 		color: var(--color-text);
 		border-radius: 0.75rem;
 		font-size: 1.08rem;
 		font-weight: 700;
+	}
+
+	.site-header__mobile-list a.is-active {
+		color: var(--color-link-hover);
+		background: var(--color-background-soft);
+	}
+
+	.site-header__mobile-list a.is-active::before {
+		position: absolute;
+		top: 0.78rem;
+		bottom: 0.78rem;
+		left: 0.18rem;
+		width: 3px;
+		background: var(--color-primary);
+		border-radius: 999px;
+		content: "";
+	}
+
+	.site-header__mobile-sublist {
+		position: relative;
+		margin: -0.12rem 0 0.45rem;
+		padding: 0 0 0 1.2rem;
+		display: grid;
+		gap: 0.12rem;
+		list-style: none;
+	}
+
+	.site-header__mobile-sublist::before {
+		position: absolute;
+		top: 0.3rem;
+		bottom: 0.42rem;
+		left: 0.45rem;
+		width: 1px;
+		background: rgba(107, 122, 74, 0.28);
+		border-radius: 999px;
+		content: "";
+	}
+
+	.site-header__mobile-sublist a {
+		min-height: 2.42rem;
+		padding-inline: 0.75rem;
+		color: var(--color-text-muted);
+		font-size: 0.92rem;
+		font-weight: 650;
+	}
+
+	.site-header__mobile-sublist a.is-active {
+		color: var(--color-link-hover);
+		background: var(--color-background-soft);
+	}
+
+	.site-header__mobile-sublist a.is-active::before {
+		top: 0.58rem;
+		bottom: 0.58rem;
 	}
 
 	.site-header__mobile-list button {
