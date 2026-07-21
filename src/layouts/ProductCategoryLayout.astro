@@ -51,6 +51,9 @@ interface Props {
 
 const { breadcrumbCurrent, description, filters, products, title } = Astro.props;
 const allFilterLabel = filters[0]?.label;
+const sizeOptions = Array.from(new Set(products.map((product) => product.size).filter(Boolean))).sort((first, second) =>
+	first.localeCompare(second, 'lv'),
+);
 const modalProducts = products.map((product) => ({
 	additionalInfo: product.additionalInfo ?? '',
 	capacity: product.capacity,
@@ -84,13 +87,23 @@ const modalProducts = products.map((product) => ({
 						<h1 id="product-category-title">{title}</h1>
 						<p>{description}</p>
 					</div>
-					<a class="product-category__help" href="#kontakti">
-						<MessageCircleQuestionMark aria-hidden="true" />
-						<span>
-							<strong>Nepieciešama palīdzība?</strong>
-							<span>Sazinies ar mums</span>
-						</span>
-					</a>
+					<div class="product-category__intro-actions">
+						<a class="product-category__help" href="#kontakti">
+							<MessageCircleQuestionMark aria-hidden="true" />
+							<span>
+								<strong>Nepieciešama palīdzība?</strong>
+								<span>Sazinies ar mums</span>
+							</span>
+						</a>
+						<label class="product-category__size-filter product-category__size-filter--mobile">
+							<Ruler aria-hidden="true" />
+							<select data-product-size-filter aria-label="Filtrēt pēc izmēra">
+								<option value="all">Visi izmēri</option>
+								{sizeOptions.map((size) => <option value={size}>{size}</option>)}
+							</select>
+							<ChevronDown aria-hidden="true" />
+						</label>
+					</div>
 				</div>
 			</section>
 
@@ -109,11 +122,14 @@ const modalProducts = products.map((product) => ({
 						))
 					}
 				</div>
-				<button class="product-category__select" type="button">
+				<label class="product-category__size-filter product-category__size-filter--desktop">
 					<Ruler aria-hidden="true" />
-					<span>Izmērs</span>
+					<select data-product-size-filter aria-label="Filtrēt pēc izmēra">
+						<option value="all">Visi izmēri</option>
+						{sizeOptions.map((size) => <option value={size}>{size}</option>)}
+					</select>
 					<ChevronDown aria-hidden="true" />
-				</button>
+				</label>
 			</section>
 
 			<section class="product-category__grid" aria-label={`${title} piedāvājums`}>
@@ -124,6 +140,7 @@ const modalProducts = products.map((product) => ({
 							class="product-card"
 							data-product-category={product.category}
 							data-product-open={index}
+							data-product-size={product.size}
 							role="button"
 							tabindex="0"
 						>
@@ -352,6 +369,13 @@ const modalProducts = products.map((product) => ({
 		line-height: 1.62;
 	}
 
+	.product-category__intro-actions {
+		display: flex;
+		align-items: center;
+		justify-self: end;
+		gap: 0.8rem;
+	}
+
 	.product-category__help {
 		display: inline-flex;
 		align-items: center;
@@ -413,7 +437,7 @@ const modalProducts = products.map((product) => ({
 	}
 
 	.product-category__tab,
-	.product-category__select {
+	.product-category__size-filter {
 		min-height: 2.6rem;
 		border: 1px solid transparent;
 		border-radius: 0.7rem;
@@ -463,8 +487,9 @@ const modalProducts = products.map((product) => ({
 		transform: scaleX(1);
 	}
 
-	.product-category__select {
-		padding: 0 0.8rem;
+	.product-category__size-filter {
+		position: relative;
+		padding: 0 0.6rem 0 0.8rem;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.45rem;
@@ -473,14 +498,45 @@ const modalProducts = products.map((product) => ({
 		border-color: rgba(222, 212, 198, 0.96);
 	}
 
-	.product-category__select:hover {
+	.product-category__size-filter:hover {
 		background: var(--color-background-soft);
 	}
 
-	.product-category__select svg {
+	.product-category__size-filter svg {
+		flex: 0 0 auto;
 		width: 1rem;
 		height: 1rem;
 		stroke-width: 2;
+	}
+
+	.product-category__size-filter select {
+		min-width: 7.5rem;
+		padding: 0 1.25rem 0 0;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		cursor: pointer;
+		font: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		outline: none;
+		appearance: none;
+	}
+
+	.product-category__size-filter select:focus-visible {
+		outline: 2px solid rgba(107, 122, 74, 0.35);
+		outline-offset: 4px;
+		border-radius: 0.45rem;
+	}
+
+	.product-category__size-filter svg:last-child {
+		position: absolute;
+		right: 0.62rem;
+		pointer-events: none;
+	}
+
+	.product-category__size-filter--mobile {
+		display: none;
 	}
 
 	.product-category__grid {
@@ -1237,10 +1293,17 @@ const modalProducts = products.map((product) => ({
 		font: inherit;
 		font-size: 1rem;
 		line-height: 1;
+		transition: background-color 180ms ease;
 	}
 
-	.product-modal__quantity button:hover {
-		background: rgba(107, 122, 74, 0.12);
+	.product-modal__quantity button.is-pressed {
+		background: rgba(107, 122, 74, 0.14);
+	}
+
+	@media (hover: hover) {
+		.product-modal__quantity button:hover {
+			background: rgba(107, 122, 74, 0.12);
+		}
 	}
 
 	.product-modal__quantity button:disabled {
@@ -1248,7 +1311,8 @@ const modalProducts = products.map((product) => ({
 		opacity: 0.42;
 	}
 
-	.product-modal__quantity button:disabled:hover {
+	.product-modal__quantity button:disabled:hover,
+	.product-modal__quantity button:disabled.is-pressed {
 		background: transparent;
 	}
 
@@ -1348,8 +1412,13 @@ const modalProducts = products.map((product) => ({
 			gap: 1rem;
 		}
 
+		.product-category__intro-actions {
+			width: 100%;
+			justify-content: space-between;
+		}
+
 		.product-category__help {
-			width: fit-content;
+			min-width: 0;
 		}
 
 		.product-category__controls {
@@ -1357,7 +1426,12 @@ const modalProducts = products.map((product) => ({
 			flex-direction: column;
 		}
 
-		.product-category__select {
+		.product-category__size-filter--desktop {
+			display: none;
+		}
+
+		.product-category__size-filter--mobile {
+			display: inline-flex;
 			width: fit-content;
 		}
 
@@ -1447,9 +1521,14 @@ const modalProducts = products.map((product) => ({
 			left: 0.6rem;
 		}
 
-		.product-category__select {
+		.product-category__size-filter {
 			min-height: 2.35rem;
 			font-size: 0.75rem;
+		}
+
+		.product-category__size-filter select {
+			min-width: 5.6rem;
+			max-width: 6.8rem;
 		}
 
 		.product-category__grid {
@@ -1669,6 +1748,7 @@ const modalProducts = products.map((product) => ({
 	};
 
 	const productFilterButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-filter]');
+	const productSizeFilters = document.querySelectorAll<HTMLSelectElement>('[data-product-size-filter]');
 	const productCards = document.querySelectorAll<HTMLElement>('[data-product-category]');
 	const productModalData = document.querySelector<HTMLScriptElement>('#product-modal-data');
 	const productModal = document.querySelector<HTMLElement>('[data-product-modal]');
@@ -1715,11 +1795,33 @@ const modalProducts = products.map((product) => ({
 	let activeModalProduct: ProductModalItem | null = null;
 	let activeGalleryIndex = 0;
 	let activeModalQuantity = 1;
+	let activeProductCategoryFilter = 'all';
+	let activeProductSizeFilter = 'all';
+	let activeModalDateInput: HTMLInputElement | null = null;
 	let viewedGalleryIndexes = new Set<number>();
+
+	const applyProductFilters = () => {
+		productCards.forEach((card) => {
+			const matchesCategory = activeProductCategoryFilter === 'all' || card.dataset.productCategory === activeProductCategoryFilter;
+			const matchesSize = activeProductSizeFilter === 'all' || card.dataset.productSize === activeProductSizeFilter;
+			card.hidden = !matchesCategory || !matchesSize;
+		});
+	};
+
+	const syncProductSizeFilters = (size: string) => {
+		productSizeFilters.forEach((filter) => {
+			filter.value = size;
+		});
+	};
 
 	productFilterButtons.forEach((button) => {
 		button.addEventListener('click', () => {
-			const activeFilter = button.dataset.productFilter ?? 'all';
+			activeProductCategoryFilter = button.dataset.productFilter ?? 'all';
+
+			if (activeProductCategoryFilter === 'all') {
+				activeProductSizeFilter = 'all';
+				syncProductSizeFilters('all');
+			}
 
 			productFilterButtons.forEach((filterButton) => {
 				const isActive = filterButton === button;
@@ -1727,9 +1829,15 @@ const modalProducts = products.map((product) => ({
 				filterButton.setAttribute('aria-pressed', String(isActive));
 			});
 
-			productCards.forEach((card) => {
-				card.hidden = activeFilter !== 'all' && card.dataset.productCategory !== activeFilter;
-			});
+			applyProductFilters();
+		});
+	});
+
+	productSizeFilters.forEach((filter) => {
+		filter.addEventListener('change', () => {
+			activeProductSizeFilter = filter.value || 'all';
+			syncProductSizeFilters(activeProductSizeFilter);
+			applyProductFilters();
 		});
 	});
 
@@ -1759,6 +1867,40 @@ const modalProducts = products.map((product) => ({
 		if (productModalQuantityDecrease) {
 			productModalQuantityDecrease.disabled = activeModalQuantity <= 1;
 		}
+	};
+
+	const flashQuantityButton = (button: HTMLButtonElement | null) => {
+		if (!button || button.disabled) return;
+		button.classList.add('is-pressed');
+		window.setTimeout(() => {
+			button.classList.remove('is-pressed');
+			button.blur();
+		}, 180);
+	};
+
+	const bindDateInputToggle = (input: HTMLInputElement | null) => {
+		if (!input) return;
+
+		input.addEventListener('pointerdown', (event) => {
+			if (document.activeElement === input && activeModalDateInput === input) {
+				event.preventDefault();
+				input.blur();
+				activeModalDateInput = null;
+				return;
+			}
+
+			activeModalDateInput = input;
+		});
+
+		input.addEventListener('focus', () => {
+			activeModalDateInput = input;
+		});
+
+		input.addEventListener('blur', () => {
+			if (activeModalDateInput === input) {
+				activeModalDateInput = null;
+			}
+		});
 	};
 
 	const getActiveGallery = () => activeModalProduct?.galleryImages?.filter(Boolean) ?? [];
@@ -1997,6 +2139,9 @@ const modalProducts = products.map((product) => ({
 		button.addEventListener('click', closeFullscreenImage);
 	});
 
+	bindDateInputToggle(productModalDateStart);
+	bindDateInputToggle(productModalDateEnd);
+
 	productModalDateStart?.addEventListener('change', () => {
 		if (!productModalDateEnd || !productModalDateStart) return;
 		productModalDateEnd.min = productModalDateStart.value;
@@ -2007,10 +2152,12 @@ const modalProducts = products.map((product) => ({
 	});
 
 	productModalQuantityDecrease?.addEventListener('click', () => {
+		flashQuantityButton(productModalQuantityDecrease);
 		setModalQuantity(activeModalQuantity - 1);
 	});
 
 	productModalQuantityIncrease?.addEventListener('click', () => {
+		flashQuantityButton(productModalQuantityIncrease);
 		setModalQuantity(activeModalQuantity + 1);
 	});
 

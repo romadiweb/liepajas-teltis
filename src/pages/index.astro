@@ -4,6 +4,7 @@ import Armchair from '@lucide/astro/icons/armchair';
 import Award from '@lucide/astro/icons/award';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CalendarDays from '@lucide/astro/icons/calendar-days';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
 import FloatingActions from '../components/common/FloatingActions.astro';
 import Heater from '@lucide/astro/icons/heater';
 import Layers from '@lucide/astro/icons/layers';
@@ -223,98 +224,113 @@ const contactLinks = [
 					</div>
 				</div>
 
-				<form class="contact-form" name="noma-pieteikums" method="post" data-netlify="true">
-					<input type="hidden" name="form-name" value="noma-pieteikums" />
+				<div class="contact-form-shell" data-contact-form-shell>
+					<button
+						class="contact-form-toggle"
+						type="button"
+						aria-expanded="false"
+						aria-controls="contact-form-panel"
+						data-contact-form-toggle
+						data-open-label="Aizpildīt pieteikumu"
+						data-close-label="Paslēpt formu"
+					>
+						<span data-contact-form-toggle-label>Aizpildīt pieteikumu</span>
+						<ChevronDown aria-hidden="true" />
+					</button>
 
-					<fieldset class="fieldset contact-form__field">
-						<label class="fieldset-legend" for="contact-name">Vārds, uzvārds</label>
-						<div class="contact-form__control">
-							<UserRound aria-hidden="true" />
-							<input
-								class="input contact-form__input"
-								id="contact-name"
-								name="vards_uzvards"
-								type="text"
-								autocomplete="name"
-								required
-							/>
+					<form class="contact-form" id="contact-form-panel" name="noma-pieteikums" method="post" data-netlify="true">
+						<input type="hidden" name="form-name" value="noma-pieteikums" />
+
+						<fieldset class="fieldset contact-form__field">
+							<label class="fieldset-legend" for="contact-name">Vārds, uzvārds</label>
+							<div class="contact-form__control">
+								<UserRound aria-hidden="true" />
+								<input
+									class="input contact-form__input"
+									id="contact-name"
+									name="vards_uzvards"
+									type="text"
+									autocomplete="name"
+									required
+								/>
+							</div>
+						</fieldset>
+
+						<fieldset class="fieldset contact-form__field">
+							<label class="fieldset-legend" for="contact-phone">Telefona numurs</label>
+							<div class="contact-form__control">
+								<Phone aria-hidden="true" />
+								<input
+									class="input contact-form__input"
+									id="contact-phone"
+									name="telefona_numurs"
+									type="tel"
+									autocomplete="tel"
+									required
+								/>
+							</div>
+						</fieldset>
+
+						<fieldset class="fieldset contact-form__field contact-form__field--full">
+							<label class="fieldset-legend" for="contact-email">Epasts</label>
+							<div class="contact-form__control">
+								<Mail aria-hidden="true" />
+								<input
+									class="input contact-form__input"
+									id="contact-email"
+									name="epasts"
+									type="email"
+									autocomplete="email"
+									required
+								/>
+							</div>
+						</fieldset>
+
+						<fieldset class="fieldset contact-form__field">
+							<label class="fieldset-legend" for="contact-date">Pasākuma datums</label>
+							<div class="contact-form__control contact-form__control--date">
+								<CalendarDays aria-hidden="true" />
+								<input class="input contact-form__input" id="contact-date" name="pasakuma_datums" type="date" required />
+							</div>
+						</fieldset>
+
+						<fieldset class="fieldset contact-form__field">
+							<label class="fieldset-legend" for="contact-location">Pasākuma norises vieta</label>
+							<div class="contact-form__control">
+								<MapPin aria-hidden="true" />
+								<input
+									class="input contact-form__input"
+									id="contact-location"
+									name="pasakuma_norises_vieta"
+									type="text"
+									required
+								/>
+							</div>
+						</fieldset>
+
+						<fieldset class="fieldset contact-form__field contact-form__field--full">
+							<label class="fieldset-legend" for="contact-inventory">Vēlamais inventārs</label>
+							<div class="contact-form__control contact-form__control--textarea">
+								<PackageCheck aria-hidden="true" />
+								<textarea
+									class="textarea contact-form__textarea"
+									id="contact-inventory"
+									name="velamais_inventars"
+									rows="5"
+									required
+								></textarea>
+							</div>
+						</fieldset>
+
+						<div class="contact-form__footer">
+							<p>Nosūtot formu, piekrītat, ka sazināsimies par jūsu pieteikumu.</p>
+							<button class="btn contact-form__button" type="submit">
+								<span>Nosūtīt pieteikumu</span>
+								<Send aria-hidden="true" />
+							</button>
 						</div>
-					</fieldset>
-
-					<fieldset class="fieldset contact-form__field">
-						<label class="fieldset-legend" for="contact-phone">Telefona numurs</label>
-						<div class="contact-form__control">
-							<Phone aria-hidden="true" />
-							<input
-								class="input contact-form__input"
-								id="contact-phone"
-								name="telefona_numurs"
-								type="tel"
-								autocomplete="tel"
-								required
-							/>
-						</div>
-					</fieldset>
-
-					<fieldset class="fieldset contact-form__field contact-form__field--full">
-						<label class="fieldset-legend" for="contact-email">Epasts</label>
-						<div class="contact-form__control">
-							<Mail aria-hidden="true" />
-							<input
-								class="input contact-form__input"
-								id="contact-email"
-								name="epasts"
-								type="email"
-								autocomplete="email"
-								required
-							/>
-						</div>
-					</fieldset>
-
-					<fieldset class="fieldset contact-form__field">
-						<label class="fieldset-legend" for="contact-date">Pasākuma datums</label>
-						<div class="contact-form__control contact-form__control--date">
-							<CalendarDays aria-hidden="true" />
-							<input class="input contact-form__input" id="contact-date" name="pasakuma_datums" type="date" required />
-						</div>
-					</fieldset>
-
-					<fieldset class="fieldset contact-form__field">
-						<label class="fieldset-legend" for="contact-location">Pasākuma norises vieta</label>
-						<div class="contact-form__control">
-							<MapPin aria-hidden="true" />
-							<input
-								class="input contact-form__input"
-								id="contact-location"
-								name="pasakuma_norises_vieta"
-								type="text"
-								required
-							/>
-						</div>
-					</fieldset>
-
-					<fieldset class="fieldset contact-form__field contact-form__field--full">
-						<label class="fieldset-legend" for="contact-inventory">Vēlamais inventārs</label>
-						<div class="contact-form__control contact-form__control--textarea">
-							<PackageCheck aria-hidden="true" />
-							<textarea
-								class="textarea contact-form__textarea"
-								id="contact-inventory"
-								name="velamais_inventars"
-								rows="5"
-								required
-							></textarea>
-						</div>
-					</fieldset>
-
-					<div class="contact-form__footer">
-						<p>Nosūtot formu, piekrītat, ka sazināsimies par jūsu pieteikumu.</p>
-						<button class="btn contact-form__button" type="submit">
-							<span>Nosūtīt pieteikumu</span>
-							<Send aria-hidden="true" />
-						</button>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</section>
 	</main>
@@ -779,6 +795,14 @@ const contactLinks = [
 		line-height: 1.2;
 	}
 
+	.contact-form-shell {
+		min-width: 0;
+	}
+
+	.contact-form-toggle {
+		display: none;
+	}
+
 	.contact-form {
 		position: relative;
 		padding: clamp(1.7rem, 3vw, 2.35rem);
@@ -1216,11 +1240,82 @@ const contactLinks = [
 			font-size: 0.92rem;
 		}
 
+		.contact-form-shell {
+			display: grid;
+			gap: 0.85rem;
+		}
+
+		.contact-form-toggle {
+			min-height: 3rem;
+			padding: 0 1.05rem 0 1.2rem;
+			display: inline-flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.9rem;
+			color: var(--color-surface);
+			background: var(--color-primary);
+			border: 0;
+			border-radius: 999px;
+			box-shadow: 0 12px 24px rgba(138, 146, 113, 0.22);
+			cursor: pointer;
+			font: inherit;
+			font-size: 0.74rem;
+			font-weight: 850;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+		}
+
+		.contact-form-toggle svg {
+			width: 1rem;
+			height: 1rem;
+			transition: transform 220ms ease;
+		}
+
+		.contact-form-shell.is-open .contact-form-toggle svg {
+			transform: rotate(180deg);
+		}
+
 		.contact-form {
 			grid-template-columns: 1fr;
 			gap: 0.92rem;
+			max-height: 0;
 			padding: 1rem;
+			padding-top: 0;
+			padding-bottom: 0;
+			overflow: hidden;
+			border-width: 0;
 			border-radius: 20px;
+			box-shadow: none;
+			opacity: 0;
+			transform: translateY(-0.6rem);
+			visibility: hidden;
+			transition:
+				max-height 360ms ease,
+				padding 260ms ease,
+				border-width 260ms ease,
+				box-shadow 260ms ease,
+				opacity 220ms ease,
+				transform 260ms ease,
+				visibility 0s linear 360ms;
+		}
+
+		.contact-form-shell.is-open .contact-form {
+			max-height: 62rem;
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+			border-width: 1px;
+			box-shadow: 0 18px 40px rgba(75, 64, 56, 0.1);
+			opacity: 1;
+			transform: translateY(0);
+			visibility: visible;
+			transition:
+				max-height 420ms ease,
+				padding 260ms ease,
+				border-width 260ms ease,
+				box-shadow 260ms ease,
+				opacity 260ms ease 80ms,
+				transform 300ms ease,
+				visibility 0s;
 		}
 
 		.contact-form .fieldset-legend {
@@ -1256,6 +1351,47 @@ const contactLinks = [
 
 <script>
 	const revealSection = document.querySelector('[data-reveal-section]');
+	const contactFormShell = document.querySelector('[data-contact-form-shell]');
+	const contactFormToggle = document.querySelector('[data-contact-form-toggle]');
+	const contactFormToggleLabel = document.querySelector('[data-contact-form-toggle-label]');
+	const contactFormPanel = document.querySelector('#contact-form-panel');
+	const contactFormMobileQuery = window.matchMedia('(max-width: 640px)');
+
+	const updateContactFormState = () => {
+		if (!contactFormShell || !contactFormToggle || !contactFormPanel) return;
+
+		const isMobile = contactFormMobileQuery.matches;
+		const isOpen = contactFormShell.classList.contains('is-open');
+		const shouldCollapse = isMobile && !isOpen;
+
+		contactFormToggle.setAttribute('aria-expanded', String(isMobile && isOpen));
+		contactFormPanel.inert = shouldCollapse;
+
+		if (contactFormToggleLabel) {
+			contactFormToggleLabel.textContent = isOpen ? contactFormToggle.dataset.closeLabel : contactFormToggle.dataset.openLabel;
+		}
+	};
+
+	contactFormToggle?.addEventListener('click', () => {
+		contactFormShell?.classList.toggle('is-open');
+		updateContactFormState();
+	});
+
+	contactFormMobileQuery.addEventListener('change', () => {
+		if (!contactFormMobileQuery.matches) {
+			contactFormShell?.classList.add('is-open');
+		} else {
+			contactFormShell?.classList.remove('is-open');
+		}
+
+		updateContactFormState();
+	});
+
+	if (!contactFormMobileQuery.matches) {
+		contactFormShell?.classList.add('is-open');
+	}
+
+	updateContactFormState();
 
 	if (revealSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		document.documentElement.classList.add('reveal-ready');
