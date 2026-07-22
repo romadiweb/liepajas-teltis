@@ -443,10 +443,7 @@ const mapPins = [
 		}
 
 		.delivery-hero__flow {
-			position: relative;
-			min-height: 10.4rem;
-			display: block;
-			isolation: isolate;
+			display: flow-root;
 		}
 
 		.delivery-hero__media {
@@ -454,16 +451,14 @@ const mapPins = [
 		}
 
 		.delivery-hero__mobile-media {
-			position: absolute;
-			z-index: 0;
-			top: -2.5rem;
-			right: -6.25rem;
 			width: min(76vw, 19rem);
 			height: 10.2rem;
-			margin: 0;
+			margin: -1.1rem -5.25rem 0 5.45rem;
 			display: block;
+			float: right;
 			overflow: hidden;
-			pointer-events: none;
+			shape-outside: polygon(42% 0, 100% 0, 100% 100%, 18% 100%, 12% 52%);
+			shape-margin: 0.3rem;
 		}
 
 		.delivery-hero__mobile-media img {
@@ -476,12 +471,9 @@ const mapPins = [
 		}
 
 		.delivery-hero__flow p {
-			position: relative;
-			z-index: 1;
-			width: min(48%, 10.75rem);
 			max-width: none;
-			min-height: 0;
-			margin: 0;
+			min-height: 11.7rem;
+			margin-left: 0;
 		}
 
 		.delivery-coverage {
