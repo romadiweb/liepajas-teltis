@@ -24,8 +24,7 @@ import Tent from '@lucide/astro/icons/tent';
 import Truck from '@lucide/astro/icons/truck';
 import UserRound from '@lucide/astro/icons/user-round';
 
-const heroImage =
-	'https://images.unsplash.com/photo-1679984740405-6e15c2df8680?auto=format&fit=crop&ixlib=rb-4.1.0&q=82&w=1800';
+const heroImage = '/images/landing-tent-pic.svg';
 
 const heroFeatures = [
 	{
@@ -128,7 +127,10 @@ const contactLinks = [
 			<div class="landing-hero__shell">
 				<div class="landing-hero__content">
 					<p class="landing-hero__eyebrow">Telšu noma Liepājā un visā Latvijā</p>
-					<h1 id="landing-hero-title"><span>Radām vietu</span> īpašiem mirkļiem</h1>
+					<h1 id="landing-hero-title">
+						<span class="landing-hero__title-accent">Radām vietu</span>
+						<span class="landing-hero__title-rest">īpašiem mirkļiem</span>
+					</h1>
 					<p class="landing-hero__lead">
 						Kvalitatīvas teltis un inventārs jebkuram pasākumam - no nelielām svinībām līdz lieliem
 						notikumiem.
@@ -152,7 +154,6 @@ const contactLinks = [
 					</a>
 				</div>
 
-				<div class="landing-hero__dots" aria-hidden="true"></div>
 				<figure class="landing-hero__media" aria-label="Pasākumu telts piemērs">
 					<img
 						alt="Balta pasākumu telts ar dekoratīvām gaismām zaļā ārtelpā"
@@ -338,30 +339,42 @@ const contactLinks = [
 </BaseLayout>
 
 <style>
+	:global(.site-header) {
+		background: transparent;
+	}
+
 	.landing-hero {
+		--hero-art-height: clamp(56rem, 73.4vw, 88rem);
+		--hero-art-width: clamp(60rem, 76.8vw, 92rem);
+		--hero-art-x: clamp(10rem, 23.4vw, 28rem);
+		--hero-art-y: clamp(-8rem, -6.7vw, -4rem);
+		--hero-lift: clamp(7.25rem, 12.5vw, 15rem);
+		--hero-text-gap: clamp(5.2rem, 5.6vw, 6.2rem);
 		position: relative;
-		min-height: clamp(39rem, 70vw, 46rem);
-		padding: clamp(4rem, 7vw, 6.25rem) 0 clamp(3.8rem, 6vw, 5rem);
+		min-height: clamp(45rem, 62vw, 51rem);
+		margin-top: calc(var(--hero-lift) * -1);
+		padding: calc(var(--hero-lift) + var(--hero-text-gap)) 0 clamp(2.4rem, 4vw, 3.4rem);
 		overflow: hidden;
-		background:
-			radial-gradient(circle at 72% 26%, rgba(203, 183, 154, 0.18), transparent 22rem),
-			var(--color-background);
+		background: var(--color-background);
 	}
 
 	.landing-hero__shell {
-		position: relative;
+		position: static;
 		max-width: 1200px;
-		min-height: clamp(30rem, 55vw, 36rem);
+		min-height: clamp(34rem, 48vw, 39rem);
 		margin: 0 auto;
-		padding: 0 clamp(1.4rem, 4vw, 2rem);
+		padding: 0 clamp(1.65rem, 4.4vw, 2.5rem);
 		display: grid;
 		align-items: center;
+		overflow: visible;
 	}
 
 	.landing-hero__content {
 		position: relative;
 		z-index: 3;
-		width: min(33.5rem, 46vw);
+		width: min(42rem, 48vw);
+		padding-top: clamp(0.25rem, 1.8vw, 1.15rem);
+		transform: translateY(clamp(-4rem, -4.1vw, -2.4rem));
 	}
 
 	.landing-hero__eyebrow {
@@ -375,17 +388,28 @@ const contactLinks = [
 	}
 
 	.landing-hero h1 {
-		max-width: 9.5em;
+		max-width: 11.2em;
 		margin: 0;
 		color: var(--color-bark);
-		font-size: clamp(3rem, 6vw, 5.2rem);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(3.25rem, 5.15vw, 5.05rem);
 		font-weight: 500;
 		letter-spacing: 0;
-		line-height: 0.98;
+		line-height: 0.96;
 	}
 
-	.landing-hero h1 span {
+	.landing-hero__title-accent {
 		color: var(--color-primary);
+	}
+
+	.landing-hero__title-accent,
+	.landing-hero__title-rest {
+		display: block;
+	}
+
+	.landing-hero__title-rest {
+		color: var(--color-bark);
+		white-space: nowrap;
 	}
 
 	.landing-hero__lead {
@@ -446,7 +470,7 @@ const contactLinks = [
 		background: #5f6f3c;
 		border-radius: 999px;
 		font-size: 0.82rem;
-		font-weight: 850;
+		font-weight: 640;
 		letter-spacing: 0.04em;
 		text-decoration: none;
 		text-transform: uppercase;
@@ -462,48 +486,40 @@ const contactLinks = [
 	.landing-hero__cta svg {
 		width: 1.05rem;
 		height: 1.05rem;
-		stroke-width: 2.4;
-	}
-
-	.landing-hero__dots {
-		position: absolute;
-		z-index: 1;
-		right: min(29vw, 23rem);
-		bottom: clamp(0.6rem, 1.6vw, 1.45rem);
-		width: clamp(12rem, 18vw, 15.5rem);
-		height: clamp(9.4rem, 13.8vw, 12.2rem);
-		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.34) 1.35px, transparent 1.55px);
-		background-position: 0 0;
-		background-size: 0.92rem 0.92rem;
-		opacity: 0.82;
+		stroke-width: 1.6;
 	}
 
 	.landing-hero__media {
 		position: absolute;
-		z-index: 2;
-		top: clamp(1.8rem, 4vw, 2.7rem);
-		right: calc(50% - 50vw);
-		width: min(58vw, 53rem);
-		height: clamp(26rem, 44vw, 36rem);
+		z-index: 1;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: calc(100% + 12rem);
 		margin: 0;
 		overflow: hidden;
-		clip-path: polygon(30% 0, 100% 0, 100% 100%, 26% 100%, 0 55%);
 	}
 
 	.landing-hero__media::after {
 		position: absolute;
-		inset: 0;
-		background: linear-gradient(90deg, rgba(75, 64, 56, 0.08), transparent 42%);
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: 15rem;
+		background: linear-gradient(180deg, rgba(246, 241, 231, 0), var(--color-background) 78%);
 		content: "";
 		pointer-events: none;
 	}
 
 	.landing-hero__media img {
-		width: 100%;
-		height: 100%;
+		width: var(--hero-art-width);
+		height: var(--hero-art-height);
+		min-height: 100%;
 		display: block;
-		object-fit: cover;
-		object-position: 49% 48%;
+		max-width: none;
+		object-fit: contain;
+		object-position: left center;
+		transform: translate(var(--hero-art-x), var(--hero-art-y));
 	}
 
 	.categories-section {
@@ -1005,36 +1021,29 @@ const contactLinks = [
 
 	@media (max-width: 960px) {
 		.landing-hero {
-			min-height: clamp(33rem, 68vw, 38rem);
-			padding: clamp(2.7rem, 5vw, 4rem) 0 clamp(3rem, 5vw, 4.4rem);
+			--hero-art-height: auto;
+			--hero-art-width: min(102vw, 58rem);
+			--hero-art-x: clamp(12rem, 28vw, 18rem);
+			--hero-art-y: -5.8rem;
+			--hero-lift: 4.6rem;
+			--hero-text-gap: clamp(2.9rem, 5.4vw, 4rem);
+			min-height: clamp(34rem, 70vw, 40rem);
 		}
 
 		.landing-hero__shell {
-			min-height: clamp(27.5rem, 58vw, 32rem);
+			min-height: clamp(28rem, 56vw, 33rem);
 			display: grid;
 			align-items: center;
 			gap: 0;
 		}
 
 		.landing-hero__content {
-			width: min(34rem, 58vw);
+			width: min(33rem, 58vw);
 			max-width: none;
 		}
 
-		.landing-hero__media {
-			position: absolute;
-			top: clamp(7rem, 17vw, 9.4rem);
-			right: clamp(-6.25rem, -10vw, -4rem);
-			width: min(46vw, 30rem);
-			height: clamp(16.5rem, 37vw, 22rem);
-			clip-path: polygon(30% 0, 100% 0, 100% 100%, 27% 100%, 0 56%);
-		}
-
-		.landing-hero__dots {
-			right: clamp(2.4rem, 9vw, 6.2rem);
-			bottom: clamp(1.4rem, 4vw, 2.6rem);
-			width: clamp(9.5rem, 22vw, 13rem);
-			height: clamp(7.4rem, 17vw, 10rem);
+		.landing-hero__media img {
+			height: auto;
 		}
 
 		.categories-section__grid {
@@ -1061,46 +1070,55 @@ const contactLinks = [
 
 	@media (max-width: 640px) {
 		.landing-hero {
-			min-height: 26.9rem;
-			padding: 1.45rem 0 1.65rem;
+			--hero-art-width: 45rem;
+			--hero-art-x: -2.35rem;
+			--hero-art-y: -9.65rem;
+			--hero-lift: 4.35rem;
+			--hero-text-gap: 2.55rem;
+			min-height: 25.8rem;
+			padding-bottom: 0.8rem;
 		}
 
 		.landing-hero__shell {
 			position: relative;
-			min-height: 23.8rem;
+			min-height: 22.9rem;
 			display: block;
 			padding-inline: 1.2rem;
 		}
 
 		.landing-hero__content {
-			width: min(64vw, 15.7rem);
+			width: min(68vw, 18.4rem);
 			max-width: none;
+			padding-top: 2rem;
+			transform: none;
 		}
 
 		.landing-hero__eyebrow {
-			margin-bottom: 0.62rem;
-			font-size: 0.6rem;
+			max-width: 15.5rem;
+			margin-bottom: 0.55rem;
+			font-size: 0.56rem;
+			letter-spacing: 0.12em;
 		}
 
 		.landing-hero h1 {
-			max-width: 7.5em;
-			font-size: clamp(1.95rem, 8.7vw, 2.65rem);
-			line-height: 1.01;
+			max-width: 8.8em;
+			font-size: clamp(1.86rem, 8.1vw, 2.34rem);
+			line-height: 0.98;
 		}
 
 		.landing-hero__lead {
-			max-width: 13.6rem;
-			margin-top: 0.85rem;
-			font-size: 0.78rem;
-			line-height: 1.48;
+			max-width: 14.7rem;
+			margin-top: 0.78rem;
+			font-size: 0.72rem;
+			line-height: 1.45;
 		}
 
 		.landing-hero__features {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 			gap: 0.48rem;
-			width: min(64vw, 15.7rem);
+			width: min(65vw, 17.3rem);
 			max-width: none;
-			margin-top: 1rem;
+			margin-top: 0.88rem;
 		}
 
 		.landing-hero__feature {
@@ -1117,32 +1135,36 @@ const contactLinks = [
 		}
 
 		.landing-hero__cta {
-			min-height: 2.85rem;
-			margin-top: 1.1rem;
+			min-height: 2.72rem;
+			margin-top: 0.95rem;
 			padding-inline: 1.25rem 1.05rem;
 			font-size: 0.68rem;
 		}
 
-		.landing-hero__media {
-			position: absolute;
-			top: clamp(5.7rem, 22vw, 6.45rem);
-			right: clamp(-12.8rem, -45vw, -10.6rem);
-			width: clamp(17rem, 78vw, 21rem);
-			height: clamp(16.8rem, 68vw, 18.8rem);
-			clip-path: polygon(30% 0, 100% 0, 100% 100%, 27% 100%, 0 56%);
+		.landing-hero__media img {
+			height: auto;
+			-webkit-mask-image: linear-gradient(
+				180deg,
+				transparent 0%,
+				rgba(0, 0, 0, 0.16) 14%,
+				rgba(0, 0, 0, 0.72) 34%,
+				#000 52%
+			);
+			mask-image: linear-gradient(
+				180deg,
+				transparent 0%,
+				rgba(0, 0, 0, 0.16) 14%,
+				rgba(0, 0, 0, 0.72) 34%,
+				#000 52%
+			);
 		}
 
-		.landing-hero__dots {
-			right: clamp(-3rem, -6vw, -1.4rem);
-			bottom: 2.35rem;
-			width: clamp(7.2rem, 30vw, 8.4rem);
-			height: clamp(5.8rem, 24vw, 6.8rem);
-			background-size: 0.72rem 0.72rem;
-			opacity: 0.7;
+		.landing-hero__media::before {
+			display: none;
 		}
 
 		.categories-section {
-			padding: 3rem 0.9rem 3.6rem;
+			padding: 0.55rem 0.9rem 3.6rem;
 		}
 
 		.categories-section::after {
