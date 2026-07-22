@@ -1,15 +1,13 @@
 ---
 const actions = [
 	{
-		label: 'Rakstīt WhatsApp',
-		href: 'https://wa.me/37129373231',
+		label: 'WhatsApp',
+		href: '#',
 		icon: 'whatsapp',
-		target: '_blank',
-		rel: 'noopener noreferrer',
 	},
 	{
-		label: 'Zvanīt uz +371 29 373 231',
-		href: 'tel:+37129373231',
+		label: 'Zvanīt',
+		href: '#',
 		icon: 'phone',
 	},
 ];
@@ -18,14 +16,7 @@ const actions = [
 <nav class="floating-actions" aria-label="Ātrie kontakti">
 	{
 		actions.map((action) => (
-			<a
-				class="floating-actions__button"
-				href={action.href}
-				target={action.target}
-				rel={action.rel}
-				aria-label={action.label}
-				title={action.label}
-			>
+			<a class="floating-actions__button" href={action.href} aria-label={action.label} title={action.label}>
 				{
 					action.icon === 'whatsapp' ? (
 						<img src="/icons/whatsapp.svg" alt="" loading="eager" decoding="async" />

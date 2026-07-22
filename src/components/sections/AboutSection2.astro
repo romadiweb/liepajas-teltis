@@ -97,25 +97,21 @@ const aboutGallery = [
 				<img src={aboutStoryImage} alt="Mājīga svinību zona ar gaismām zem telts" loading="lazy" decoding="async" />
 			</figure>
 			<div class="about-section__story-copy">
-				<div class="about-section__story-heading">
-					<p class="about-section__eyebrow">Kas mēs esam?</p>
-					<h2>Risinājums, kas pielāgojas jūsu pasākumam</h2>
-					<div class="about-section__rule" aria-hidden="true"></div>
-				</div>
-				<div class="about-section__story-body">
-					<p>
-						Esam telšu un pasākumu inventāra nomas komanda, kas palīdz no nelielām ģimenes svinībām līdz lielākiem
-						notikumiem.
-					</p>
-					<p>
-						Mēs parūpējamies par praktisko pusi, lai jūs varētu koncentrēties uz cilvēkiem, atmosfēru un notikuma
-						sajūtu.
-					</p>
-					<a class="about-section__button" href="/pieteikt-nomu">
-						<span>Pieteikt nomu</span>
-						<ArrowRight aria-hidden="true" />
-					</a>
-				</div>
+				<p class="about-section__eyebrow">Kas mēs esam?</p>
+				<h2>Risinājums, kas pielāgojas jūsu pasākumam</h2>
+				<div class="about-section__rule" aria-hidden="true"></div>
+				<p>
+					Esam telšu un pasākumu inventāra nomas komanda, kas palīdz no nelielām ģimenes svinībām līdz lielākiem
+					notikumiem.
+				</p>
+				<p>
+					Mēs parūpējamies par praktisko pusi, lai jūs varētu koncentrēties uz cilvēkiem, atmosfēru un notikuma
+					sajūtu.
+				</p>
+				<a class="about-section__button" href="/pieteikt-nomu">
+					<span>Pieteikt nomu</span>
+					<ArrowRight aria-hidden="true" />
+				</a>
 			</div>
 		</div>
 
@@ -511,27 +507,13 @@ const aboutGallery = [
 			gap: 1.8rem;
 		}
 
-		.about-section__copy {
-			max-width: 42rem;
-		}
-
-		/* Keep each image connected to its own content on stacked layouts. */
+		.about-section__copy,
 		.about-section__story-copy {
-			display: contents;
-		}
-
-		.about-section__story-heading {
-			order: 1;
 			max-width: 42rem;
 		}
 
 		.about-section__story-media {
-			order: 2;
-		}
-
-		.about-section__story-body {
-			order: 3;
-			max-width: 42rem;
+			order: -1;
 		}
 
 		.about-section__benefit-grid,

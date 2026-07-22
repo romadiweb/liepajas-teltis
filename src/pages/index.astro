@@ -1454,17 +1454,25 @@ const contactLinks = [
 	const contactFormMobileQuery = window.matchMedia('(max-width: 640px)');
 
 	const updateContactFormState = () => {
-		if (!contactFormShell || !contactFormToggle || !contactFormPanel) return;
+		if (
+			!(contactFormShell instanceof HTMLElement) ||
+			!(contactFormToggle instanceof HTMLElement) ||
+			!(contactFormPanel instanceof HTMLElement)
+		) {
+			return;
+		}
 
 		const isMobile = contactFormMobileQuery.matches;
 		const isOpen = contactFormShell.classList.contains('is-open');
 		const shouldCollapse = isMobile && !isOpen;
+		const openLabel = contactFormToggle.getAttribute('data-open-label') ?? 'Aizpildīt pieteikumu';
+		const closeLabel = contactFormToggle.getAttribute('data-close-label') ?? 'Paslēpt formu';
 
 		contactFormToggle.setAttribute('aria-expanded', String(isMobile && isOpen));
-		contactFormPanel.inert = shouldCollapse;
+		contactFormPanel.toggleAttribute('inert', shouldCollapse);
 
-		if (contactFormToggleLabel) {
-			contactFormToggleLabel.textContent = isOpen ? contactFormToggle.dataset.closeLabel : contactFormToggle.dataset.openLabel;
+		if (contactFormToggleLabel instanceof HTMLElement) {
+			contactFormToggleLabel.textContent = isOpen ? closeLabel : openLabel;
 		}
 	};
 
