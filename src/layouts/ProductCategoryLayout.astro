@@ -350,15 +350,20 @@ const modalProducts = products.map((product) => ({
 	.product-category {
 		width: min(100%, 1200px);
 		margin: 0 auto;
-		padding: clamp(1.6rem, 3vw, 2.5rem) clamp(1rem, 3vw, 1.5rem) 3.7rem;
+		padding: clamp(1.1rem, 2.2vw, 1.95rem) clamp(1rem, 3vw, 1.5rem) 3.7rem;
 	}
 
 	.product-category__hero {
 		padding: clamp(0.65rem, 1.5vw, 1.2rem) clamp(0.1rem, 1vw, 0.2rem) clamp(1.6rem, 3vw, 2.4rem);
 	}
 
+	.product-category__breadcrumbs {
+		margin-left: -0.45rem;
+		margin-bottom: clamp(1.5rem, 2.7vw, 2rem);
+	}
+
 	.product-category__intro {
-		margin-top: clamp(2.25rem, 4vw, 3.35rem);
+		margin-top: clamp(0.35rem, 0.8vw, 0.65rem);
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) auto;
 		align-items: end;
@@ -1609,6 +1614,11 @@ const modalProducts = products.map((product) => ({
 
 		.product-category__hero {
 			padding-top: 0.4rem;
+		}
+
+		.product-category__breadcrumbs {
+			margin-left: 0;
+			margin-bottom: 1.1rem;
 		}
 
 		.product-category__intro {

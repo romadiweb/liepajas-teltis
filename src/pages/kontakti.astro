@@ -1,11 +1,11 @@
 ---
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import CalendarDays from '@lucide/astro/icons/calendar-days';
-import Check from '@lucide/astro/icons/check';
+import CheckCircle2 from '@lucide/astro/icons/circle-check';
 import Clock3 from '@lucide/astro/icons/clock-3';
+import Leaf from '@lucide/astro/icons/leaf';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
-import PackageCheck from '@lucide/astro/icons/package-check';
 import Phone from '@lucide/astro/icons/phone';
 import Send from '@lucide/astro/icons/send';
 import UserRound from '@lucide/astro/icons/user-round';
@@ -15,32 +15,34 @@ import ScrollToTop from '../components/common/ScrollToTop.astro';
 import SiteFooter from '../components/common/SiteFooter.astro';
 import SiteHeader from '../components/common/SiteHeader.astro';
 
-const contactCards = [
+const contactMethods = [
 	{
 		href: 'tel:+37129373231',
 		icon: Phone,
-		label: 'Zvaniet',
-		text: '+371 29 373 231',
+		title: 'Tālrunis',
+		value: '+371 29 373 231',
 	},
 	{
 		href: 'mailto:info@liepajasteltis.lv',
 		icon: Mail,
-		label: 'E-pasts',
-		text: 'info@liepajasteltis.lv',
+		title: 'E-pasts',
+		value: 'info@liepajasteltis.lv',
 	},
 	{
-		href: 'https://www.google.com/maps/search/?api=1&query=Liepāja',
+		href: 'https://www.google.com/maps/search/?api=1&query=Darbn%C4%ABcu%20iela%205%2C%20Liep%C4%81ja',
 		icon: MapPin,
-		label: 'Bāze',
-		text: 'Liepāja - visa Latvija',
+		title: 'Adrese',
+		value: 'Darbnīcu iela 5,\nLiepāja, LV-3401',
+	},
+	{
+		href: null,
+		icon: Clock3,
+		title: 'Darba laiks',
+		value: '24/7',
 	},
 ];
 
-const processItems = [
-	'Pastāstiet par datumu, vietu un inventāru',
-	'Sagatavosim piemērotāko nomas piedāvājumu',
-	'Vienosimies par piegādi un uzstādīšanu',
-];
+const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls serviss'];
 ---
 
 <BaseLayout title="Kontakti | Liepājas teltis" description="Sazinieties ar Liepājas teltis par telšu un inventāra nomu jūsu pasākumam.">
@@ -49,116 +51,133 @@ const processItems = [
 		<FloatingActions />
 		<ScrollToTop />
 
-		<section class="contact-hero">
-			<div class="contact-hero__content">
-				<nav class="breadcrumb-trail contact-hero__breadcrumbs" aria-label="Lapas ceļš">
-					<a href="/">Sākums</a>
-					<ArrowRight aria-hidden="true" />
-					<span>Kontakti</span>
-				</nav>
-				<p class="contact-hero__eyebrow">Kontakti</p>
-				<h1 id="contact-page-title">Pastāstiet par savu <span>pasākumu</span></h1>
-				<p>
-					Aizpildiet pieteikumu vai sazinieties tieši - atbildēsim ar piedāvājumu, kas pielāgots jūsu
-					norises vietai, viesu skaitam un izvēlētajam inventāram.
-				</p>
-			</div>
+		<section class="contact-page__hero">
+			<nav class="breadcrumb-trail contact-page__breadcrumbs" aria-label="Lapas ceļš">
+				<a href="/">Sākums</a>
+				<ArrowRight aria-hidden="true" />
+				<span>Kontakti</span>
+			</nav>
 
-			<div class="contact-hero__panel" aria-label="Kontaktinformācija">
-				{
-					contactCards.map(({ href, icon: Icon, label, text }) => (
-						<a class="contact-card" href={href}>
-							<span class="contact-card__icon">
-								<Icon aria-hidden="true" />
-							</span>
-							<span>
-								<strong>{label}</strong>
-								<span>{text}</span>
-							</span>
-						</a>
-					))
-				}
+			<div class="contact-page__intro">
+				<h1 id="contact-page-title">Kontakti</h1>
+				<div class="contact-page__rule" aria-hidden="true"></div>
+				<p>Sazinieties ar mums - mēs ar prieku palīdzēsim plānot jūsu pasākumu!</p>
 			</div>
 		</section>
 
-		<section class="contact-workspace" aria-label="Pieteikuma forma">
-			<div class="contact-workspace__aside">
-				<div class="contact-workspace__note">
-					<Clock3 aria-hidden="true" />
-					<span>Parasti atbildam 24 stundu laikā</span>
+		<section class="contact-methods" aria-label="Kontaktinformācija">
+			{
+				contactMethods.map(({ href, icon: Icon, title, value }) => {
+					const content = (
+						<>
+							<Icon aria-hidden="true" />
+							<strong>{title}</strong>
+							<span>{value}</span>
+						</>
+					);
+
+					return href ? (
+						<a class="contact-method" href={href}>
+							{content}
+						</a>
+					) : (
+						<div class="contact-method">{content}</div>
+					);
+				})
+			}
+		</section>
+
+		<section class="contact-message" aria-label="Rakstiet mums">
+			<form class="contact-form-card" name="kontaktu-zina" method="post" data-netlify="true">
+				<input type="hidden" name="form-name" value="kontaktu-zina" />
+				<div class="contact-form-card__heading">
+					<h2>Rakstiet mums</h2>
+					<div class="contact-page__rule" aria-hidden="true"></div>
+					<p>Aizpildiet formu, un mēs ar jums sazināsimies tuvākajā laikā.</p>
 				</div>
-				<h2>Kas notiek tālāk?</h2>
-				<ol>
+
+				<div class="contact-form-card__grid">
+					<label>
+						<span>Vārds, Uzvārds</span>
+						<input name="vards_uzvards" type="text" autocomplete="name" placeholder="Vārds, Uzvārds" required />
+					</label>
+					<label>
+						<span>E-pasts</span>
+						<input name="epasts" type="email" autocomplete="email" placeholder="E-pasts" required />
+					</label>
+					<label class="contact-form-card__full">
+						<span>Tālruņa numurs</span>
+						<input name="telefona_numurs" type="tel" autocomplete="tel" placeholder="Tālruņa numurs" />
+					</label>
+					<label class="contact-form-card__full">
+						<span>Ziņojums</span>
+						<textarea name="zinojums" rows="5" placeholder="Ziņojums" required></textarea>
+					</label>
+				</div>
+
+				<button class="contact-form-card__button" type="submit">
+					<span>Nosūtīt</span>
+					<ArrowRight aria-hidden="true" />
+				</button>
+			</form>
+
+			<aside class="contact-support" aria-label="Saziņas priekšrocības">
+				<Leaf class="contact-support__leaf" aria-hidden="true" />
+				<h2>Sazinieties jebkurā jums ērtā veidā</h2>
+				<div class="contact-page__rule" aria-hidden="true"></div>
+				<p>Atbildam ātri un palīdzam atrast piemērotāko risinājumu jūsu pasākumam.</p>
+				<ul>
 					{
-						processItems.map((item) => (
+						supportPoints.map((point) => (
 							<li>
-								<Check aria-hidden="true" />
-								<span>{item}</span>
+								<CheckCircle2 aria-hidden="true" />
+								<span>{point}</span>
 							</li>
 						))
 					}
-				</ol>
-			</div>
+				</ul>
+			</aside>
+		</section>
 
-			<form class="contact-request" name="kontaktu-pieteikums" method="post" data-netlify="true">
-				<input type="hidden" name="form-name" value="kontaktu-pieteikums" />
-
-				<fieldset>
-					<label for="contact-name">Vārds, uzvārds</label>
-					<div class="contact-request__control">
-						<UserRound aria-hidden="true" />
-						<input id="contact-name" name="vards_uzvards" type="text" autocomplete="name" required />
-					</div>
-				</fieldset>
-
-				<fieldset>
-					<label for="contact-phone">Telefona numurs</label>
-					<div class="contact-request__control">
-						<Phone aria-hidden="true" />
-						<input id="contact-phone" name="telefona_numurs" type="tel" autocomplete="tel" required />
-					</div>
-				</fieldset>
-
-				<fieldset class="contact-request__full">
-					<label for="contact-email">Epasts</label>
-					<div class="contact-request__control">
-						<Mail aria-hidden="true" />
-						<input id="contact-email" name="epasts" type="email" autocomplete="email" required />
-					</div>
-				</fieldset>
-
-				<fieldset>
-					<label for="contact-date">Pasākuma datums</label>
-					<div class="contact-request__control">
-						<CalendarDays aria-hidden="true" />
-						<input id="contact-date" name="pasakuma_datums" type="date" required />
-					</div>
-				</fieldset>
-
-				<fieldset>
-					<label for="contact-location">Norises vieta</label>
-					<div class="contact-request__control">
-						<MapPin aria-hidden="true" />
-						<input id="contact-location" name="pasakuma_norises_vieta" type="text" required />
-					</div>
-				</fieldset>
-
-				<fieldset class="contact-request__full">
-					<label for="contact-inventory">Vēlamais inventārs</label>
-					<div class="contact-request__control contact-request__control--textarea">
-						<PackageCheck aria-hidden="true" />
-						<textarea id="contact-inventory" name="velamais_inventars" rows="6" required></textarea>
-					</div>
-				</fieldset>
-
-				<div class="contact-request__footer">
-					<p>Nosūtot formu, piekrītat, ka sazināsimies par jūsu pieteikumu.</p>
-					<button type="submit">
-						<span>Nosūtīt pieteikumu</span>
-						<Send aria-hidden="true" />
-					</button>
+		<section class="contact-map" aria-label="Atrašanās vieta">
+			<div class="contact-map__visual" aria-hidden="true">
+				<span class="contact-map__water"></span>
+				<span class="contact-map__road contact-map__road--one"></span>
+				<span class="contact-map__road contact-map__road--two"></span>
+				<span class="contact-map__road contact-map__road--three"></span>
+				<span class="contact-map__road contact-map__road--four"></span>
+				<span class="contact-map__road contact-map__road--five"></span>
+				<span class="contact-map__marker">
+					<MapPin aria-hidden="true" />
+				</span>
+				<div class="contact-map__controls">
+					<span>+</span>
+					<span>-</span>
+					<span>⌾</span>
 				</div>
-			</form>
+			</div>
+			<div class="contact-map__card">
+				<h2>Liepājas Teltis</h2>
+				<p>Darbnīcu iela 5,<br />Liepāja, LV-3401</p>
+				<a href="https://www.google.com/maps/search/?api=1&query=Darbn%C4%ABcu%20iela%205%2C%20Liep%C4%81ja" target="_blank" rel="noreferrer">
+					<span>Skatīt kartē</span>
+					<ArrowRight aria-hidden="true" />
+				</a>
+			</div>
+		</section>
+
+		<section class="contact-cta" aria-label="Pieteikt nomu">
+			<div class="contact-cta__icon">
+				<CalendarDays aria-hidden="true" />
+			</div>
+			<div>
+				<h2>Plāno savu pasākumu?</h2>
+				<p>Mēs palīdzēsim radīt tieši tādu atmosfēru, kādu esi iecerējis.</p>
+			</div>
+			<a href="/pieteikt-nomu">
+				<span>Pieteikt nomu</span>
+				<Send aria-hidden="true" />
+			</a>
 		</section>
 	</main>
 	<SiteFooter />
@@ -167,515 +186,681 @@ const processItems = [
 <style>
 	.contact-page {
 		position: relative;
+		padding: clamp(1.6rem, 3.8vw, 3.1rem) clamp(1rem, 3vw, 1.5rem) 0;
 		overflow: hidden;
+		background: var(--color-background);
 	}
 
 	.contact-page::before {
 		position: absolute;
-		inset: 8rem auto auto -5rem;
-		width: 18rem;
-		height: 13rem;
-		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.34) 1.25px, transparent 1.5px);
+		left: max(-4rem, calc(50% - 47rem));
+		top: 10rem;
+		width: clamp(8rem, 16vw, 13rem);
+		height: clamp(6rem, 11vw, 9rem);
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.28) 1.25px, transparent 1.55px);
 		background-size: 0.82rem 0.82rem;
 		content: "";
-		opacity: 0.74;
+		opacity: 0.78;
 		pointer-events: none;
 	}
 
-	.contact-page::after {
-		position: absolute;
-		right: max(1rem, calc(50% - 42rem));
-		bottom: 13rem;
-		width: clamp(9rem, 17vw, 14rem);
-		height: clamp(6.5rem, 12vw, 9.5rem);
-		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.3) 1.25px, transparent 1.5px);
-		background-size: 0.82rem 0.82rem;
-		content: "";
-		opacity: 0.66;
-		pointer-events: none;
-	}
-
-	.contact-hero,
-	.contact-workspace {
+	.contact-page__hero,
+	.contact-methods,
+	.contact-message,
+	.contact-map,
+	.contact-cta {
 		position: relative;
 		z-index: 1;
-		width: min(100% - 2.4rem, 1160px);
+		width: min(100%, 1160px);
 		margin-inline: auto;
 	}
 
-	.contact-hero {
-		padding: clamp(1.6rem, 3.8vw, 3.1rem) 0 clamp(2rem, 4vw, 3.2rem);
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(18rem, 25rem);
-		align-items: end;
-		gap: clamp(2rem, 5vw, 4.5rem);
+	.contact-page__breadcrumbs {
+		margin-bottom: clamp(1.5rem, 2.7vw, 2rem);
 	}
 
-	.contact-hero__breadcrumbs {
-		margin-bottom: clamp(1.35rem, 2.5vw, 2rem);
+	.contact-page__intro {
+		max-width: 34rem;
 	}
 
-	.contact-hero__eyebrow {
-		margin: 0 0 0.85rem;
-		color: #8A9271;
-		font-size: 0.74rem;
-		font-weight: 850;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-	}
-
-	.contact-hero h1 {
-		max-width: 9.2em;
+	.contact-page__intro h1,
+	.contact-form-card h2,
+	.contact-support h2,
+	.contact-cta h2 {
 		margin: 0;
 		color: var(--color-bark);
 		font-family: Georgia, "Times New Roman", serif;
-		font-size: clamp(3rem, 7vw, 6rem);
 		font-weight: 500;
 		letter-spacing: 0;
-		line-height: 0.96;
 	}
 
-	.contact-hero h1 span {
-		color: var(--color-primary);
-	}
-
-	.contact-hero p:last-child {
-		max-width: 35rem;
-		margin: 1.35rem 0 0;
-		color: var(--color-text-muted);
-		font-size: clamp(1rem, 1.4vw, 1.12rem);
-		font-weight: 500;
-		line-height: 1.7;
-	}
-
-	.contact-hero__panel {
-		padding: 1rem;
-		display: grid;
-		gap: 0.75rem;
-		background: rgba(255, 255, 255, 0.56);
-		border: 1px solid rgba(222, 212, 198, 0.82);
-		border-radius: 22px;
-		box-shadow: var(--shadow-soft);
-	}
-
-	.contact-card {
-		padding: 0.85rem;
-		display: grid;
-		grid-template-columns: 2.7rem minmax(0, 1fr);
-		align-items: center;
-		gap: 0.8rem;
-		color: var(--color-bark);
-		background: rgba(246, 241, 231, 0.64);
-		border: 1px solid rgba(222, 212, 198, 0.78);
-		border-radius: 16px;
-		text-decoration: none;
-	}
-
-	.contact-card:hover {
-		color: var(--color-bark);
-		background: rgba(255, 255, 255, 0.76);
-		transform: translateY(-2px);
-	}
-
-	.contact-card__icon {
-		width: 2.7rem;
-		height: 2.7rem;
-		display: grid;
-		place-items: center;
-		color: var(--color-surface);
-		background: #6b7a4a;
-		border-radius: 999px;
-	}
-
-	.contact-card__icon svg {
-		width: 1.1rem;
-		height: 1.1rem;
-		stroke-width: 2;
-	}
-
-	.contact-card strong {
-		display: block;
-		color: var(--color-text-muted);
-		font-size: 0.64rem;
-		font-weight: 700;
-		letter-spacing: 0.16em;
-		line-height: 1.2;
-		text-transform: uppercase;
-	}
-
-	.contact-card span span {
-		display: block;
-		margin-top: 0.24rem;
-		color: var(--color-bark);
-		font-size: 0.96rem;
-		font-weight: 650;
-		line-height: 1.22;
-	}
-
-	.contact-workspace {
-		margin-bottom: clamp(4rem, 7vw, 6rem);
-		display: grid;
-		grid-template-columns: minmax(17rem, 0.62fr) minmax(0, 1fr);
-		gap: clamp(1.2rem, 3vw, 2rem);
-		align-items: stretch;
-	}
-
-	.contact-workspace__aside,
-	.contact-request {
-		border: 1px solid rgba(185, 167, 143, 0.5);
-		box-shadow: 0 24px 58px rgba(75, 64, 56, 0.11);
-	}
-
-	.contact-workspace__aside {
-		position: relative;
-		padding: clamp(1.25rem, 3vw, 2rem);
-		overflow: hidden;
-		background:
-			linear-gradient(180deg, rgba(237, 228, 215, 0.24), rgba(255, 255, 255, 0.2)),
-			radial-gradient(circle at 18% 8%, rgba(203, 183, 154, 0.42), transparent 12rem),
-			#eef0e4;
-		border-radius: 26px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 2rem;
-	}
-
-	.contact-workspace__aside::before {
-		position: absolute;
-		right: -2.3rem;
-		top: 4rem;
-		width: 11rem;
-		height: 8rem;
-		background-image: radial-gradient(circle, rgba(95, 111, 60, 0.2) 1.2px, transparent 1.45px);
-		background-size: 0.7rem 0.7rem;
-		content: "";
-		opacity: 0.82;
-		pointer-events: none;
-	}
-
-	.contact-workspace__aside::after {
-		position: absolute;
-		right: 1.4rem;
-		bottom: 1.35rem;
-		width: clamp(5.5rem, 11vw, 8rem);
-		height: clamp(5.5rem, 11vw, 8rem);
-		background: rgba(107, 122, 74, 0.12);
-		border: 1px solid rgba(107, 122, 74, 0.14);
-		border-radius: 999px;
-		content: "";
-		pointer-events: none;
-	}
-
-	.contact-workspace__aside > * {
-		position: relative;
-		z-index: 1;
-	}
-
-	.contact-request {
-		background: rgba(255, 255, 255, 0.72);
-	}
-
-	.contact-workspace__note {
-		width: fit-content;
-		padding: 0.65rem 0.8rem;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.55rem;
-		color: var(--color-bark);
-		background: rgba(237, 228, 215, 0.82);
-		border: 1px solid rgba(222, 212, 198, 0.9);
-		border-radius: 999px;
-		font-size: 0.78rem;
-		font-weight: 680;
-	}
-
-	.contact-workspace__note svg {
-		width: 1rem;
-		height: 1rem;
-		color: #6b7a4a;
-	}
-
-	.contact-workspace__aside h2 {
-		max-width: 8.4em;
-		margin: auto 0 0;
-		color: var(--color-bark);
-		font-family: Georgia, "Times New Roman", serif;
-		font-size: clamp(2rem, 4vw, 3.15rem);
-		font-weight: 500;
+	.contact-page__intro h1 {
+		font-size: clamp(2.8rem, 5.6vw, 4.45rem);
 		line-height: 1;
 	}
 
-	.contact-workspace__aside ol {
+	.contact-page__rule {
+		width: 2.8rem;
+		height: 1px;
+		margin: 1rem 0 1.1rem;
+		background: var(--color-primary);
+	}
+
+	.contact-page__intro p {
+		max-width: 25rem;
 		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 0.85rem;
-		list-style: none;
-	}
-
-	.contact-workspace__aside li {
-		display: grid;
-		grid-template-columns: 1.55rem minmax(0, 1fr);
-		gap: 0.65rem;
 		color: var(--color-text-muted);
-		font-size: 0.95rem;
-		font-weight: 620;
-		line-height: 1.45;
+		font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+		font-weight: 500;
+		line-height: 1.68;
 	}
 
-	.contact-workspace__aside li svg {
-		width: 1.55rem;
-		height: 1.55rem;
-		padding: 0.28rem;
-		color: #6b7a4a;
-		background: rgba(138, 146, 113, 0.14);
-		border-radius: 999px;
+	.contact-methods {
+		margin-top: clamp(2.7rem, 5vw, 4.2rem);
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.44);
+		border: 1px solid rgba(222, 212, 198, 0.78);
+		border-radius: 8px;
+		box-shadow: 0 16px 38px rgba(75, 64, 56, 0.05);
 	}
 
-	.contact-request {
-		padding: clamp(1.2rem, 3vw, 2rem);
+	.contact-method {
+		min-height: 8.6rem;
+		padding: 1rem clamp(1rem, 2.4vw, 2.4rem);
+		display: grid;
+		place-items: center;
+		align-content: center;
+		color: var(--color-bark);
+		text-align: center;
+		text-decoration: none;
+		border-right: 1px solid rgba(185, 167, 143, 0.42);
+	}
+
+	.contact-method:last-child {
+		border-right: 0;
+	}
+
+	.contact-method:hover {
+		color: var(--color-bark);
+		transform: translateY(-2px);
+	}
+
+	.contact-method svg {
+		width: 1.8rem;
+		height: 1.8rem;
+		margin-bottom: 1.1rem;
+		color: var(--color-primary);
+		stroke-width: 1.8;
+	}
+
+	.contact-method strong {
+		display: block;
+		margin-bottom: 0.55rem;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 1.05rem;
+		font-weight: 500;
+		line-height: 1.2;
+	}
+
+	.contact-method span {
+		white-space: pre-line;
+		color: var(--color-text-muted);
+		font-size: 0.88rem;
+		font-weight: 560;
+		line-height: 1.55;
+	}
+
+	.contact-message {
+		margin-top: clamp(2.1rem, 4.5vw, 3.8rem);
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.9fr);
+		gap: clamp(1.4rem, 3vw, 2.2rem);
+		align-items: stretch;
+	}
+
+	.contact-form-card,
+	.contact-support {
+		border: 1px solid rgba(222, 212, 198, 0.82);
+		border-radius: 8px;
+		box-shadow: 0 18px 44px rgba(75, 64, 56, 0.06);
+	}
+
+	.contact-form-card {
+		padding: clamp(1.4rem, 3vw, 2.5rem);
+		background: rgba(255, 255, 255, 0.48);
+	}
+
+	.contact-form-card__heading h2,
+	.contact-support h2 {
+		font-size: clamp(1.75rem, 3vw, 2.35rem);
+		line-height: 1.08;
+	}
+
+	.contact-form-card__heading p,
+	.contact-support p {
+		max-width: 23rem;
+		margin: 0 0 1.35rem;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 500;
+		line-height: 1.65;
+	}
+
+	.contact-form-card__grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 1rem;
-		border-radius: 30px;
+		gap: 0.75rem;
 	}
 
-	.contact-request fieldset {
+	.contact-form-card label {
 		min-width: 0;
-		margin: 0;
-		padding: 0;
-		border: 0;
+		display: grid;
+		gap: 0.35rem;
 	}
 
-	.contact-request__full,
-	.contact-request__footer {
+	.contact-form-card label > span {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+	}
+
+	.contact-form-card__full {
 		grid-column: 1 / -1;
 	}
 
-	.contact-request label {
-		display: block;
-		margin: 0 0 0.42rem;
-		color: #344234;
-		font-size: 0.66rem;
-		font-weight: 650;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-	}
-
-	.contact-request__control {
-		position: relative;
-		color: var(--color-text-muted);
-	}
-
-	.contact-request__control svg {
-		position: absolute;
-		top: 50%;
-		left: 1rem;
-		z-index: 1;
-		width: 1rem;
-		height: 1rem;
-		color: #7f8a64;
-		stroke-width: 2;
-		transform: translateY(-50%);
-		pointer-events: none;
-	}
-
-	.contact-request__control--textarea svg {
-		top: 1rem;
-		transform: none;
-	}
-
-	.contact-request input,
-	.contact-request textarea {
+	.contact-form-card input,
+	.contact-form-card textarea {
 		width: 100%;
 		color: var(--color-bark);
-		background: rgba(255, 255, 255, 0.88);
-		border: 1px solid rgba(185, 167, 143, 0.62);
-		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 2px 8px rgba(75, 64, 56, 0.08);
+		background: rgba(255, 255, 255, 0.72);
+		border: 1px solid rgba(222, 212, 198, 0.92);
+		border-radius: 4px;
 		font: inherit;
-		font-size: 0.96rem;
+		font-size: 0.88rem;
 	}
 
-	.contact-request input {
-		min-height: 2.8rem;
-		padding: 0 1rem 0 2.55rem;
-		border-radius: 999px;
+	.contact-form-card input {
+		min-height: 2.45rem;
+		padding: 0 0.85rem;
 	}
 
-	.contact-request input[type="date"] {
-		color-scheme: light;
-		background: rgba(246, 241, 231, 0.96);
-	}
-
-	.contact-request textarea {
-		min-height: 8rem;
-		padding: 0.92rem 1rem 0.92rem 2.55rem;
-		border-radius: 18px;
+	.contact-form-card textarea {
+		min-height: 6rem;
+		padding: 0.75rem 0.85rem;
 		line-height: 1.5;
 		resize: vertical;
 	}
 
-	.contact-request input:focus,
-	.contact-request textarea:focus {
-		border-color: #8a9271;
+	.contact-form-card input::placeholder,
+	.contact-form-card textarea::placeholder {
+		color: rgba(115, 103, 93, 0.72);
+	}
+
+	.contact-form-card input:focus,
+	.contact-form-card textarea:focus {
+		border-color: var(--color-primary);
 		outline: none;
-		box-shadow: var(--focus-ring), 0 2px 10px rgba(75, 64, 56, 0.1);
+		box-shadow: var(--focus-ring);
 	}
 
-	.contact-request__footer {
-		margin-top: 0.45rem;
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		align-items: center;
-		gap: 1rem;
-	}
-
-	.contact-request__footer p {
-		max-width: 18rem;
-		margin: 0;
-		color: var(--color-text-muted);
-		font-size: 0.78rem;
-		font-weight: 500;
-		line-height: 1.42;
-	}
-
-	.contact-request__footer button {
-		min-height: 3.1rem;
-		padding: 0 1.55rem;
+	.contact-form-card__button,
+	.contact-cta a {
+		min-height: 2.75rem;
+		padding: 0 1.45rem;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.72rem;
+		gap: 0.75rem;
 		color: var(--color-surface);
-		background: var(--color-primary);
+		background: #4f5d32;
 		border: 0;
 		border-radius: 999px;
-		box-shadow: 0 12px 22px rgba(138, 146, 113, 0.24);
+		box-shadow: 0 14px 28px rgba(79, 93, 50, 0.2);
 		cursor: pointer;
 		font: inherit;
-		font-size: 0.8rem;
+		font-size: 0.75rem;
 		font-weight: 850;
-		letter-spacing: 0.04em;
+		letter-spacing: 0.06em;
+		text-decoration: none;
 		text-transform: uppercase;
 	}
 
-	.contact-request__footer button:hover {
+	.contact-form-card__button {
+		margin-top: 1.15rem;
+	}
+
+	.contact-form-card__button:hover,
+	.contact-cta a:hover {
+		color: var(--color-surface);
 		background: var(--color-primary-hover);
 		transform: translateY(-2px);
 	}
 
-	.contact-request__footer button svg {
+	.contact-form-card__button svg,
+	.contact-cta a svg {
 		width: 1rem;
 		height: 1rem;
 	}
 
+	.contact-support {
+		position: relative;
+		padding: clamp(1.55rem, 3.4vw, 3rem);
+		overflow: hidden;
+		background:
+			linear-gradient(135deg, rgba(237, 228, 215, 0.86), rgba(246, 241, 231, 0.72)),
+			radial-gradient(circle at 12% 100%, rgba(203, 183, 154, 0.24), transparent 11rem);
+	}
+
+	.contact-support__leaf {
+		width: clamp(3.4rem, 7vw, 5rem);
+		height: clamp(3.4rem, 7vw, 5rem);
+		margin-bottom: clamp(1.2rem, 2.2vw, 1.8rem);
+		color: rgba(138, 146, 113, 0.62);
+		stroke-width: 1.25;
+	}
+
+	.contact-support h2 {
+		max-width: 11em;
+	}
+
+	.contact-support ul {
+		margin: 1.45rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.72rem;
+		list-style: none;
+	}
+
+	.contact-support li {
+		display: flex;
+		align-items: center;
+		gap: 0.58rem;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 560;
+	}
+
+	.contact-support li svg {
+		width: 1rem;
+		height: 1rem;
+		color: var(--color-primary);
+		stroke-width: 1.8;
+	}
+
+	.contact-map {
+		position: relative;
+		height: clamp(15rem, 29vw, 19rem);
+		margin-top: clamp(2.2rem, 4vw, 3.2rem);
+		overflow: hidden;
+		background: #e9e1d4;
+		border-radius: 8px;
+		box-shadow: 0 20px 48px rgba(75, 64, 56, 0.08);
+	}
+
+	.contact-map__visual {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		background:
+			linear-gradient(115deg, transparent 0 13%, rgba(211, 222, 202, 0.72) 13% 24%, transparent 24% 100%),
+			linear-gradient(28deg, transparent 0 44%, rgba(216, 225, 205, 0.82) 44% 58%, transparent 58% 100%),
+			linear-gradient(90deg, rgba(199, 218, 219, 0.72) 0 24%, transparent 24% 100%),
+			#ece8df;
+	}
+
+	.contact-map__visual::before,
+	.contact-map__visual::after {
+		position: absolute;
+		inset: 0;
+		content: "";
+		pointer-events: none;
+	}
+
+	.contact-map__visual::before {
+		background-image:
+			linear-gradient(84deg, transparent 0 48%, rgba(255, 255, 255, 0.84) 48.35% 49.5%, transparent 49.85% 100%),
+			linear-gradient(8deg, transparent 0 54%, rgba(255, 255, 255, 0.72) 54.35% 55.45%, transparent 55.8% 100%),
+			linear-gradient(143deg, transparent 0 42%, rgba(255, 255, 255, 0.62) 42.25% 43.1%, transparent 43.45% 100%);
+		opacity: 0.95;
+	}
+
+	.contact-map__visual::after {
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.14) 1px, transparent 1.3px);
+		background-size: 0.72rem 0.72rem;
+		opacity: 0.38;
+	}
+
+	.contact-map__water {
+		position: absolute;
+		inset: -7% auto -9% -4%;
+		width: 27%;
+		background:
+			radial-gradient(circle at 72% 34%, rgba(255, 255, 255, 0.4), transparent 2.4rem),
+			#accdd1;
+		clip-path: polygon(0 0, 76% 0, 62% 17%, 82% 32%, 60% 49%, 74% 68%, 54% 100%, 0 100%);
+	}
+
+	.contact-map__road {
+		position: absolute;
+		height: 0.42rem;
+		background: rgba(255, 255, 255, 0.76);
+		border: 1px solid rgba(213, 204, 190, 0.64);
+		border-radius: 999px;
+		box-shadow: 0 1px 0 rgba(185, 167, 143, 0.12);
+	}
+
+	.contact-map__road--one {
+		left: 13%;
+		top: 30%;
+		width: 70%;
+		transform: rotate(-10deg);
+	}
+
+	.contact-map__road--two {
+		left: 25%;
+		top: 59%;
+		width: 66%;
+		transform: rotate(13deg);
+	}
+
+	.contact-map__road--three {
+		left: 31%;
+		top: 12%;
+		width: 52%;
+		transform: rotate(39deg);
+	}
+
+	.contact-map__road--four {
+		left: 38%;
+		top: 23%;
+		width: 0.42rem;
+		height: 72%;
+		transform: rotate(14deg);
+	}
+
+	.contact-map__road--five {
+		left: 57%;
+		top: -7%;
+		width: 0.42rem;
+		height: 93%;
+		transform: rotate(-20deg);
+	}
+
+	.contact-map__marker {
+		position: absolute;
+		left: 50%;
+		top: 48%;
+		z-index: 1;
+		width: 2.8rem;
+		height: 2.8rem;
+		display: grid;
+		place-items: center;
+		color: #4f5d32;
+		background: rgba(255, 255, 255, 0.74);
+		border-radius: 999px;
+		box-shadow: 0 10px 24px rgba(75, 64, 56, 0.16);
+		transform: translate(-50%, -50%);
+	}
+
+	.contact-map__marker svg {
+		width: 1.8rem;
+		height: 1.8rem;
+		fill: #4f5d32;
+		stroke-width: 1.8;
+	}
+
+	.contact-map__controls {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		z-index: 2;
+		overflow: hidden;
+		display: grid;
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(222, 212, 198, 0.82);
+		border-radius: 8px;
+		box-shadow: var(--shadow-soft);
+		transform: translateY(-50%);
+	}
+
+	.contact-map__controls span {
+		width: 2.2rem;
+		height: 2.1rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-bark);
+		border-bottom: 1px solid rgba(222, 212, 198, 0.82);
+		font-size: 1rem;
+		font-weight: 800;
+		line-height: 1;
+	}
+
+	.contact-map__controls span:last-child {
+		border-bottom: 0;
+		font-size: 0.92rem;
+	}
+
+	.contact-map__card {
+		position: absolute;
+		top: 50%;
+		left: clamp(1.2rem, 3vw, 2.4rem);
+		z-index: 1;
+		width: min(15rem, calc(100% - 2rem));
+		padding: 1.25rem 1.35rem;
+		background: rgba(255, 255, 255, 0.88);
+		border: 1px solid rgba(222, 212, 198, 0.84);
+		border-radius: 8px;
+		box-shadow: var(--shadow-soft);
+		transform: translateY(-50%);
+	}
+
+	.contact-map__card h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 1.15rem;
+		font-weight: 500;
+	}
+
+	.contact-map__card p {
+		margin: 0.65rem 0 0.9rem;
+		color: var(--color-text-muted);
+		font-size: 0.86rem;
+		font-weight: 560;
+		line-height: 1.48;
+	}
+
+	.contact-map__card a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--color-bark);
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.contact-map__card a svg {
+		width: 0.9rem;
+		height: 0.9rem;
+	}
+
+	.contact-cta {
+		margin-top: clamp(1.6rem, 3.2vw, 2.4rem);
+		margin-bottom: clamp(2.2rem, 4vw, 3.2rem);
+		padding: clamp(1rem, 2vw, 1.4rem) clamp(1.2rem, 3vw, 2rem);
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: clamp(1rem, 2.4vw, 1.6rem);
+		background: rgba(255, 255, 255, 0.44);
+		border: 1px solid rgba(222, 212, 198, 0.84);
+		border-radius: 8px;
+		box-shadow: 0 14px 34px rgba(75, 64, 56, 0.06);
+	}
+
+	.contact-cta__icon {
+		width: clamp(3.5rem, 6vw, 5rem);
+		height: clamp(3.5rem, 6vw, 5rem);
+		display: grid;
+		place-items: center;
+		color: var(--color-primary);
+		background: rgba(237, 228, 215, 0.75);
+		border: 1px solid rgba(222, 212, 198, 0.92);
+		border-radius: 8px;
+	}
+
+	.contact-cta__icon svg {
+		width: 1.8rem;
+		height: 1.8rem;
+		stroke-width: 1.7;
+	}
+
+	.contact-cta h2 {
+		font-size: clamp(1.45rem, 2.6vw, 2rem);
+		line-height: 1.1;
+	}
+
+	.contact-cta p {
+		max-width: 24rem;
+		margin: 0.35rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 560;
+		line-height: 1.48;
+	}
+
 	@media (max-width: 860px) {
-		.contact-hero,
-		.contact-workspace {
-			width: min(100% - 2rem, 42rem);
+		.contact-methods {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
-		.contact-hero,
-		.contact-workspace {
+		.contact-method {
+			border-right: 0;
+			border-bottom: 1px solid rgba(185, 167, 143, 0.32);
+		}
+
+		.contact-method:nth-child(odd) {
+			border-right: 1px solid rgba(185, 167, 143, 0.32);
+		}
+
+		.contact-method:nth-last-child(-n + 2) {
+			border-bottom: 0;
+		}
+
+		.contact-message {
 			grid-template-columns: 1fr;
 		}
 
-		.contact-hero__panel {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+		.contact-cta {
+			grid-template-columns: auto minmax(0, 1fr);
 		}
 
-		.contact-card {
-			grid-template-columns: 1fr;
-			align-content: start;
+		.contact-cta a {
+			grid-column: 1 / -1;
+			width: fit-content;
 		}
 	}
 
 	@media (max-width: 640px) {
-		.contact-page::before {
-			inset: 6rem auto auto -7rem;
-			width: 16rem;
-			height: 11rem;
-			opacity: 0.48;
-		}
-
-		.contact-page::after {
-			right: -3.5rem;
-			bottom: 9rem;
-			width: 10rem;
-			height: 7rem;
-			opacity: 0.38;
-		}
-
-		.contact-hero {
+		.contact-page {
+			padding-inline: 1rem;
 			padding-top: 1.25rem;
-			gap: 1.25rem;
 		}
 
-		.contact-hero__breadcrumbs {
+		.contact-page::before {
+			left: -6rem;
+			top: 8rem;
+			width: 13rem;
+			height: 9rem;
+			opacity: 0.46;
+		}
+
+		.contact-page__breadcrumbs {
 			margin-bottom: 1.1rem;
 		}
 
-		.contact-hero__eyebrow {
-			font-size: 0.62rem;
+		.contact-page__intro h1 {
+			font-size: clamp(2.35rem, 11.5vw, 3.05rem);
 		}
 
-		.contact-hero h1 {
-			font-size: clamp(2.55rem, 13vw, 3.55rem);
-		}
-
-		.contact-hero p:last-child {
+		.contact-page__intro p {
 			font-size: 0.92rem;
 			line-height: 1.58;
 		}
 
-		.contact-hero__panel {
+		.contact-methods {
+			margin-top: 2.1rem;
+		}
+
+		.contact-method {
+			min-height: 7.8rem;
+			padding: 0.7rem 0.75rem;
+		}
+
+		.contact-method svg {
+			width: 1.7rem;
+			height: 1.7rem;
+			margin-bottom: 1rem;
+		}
+
+		.contact-method strong {
+			font-size: 0.98rem;
+		}
+
+		.contact-method span {
+			font-size: 0.78rem;
+		}
+
+		.contact-message {
+			margin-top: 1.6rem;
+			gap: 1rem;
+		}
+
+		.contact-form-card,
+		.contact-support {
+			padding: 1.1rem;
+		}
+
+		.contact-form-card__heading h2,
+		.contact-support h2 {
+			font-size: 1.55rem;
+		}
+
+		.contact-form-card__grid {
 			grid-template-columns: 1fr;
-			border-radius: 18px;
 		}
 
-		.contact-card {
-			grid-template-columns: 2.45rem minmax(0, 1fr);
-			border-radius: 14px;
+		.contact-form-card__full {
+			grid-column: auto;
 		}
 
-		.contact-card__icon {
-			width: 2.45rem;
-			height: 2.45rem;
+		.contact-map {
+			height: 19rem;
+			margin-top: 1.4rem;
 		}
 
-		.contact-workspace {
-			margin-bottom: 4rem;
-		}
-
-		.contact-workspace__aside,
-		.contact-request {
-			border-radius: 20px;
-		}
-
-		.contact-workspace__aside {
-			min-height: 22rem;
-		}
-
-		.contact-workspace__aside::before {
-			right: -3.8rem;
-			top: 3.4rem;
-		}
-
-		.contact-request {
-			grid-template-columns: 1fr;
+		.contact-map__card {
+			top: auto;
+			left: 1rem;
+			bottom: 1rem;
 			padding: 1rem;
+			transform: none;
 		}
 
-		.contact-request__footer {
+		.contact-cta {
+			margin-top: 1.2rem;
 			grid-template-columns: 1fr;
+			text-align: left;
 		}
 
-		.contact-request__footer p {
-			max-width: none;
-		}
-
-		.contact-request__footer button {
+		.contact-cta a {
 			width: 100%;
 		}
 	}

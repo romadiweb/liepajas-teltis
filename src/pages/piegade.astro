@@ -1,0 +1,519 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import CheckCircle from '@lucide/astro/icons/circle-check';
+import MapPin from '@lucide/astro/icons/map-pin';
+import PackageCheck from '@lucide/astro/icons/package-check';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import Truck from '@lucide/astro/icons/truck';
+import Wrench from '@lucide/astro/icons/wrench';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+
+const deliveryFeatures = [
+	{ icon: Truck, text: 'Piegāde visā Latvijā' },
+	{ icon: Wrench, text: 'Uzstādīšana uz vietas' },
+	{ icon: ShieldCheck, text: 'Droša un kvalitatīva transportēšana' },
+	{ icon: PackageCheck, text: 'Inventāra piegāde laikā' },
+];
+
+const servicePoints = ['Profesionāla komanda', 'Kvalitatīvs inventārs', 'Uzticams serviss'];
+
+const mapPins = [
+	[18, 48],
+	[22, 39],
+	[25, 33],
+	[27, 60],
+	[34, 48],
+	[39, 66],
+	[44, 50],
+	[47, 53],
+	[52, 35],
+	[58, 56],
+	[63, 43],
+	[64, 65],
+	[74, 56],
+	[77, 75],
+	[86, 41],
+	[91, 54],
+	[93, 66],
+];
+---
+
+<BaseLayout
+	title="Piegāde | Liepājas teltis"
+	description="Piegādājam, uzstādām un nodrošinām telšu un pasākumu inventāra nomu visā Latvijā."
+>
+	<SiteHeader />
+	<main class="page-shell delivery-page" aria-labelledby="delivery-page-title">
+		<FloatingActions />
+		<ScrollToTop />
+
+		<section class="delivery-hero">
+			<div class="delivery-hero__copy">
+				<nav class="breadcrumb-trail delivery-hero__breadcrumbs" aria-label="Lapas ceļš">
+					<a href="/">Sākums</a>
+					<ArrowRight aria-hidden="true" />
+					<span>Piegāde</span>
+				</nav>
+				<h1 id="delivery-page-title">Piegāde</h1>
+				<div class="delivery-rule" aria-hidden="true"></div>
+				<div class="delivery-hero__flow">
+					<div class="delivery-hero__mobile-media" aria-hidden="true">
+						<img src="/images/delivery-truck.svg" alt="" />
+					</div>
+					<p>Piegādājam, uzstādām un nodrošinām visu nepieciešamo jūsu pasākumam visā Latvijā.</p>
+				</div>
+			</div>
+			<div class="delivery-hero__media" aria-label="Liepājas Teltis piegādes transports">
+				<img src="/images/delivery-truck.svg" alt="Liepājas Teltis piegādes transports" />
+			</div>
+		</section>
+
+		<section class="delivery-coverage" aria-labelledby="delivery-coverage-title">
+			<div class="delivery-section-heading">
+				<h2 id="delivery-coverage-title">Piegāde visā Latvijā</h2>
+				<div class="delivery-rule" aria-hidden="true"></div>
+			</div>
+			<div class="delivery-coverage__grid">
+				<div class="delivery-feature-list" aria-label="Piegādes priekšrocības">
+					{
+						deliveryFeatures.map(({ icon: Icon, text }) => (
+							<div class="delivery-feature">
+								<Icon aria-hidden="true" />
+								<span>{text}</span>
+							</div>
+						))
+					}
+				</div>
+				<div class="delivery-map" aria-label="Piegāde Latvijā">
+					<div class="delivery-map__stage">
+						<img class="delivery-map__asset" src="/images/latvia.svg" alt="Latvijas karte" loading="lazy" />
+						{
+							mapPins.map(([left, top]) => (
+								<span class="delivery-map__pin" style={`left: ${left}%; top: ${top}%`}>
+									<MapPin aria-hidden="true" />
+								</span>
+							))
+						}
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="delivery-service" aria-labelledby="delivery-service-title">
+			<figure class="delivery-service__image">
+				<img src="https://images.unsplash.com/photo-1747407823729-466c37e18bec?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Telts uzstādīšana pasākuma norises vietā" loading="lazy" />
+			</figure>
+			<div class="delivery-service__copy">
+				<h2 id="delivery-service-title">Pilns serviss no sākuma līdz pasākuma beigām</h2>
+				<div class="delivery-rule" aria-hidden="true"></div>
+				<p>Piegādājam, uzstādām un demontējam inventāru, lai jūs varētu baudīt pasākumu bez rūpēm.</p>
+				<ul>
+					{
+						servicePoints.map((point) => (
+							<li>
+								<CheckCircle aria-hidden="true" />
+								<span>{point}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</section>
+	</main>
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.delivery-page {
+		position: relative;
+		padding: clamp(1.6rem, 3.8vw, 3.1rem) clamp(1rem, 3vw, 1.5rem) 0;
+		overflow: hidden;
+		background: var(--color-background);
+	}
+
+	.delivery-hero,
+	.delivery-coverage,
+	.delivery-service {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 1160px);
+		margin-inline: auto;
+	}
+
+	.delivery-hero {
+		display: grid;
+		grid-template-columns: minmax(17rem, 0.44fr) minmax(0, 0.96fr);
+		align-items: start;
+		min-height: clamp(17rem, 27vw, 21.5rem);
+	}
+
+	.delivery-hero__copy {
+		padding: 0 clamp(1rem, 3vw, 2.6rem) clamp(1rem, 3vw, 2.4rem) 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	.delivery-hero__breadcrumbs {
+		margin-bottom: clamp(1.5rem, 2.7vw, 2rem);
+	}
+
+	.delivery-hero h1,
+	.delivery-section-heading h2,
+	.delivery-service h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-weight: 500;
+		letter-spacing: 0;
+	}
+
+	.delivery-hero h1 {
+		font-size: clamp(2.9rem, 5.8vw, 4.6rem);
+		line-height: 1;
+	}
+
+	.delivery-rule {
+		width: 2.6rem;
+		height: 1px;
+		margin: 1rem 0 1.25rem;
+		background: var(--color-primary);
+	}
+
+	.delivery-hero p,
+	.delivery-service p {
+		max-width: 23rem;
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+		font-weight: 580;
+		line-height: 1.7;
+	}
+
+	.delivery-hero__flow {
+		display: contents;
+	}
+
+	.delivery-hero__mobile-media {
+		display: none;
+	}
+
+	.delivery-hero__media {
+		position: relative;
+		width: min(100%, 48rem);
+		min-height: 100%;
+		justify-self: end;
+		overflow: hidden;
+		background: transparent;
+		clip-path: inset(0 9% 0 0);
+	}
+
+	.delivery-hero__media img {
+		position: relative;
+		z-index: 1;
+		width: 168%;
+		height: clamp(19rem, 31vw, 24.8rem);
+		margin-left: -21%;
+		display: block;
+		object-fit: contain;
+		object-position: center right;
+		transform: translateY(-3.9rem);
+	}
+
+	.delivery-coverage {
+		margin-top: clamp(0.35rem, 1.2vw, 0.9rem);
+		padding: clamp(2.1rem, 4.5vw, 3.8rem) clamp(1.3rem, 4vw, 3rem) clamp(2rem, 4.8vw, 4rem);
+		background: rgba(255, 255, 255, 0.44);
+		border: 1px solid rgba(222, 212, 198, 0.78);
+		border-radius: 8px;
+		box-shadow: 0 18px 46px rgba(75, 64, 56, 0.06);
+	}
+
+	.delivery-section-heading {
+		text-align: center;
+	}
+
+	.delivery-section-heading h2 {
+		font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+		line-height: 1.1;
+	}
+
+	.delivery-section-heading .delivery-rule {
+		margin-inline: auto;
+	}
+
+	.delivery-coverage__grid {
+		margin-top: clamp(1.9rem, 4vw, 3rem);
+		display: grid;
+		grid-template-columns: minmax(15rem, 0.42fr) minmax(0, 1fr);
+		align-items: center;
+		gap: clamp(2rem, 5vw, 4.2rem);
+	}
+
+	.delivery-feature-list {
+		display: grid;
+	}
+
+	.delivery-feature {
+		min-height: 6.2rem;
+		padding: 1rem 0;
+		display: grid;
+		grid-template-columns: 2.4rem minmax(0, 1fr);
+		align-items: center;
+		gap: 1rem;
+		border-bottom: 1px solid rgba(185, 167, 143, 0.36);
+	}
+
+	.delivery-feature:first-child {
+		border-top: 0;
+	}
+
+	.delivery-feature svg {
+		width: 2.15rem;
+		height: 2.15rem;
+		color: var(--color-primary);
+		stroke-width: 1.8;
+	}
+
+	.delivery-feature span {
+		color: var(--color-bark);
+		font-size: 0.94rem;
+		font-weight: 700;
+		line-height: 1.35;
+	}
+
+	.delivery-map {
+		position: relative;
+		min-height: clamp(21rem, 36vw, 30rem);
+		display: grid;
+		place-items: center;
+	}
+
+	.delivery-map__stage {
+		position: relative;
+		width: min(100%, 42rem);
+	}
+
+	.delivery-map__asset {
+		width: 100%;
+		height: auto;
+		display: block;
+		opacity: 0.96;
+		filter: drop-shadow(0 1px 0 rgba(155, 135, 115, 0.12));
+	}
+
+	.delivery-map__pin {
+		position: absolute;
+		width: 1.24rem;
+		height: 1.24rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-primary);
+		transform: translate(-50%, -100%);
+	}
+
+	.delivery-map__pin svg {
+		width: 100%;
+		height: 100%;
+		fill: rgba(246, 241, 231, 0.88);
+		stroke-width: 2.2;
+	}
+
+	.delivery-service {
+		padding: clamp(4.2rem, 8vw, 6.4rem) 0 clamp(2.6rem, 4.8vw, 3.8rem);
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.88fr);
+		align-items: center;
+		gap: clamp(2rem, 5vw, 4rem);
+	}
+
+	.delivery-service__image {
+		margin: 0;
+		overflow: hidden;
+		aspect-ratio: 1.42 / 1;
+		border-radius: 8px;
+		box-shadow: 0 18px 44px rgba(75, 64, 56, 0.1);
+	}
+
+	.delivery-service__image img {
+		width: 100%;
+		height: 100%;
+		display: block;
+		object-fit: cover;
+	}
+
+	.delivery-service h2 {
+		max-width: 12em;
+		font-size: clamp(1.9rem, 3.8vw, 3rem);
+		line-height: 1.08;
+	}
+
+	.delivery-service ul {
+		margin: 1.55rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.7rem;
+		list-style: none;
+	}
+
+	.delivery-service li {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		color: var(--color-text-muted);
+		font-size: 0.94rem;
+		font-weight: 650;
+		line-height: 1.35;
+	}
+
+	.delivery-service li svg {
+		width: 1rem;
+		height: 1rem;
+		color: var(--color-primary);
+		stroke-width: 1.9;
+	}
+
+	@media (max-width: 860px) {
+		.delivery-hero {
+			grid-template-columns: 1fr;
+			gap: 1.4rem;
+		}
+
+		.delivery-hero__copy {
+			padding-right: 0;
+		}
+
+		.delivery-hero__media {
+			min-height: 19rem;
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+			border-radius: 8px;
+		}
+
+		.delivery-coverage__grid,
+		.delivery-service {
+			grid-template-columns: 1fr;
+		}
+
+		.delivery-feature-list {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 0;
+			border-block: 1px solid rgba(185, 167, 143, 0.28);
+		}
+
+		.delivery-feature {
+			padding: 1rem;
+			border-bottom: 1px solid rgba(185, 167, 143, 0.28);
+		}
+
+		.delivery-feature:nth-child(odd) {
+			border-right: 1px solid rgba(185, 167, 143, 0.28);
+		}
+
+		.delivery-feature:nth-last-child(-n + 2) {
+			border-bottom: 0;
+		}
+
+		.delivery-service__copy {
+			order: -1;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.delivery-page {
+			padding-inline: 1rem;
+			padding-top: 1.25rem;
+		}
+
+		.delivery-hero__breadcrumbs {
+			margin-bottom: 1.1rem;
+		}
+
+		.delivery-hero h1 {
+			font-size: clamp(2.35rem, 11.5vw, 3.05rem);
+		}
+
+		.delivery-hero p,
+		.delivery-service p {
+			font-size: 0.92rem;
+			line-height: 1.58;
+		}
+
+		.delivery-hero__flow {
+			display: flow-root;
+		}
+
+		.delivery-hero__media {
+			display: none;
+		}
+
+		.delivery-hero__mobile-media {
+			width: min(76vw, 19rem);
+			height: 10.2rem;
+			margin: -1.1rem -5.25rem 0 5.45rem;
+			display: block;
+			float: right;
+			overflow: hidden;
+			shape-outside: polygon(42% 0, 100% 0, 100% 100%, 18% 100%, 12% 52%);
+			shape-margin: 0.3rem;
+		}
+
+		.delivery-hero__mobile-media img {
+			width: 250%;
+			height: 100%;
+			display: block;
+			object-fit: contain;
+			object-position: center center;
+			transform: translate(-6.35rem, -0.3rem);
+		}
+
+		.delivery-hero__flow p {
+			max-width: none;
+			min-height: 11.7rem;
+			margin-left: 0;
+		}
+
+		.delivery-coverage {
+			margin-top: 0.85rem;
+			padding: 1.35rem 1rem 1.65rem;
+		}
+
+		.delivery-section-heading h2,
+		.delivery-service h2 {
+			font-size: clamp(1.65rem, 8vw, 2.15rem);
+		}
+
+		.delivery-coverage__grid {
+			margin-top: 1.4rem;
+			gap: 1.3rem;
+		}
+
+		.delivery-feature-list {
+			grid-template-columns: 1fr;
+		}
+
+		.delivery-feature,
+		.delivery-feature:nth-child(odd),
+		.delivery-feature:nth-last-child(-n + 2) {
+			min-height: 4.8rem;
+			border-right: 0;
+			border-bottom: 1px solid rgba(185, 167, 143, 0.28);
+		}
+
+		.delivery-feature:last-child {
+			border-bottom: 0;
+		}
+
+		.delivery-map {
+			min-height: 17rem;
+		}
+
+		.delivery-service {
+			padding-top: 3rem;
+			gap: 1.4rem;
+		}
+	}
+</style>

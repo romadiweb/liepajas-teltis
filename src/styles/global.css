@@ -117,6 +117,17 @@ button:focus-visible {
 	stroke-width: 2;
 }
 
+@media (max-width: 640px) {
+	.breadcrumb-trail {
+		font-size: 0.7rem;
+	}
+
+	.breadcrumb-trail svg {
+		width: 0.7rem;
+		height: 0.7rem;
+	}
+}
+
 .floating-actions {
 	position: fixed;
 	bottom: clamp(1rem, 2vw, 1.5rem);
