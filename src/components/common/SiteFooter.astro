@@ -89,7 +89,32 @@ const year = new Date().getFullYear();
 	</div>
 
 	<div class="site-footer__bottom">
-		<span>Mājaslapu veidoja - <a class="underline" href="https://www.romadi.lv/" target="_blank" rel="noopener noreferrer">Romadi</a></span>
+		<span>
+			<button
+				type="button"
+				class="site-footer__cookie-settings underline"
+				data-cc="show-preferencesModal"
+			>
+				Sīkdatņu iestatījumi
+			</button>
+
+			<span class="site-footer__separator">·</span>
+
+			<a class="underline" href="/privatuma-politika">Privātuma politika</a>
+
+			<span class="site-footer__separator">·</span>
+
+			Mājaslapu veidoja -
+			<a
+				class="underline"
+				href="https://www.romadi.lv/"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Romadi
+			</a>
+		</span>
+
 		<div class="site-footer__rekviziti">
 			<slot name="rekviziti">
 				<span>© {year} Liepājas teltis</span>
@@ -267,6 +292,19 @@ const year = new Date().getFullYear();
 		-webkit-mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 92%);
 		mask-image: linear-gradient(180deg, #000 0%, #000 52%, transparent 92%);
 	}
+
+.site-footer__cookie-settings {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.site-footer__separator {
+	margin: 0 0.5rem;
+}
 
 	.site-footer__wordmark span {
 		display: block;

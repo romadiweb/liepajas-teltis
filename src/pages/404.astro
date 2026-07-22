@@ -1,0 +1,373 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Tent from '@lucide/astro/icons/tent';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+---
+
+<BaseLayout
+	title="Lapa nav atrasta — Liepājas Teltis"
+	description="Pieprasītā lapa netika atrasta. Atgriezieties Liepājas Teltis sākumlapā vai piesakiet telšu un inventāra nomu."
+>
+	<SiteHeader />
+
+	<main id="top" class="not-found" aria-labelledby="not-found-title">
+		<FloatingActions />
+
+		<div class="not-found__inner">
+			<div class="not-found__content">
+				<p class="not-found__eyebrow">Kļūda 404</p>
+				<h1 id="not-found-title">Šī lapa ir aizceļojusi</h1>
+				<div class="not-found__rule" aria-hidden="true"></div>
+
+				<p class="not-found__description">
+					Iespējams, saite vairs nav aktuāla vai adresē ieviesusies kļūda. Atgriezieties sākumlapā un turpiniet
+					plānot savu pasākumu.
+				</p>
+
+				<div class="not-found__actions">
+					<a class="not-found__button not-found__button--primary" href="/">
+						<span>Uz sākumlapu</span>
+						<ArrowRight aria-hidden="true" />
+					</a>
+
+					<a class="not-found__button not-found__button--secondary" href="/pieteikt-nomu">
+						<span>Pieteikt nomu</span>
+						<ArrowRight aria-hidden="true" />
+					</a>
+				</div>
+			</div>
+
+			<div class="not-found__visual" aria-hidden="true">
+				<span class="not-found__number">404</span>
+
+				<div class="not-found__tent">
+					<Tent />
+				</div>
+
+				<span class="not-found__ground"></span>
+			</div>
+		</div>
+	</main>
+
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.not-found {
+		position: relative;
+		min-height: clamp(34rem, 72vh, 48rem);
+		padding: clamp(3.5rem, 7vw, 6rem) clamp(1.2rem, 4vw, 2rem);
+		display: grid;
+		align-items: center;
+		background: var(--color-background);
+		overflow: hidden;
+	}
+
+	.not-found::before,
+	.not-found::after {
+		position: absolute;
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.32) 1.25px, transparent 1.55px);
+		background-size: 0.82rem 0.82rem;
+		content: '';
+		pointer-events: none;
+	}
+
+	.not-found::before {
+		left: max(1rem, calc(50% - 42rem));
+		top: clamp(2rem, 5vw, 4rem);
+		width: clamp(7rem, 14vw, 11rem);
+		height: clamp(5rem, 10vw, 7.5rem);
+		opacity: 0.55;
+	}
+
+	.not-found::after {
+		right: max(1rem, calc(50% - 42rem));
+		bottom: clamp(2rem, 5vw, 4rem);
+		width: clamp(7.5rem, 15vw, 12rem);
+		height: clamp(5.5rem, 10vw, 8rem);
+		opacity: 0.42;
+	}
+
+	.not-found__inner {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 1160px);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(18rem, 0.88fr) minmax(25rem, 1.12fr);
+		align-items: center;
+		gap: clamp(2.5rem, 7vw, 6rem);
+	}
+
+	.not-found__content {
+		max-width: 34rem;
+	}
+
+	.not-found__eyebrow {
+		margin: 0 0 1rem;
+		color: #8a9271;
+		font-size: 0.72rem;
+		font-weight: 850;
+		letter-spacing: 0.2em;
+		line-height: 1.3;
+		text-transform: uppercase;
+	}
+
+	.not-found h1 {
+		max-width: 9em;
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(2.8rem, 5.2vw, 4.7rem);
+		font-weight: 500;
+		letter-spacing: 0;
+		line-height: 1;
+	}
+
+	.not-found__rule {
+		width: 3.4rem;
+		height: 1px;
+		margin: 1.15rem 0 1.25rem;
+		background: var(--color-primary);
+		opacity: 0.85;
+	}
+
+	.not-found__description {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: clamp(0.95rem, 1.25vw, 1.04rem);
+		font-weight: 500;
+		line-height: 1.66;
+	}
+
+	.not-found__actions {
+		margin-top: 1.65rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.8rem;
+	}
+
+	.not-found__button {
+		width: fit-content;
+		min-height: 3rem;
+		padding: 0.3rem 1.35rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.7rem;
+		border: 1px solid transparent;
+		border-radius: 999px;
+		font-size: 0.76rem;
+		font-weight: 850;
+		letter-spacing: 0.04em;
+		line-height: 1;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition:
+			background 180ms ease,
+			border-color 180ms ease,
+			color 180ms ease,
+			transform 180ms ease;
+	}
+
+	.not-found__button:hover {
+		transform: translateY(-2px);
+	}
+
+	.not-found__button svg {
+		width: 1rem;
+		height: 1rem;
+		stroke-width: 2.2;
+	}
+
+	.not-found__button--primary {
+		color: var(--color-surface);
+		background: var(--color-primary);
+		box-shadow: 0 14px 26px rgba(75, 64, 56, 0.13);
+	}
+
+	.not-found__button--primary:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+	}
+
+	.not-found__button--secondary {
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.55);
+		border-color: rgba(138, 146, 113, 0.45);
+	}
+
+	.not-found__button--secondary:hover {
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.9);
+		border-color: var(--color-primary);
+	}
+
+	.not-found__visual {
+		position: relative;
+		min-height: clamp(18rem, 38vw, 27rem);
+		display: grid;
+		place-items: center;
+		isolation: isolate;
+	}
+
+	.not-found__visual::before {
+		position: absolute;
+		inset: 7% 3% 4% 7%;
+		z-index: -2;
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(222, 212, 198, 0.66);
+		border-radius: 8px;
+		box-shadow: 0 18px 42px rgba(75, 64, 56, 0.1);
+		clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+		content: '';
+	}
+
+	.not-found__visual::after {
+		position: absolute;
+		inset: 15% 11% 11% 18%;
+		z-index: -1;
+		background:
+			radial-gradient(circle at 72% 24%, rgba(138, 146, 113, 0.18) 0 2.8rem, transparent 2.9rem),
+			linear-gradient(150deg, rgba(244, 241, 234, 0.15), rgba(138, 146, 113, 0.12));
+		border-radius: 999px 999px 1.25rem 1.25rem;
+		content: '';
+	}
+
+	.not-found__number {
+		position: absolute;
+		top: 8%;
+		right: 8%;
+		color: rgba(75, 64, 56, 0.09);
+		font-family: Georgia, 'Times New Roman', serif;
+		font-size: clamp(6rem, 15vw, 11rem);
+		font-weight: 500;
+		line-height: 0.9;
+		user-select: none;
+	}
+
+	.not-found__tent {
+		width: clamp(8rem, 18vw, 13rem);
+		height: clamp(8rem, 18vw, 13rem);
+		display: grid;
+		place-items: center;
+		color: var(--color-primary);
+		background: rgba(138, 146, 113, 0.1);
+		border: 1px solid rgba(138, 146, 113, 0.2);
+		border-radius: 999px;
+		box-shadow: 0 16px 38px rgba(75, 64, 56, 0.08);
+	}
+
+	.not-found__tent svg {
+		width: 48%;
+		height: 48%;
+		stroke-width: 1.35;
+	}
+
+	.not-found__ground {
+		position: absolute;
+		left: 18%;
+		right: 11%;
+		bottom: 16%;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, rgba(138, 146, 113, 0.55), transparent);
+	}
+
+	@media (max-width: 860px) {
+		.not-found {
+			padding-top: clamp(2rem, 6vw, 3.5rem);
+		}
+
+		.not-found__inner {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+		}
+
+		.not-found__content {
+			max-width: 42rem;
+		}
+
+		.not-found__visual {
+			width: min(100%, 38rem);
+			min-height: clamp(16rem, 55vw, 23rem);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.not-found {
+			min-height: auto;
+			padding: 2rem 1.05rem 3.5rem;
+		}
+
+		.not-found::before {
+			left: -2.4rem;
+			top: 1.5rem;
+			width: 8rem;
+			height: 5.6rem;
+			opacity: 0.4;
+		}
+
+		.not-found::after {
+			right: -2.6rem;
+			bottom: 2rem;
+			width: 8.5rem;
+			height: 6rem;
+			opacity: 0.32;
+		}
+
+		.not-found h1 {
+			max-width: 8.5em;
+			font-size: clamp(2.35rem, 11vw, 3.35rem);
+		}
+
+		.not-found__eyebrow {
+			margin-bottom: 0.7rem;
+			font-size: 0.62rem;
+			letter-spacing: 0.17em;
+		}
+
+		.not-found__rule {
+			margin: 0.82rem 0 0.95rem;
+		}
+
+		.not-found__description {
+			font-size: 0.88rem;
+			line-height: 1.55;
+		}
+
+		.not-found__actions {
+			align-items: stretch;
+			flex-direction: column;
+		}
+
+		.not-found__button {
+			width: 100%;
+			min-height: 2.85rem;
+			font-size: 0.68rem;
+		}
+
+		.not-found__visual {
+			min-height: 16rem;
+		}
+
+		.not-found__visual::before {
+			inset: 5% 0 2%;
+			clip-path: none;
+		}
+
+		.not-found__number {
+			top: 9%;
+			right: 5%;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.not-found__button {
+			transition: none;
+		}
+	}
+</style>

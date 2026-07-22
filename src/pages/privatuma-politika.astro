@@ -1,0 +1,601 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Cookie from '@lucide/astro/icons/cookie';
+import Database from '@lucide/astro/icons/database';
+import FileText from '@lucide/astro/icons/file-text';
+import Mail from '@lucide/astro/icons/mail';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+
+const updatedAt = '22.07.2026.';
+
+const dataItems = [
+	{
+		icon: FileText,
+		title: 'Pieteikumu un saziņas dati',
+		text: 'Vārds, uzvārds, tālrunis, e-pasts, pasākuma datums, norises vieta, vēlamais inventārs un ziņojums, ko iesniedzat formās.',
+	},
+	{
+		icon: Database,
+		title: 'Nomas saraksts pārlūkā',
+		text: 'Produkti, daudzums un izvēlētais nomas periods tiek saglabāti jūsu pārlūkā, lai saraksts nepazustu starp lapām.',
+	},
+	{
+		icon: Cookie,
+		title: 'Sīkdatņu izvēles',
+		text: 'Saglabājam, kurām sīkdatņu kategorijām esat piekrituši, lai neprasītu izvēli katrā apmeklējumā.',
+	},
+];
+
+const cookieRows = [
+	{
+		name: 'cc_cookie',
+		type: 'Sīkdatne',
+		provider: 'Liepājas teltis',
+		purpose: 'Saglabā sīkdatņu piekrišanas izvēli.',
+		duration: '182 dienas',
+		category: 'Nepieciešama',
+	},
+	{
+		name: 'liepajas-teltis-cart',
+		type: 'localStorage',
+		provider: 'Liepājas teltis',
+		purpose: 'Saglabā nomas saraksta produktus, daudzumu un nomas periodu šajā pārlūkā.',
+		duration: 'Līdz saraksta dzēšanai vai pārlūka datu notīrīšanai',
+		category: 'Nepieciešama',
+	},
+	{
+		name: '_ga, _ga_*',
+		type: 'Sīkdatne',
+		provider: 'Google Analytics',
+		purpose: 'Atšķir apmeklētājus un apkopo vietnes lietojuma statistiku, ja analītika ir pieslēgta un pieņemta.',
+		duration: 'Parasti līdz 2 gadiem',
+		category: 'Analītika',
+	},
+	{
+		name: '_gid',
+		type: 'Sīkdatne',
+		provider: 'Google Analytics',
+		purpose: 'Atšķir apmeklētājus īstermiņa statistikai, ja analītika ir pieslēgta un pieņemta.',
+		duration: 'Parasti 24 stundas',
+		category: 'Analītika',
+	},
+	{
+		name: '_gat, _gat_*',
+		type: 'Sīkdatne',
+		provider: 'Google Analytics',
+		purpose: 'Ierobežo pieprasījumu biežumu analītikas pakalpojumam, ja analītika ir pieslēgta un pieņemta.',
+		duration: 'Parasti līdz 1 minūtei',
+		category: 'Analītika',
+	},
+];
+---
+
+<BaseLayout
+	title="Privātuma politika | Liepājas teltis"
+	description="Liepājas teltis privātuma politika par personas datu, sīkdatņu un nomas saraksta pārlūka krātuves izmantošanu."
+>
+	<SiteHeader />
+	<main class="page-shell privacy-page" aria-labelledby="privacy-page-title">
+		<FloatingActions />
+		<ScrollToTop />
+
+		<section class="privacy-hero">
+			<nav class="breadcrumb-trail privacy-hero__breadcrumbs" aria-label="Lapas ceļš">
+				<a href="/">Sākums</a>
+				<ArrowRight aria-hidden="true" />
+				<span>Privātuma politika</span>
+			</nav>
+
+			<div class="privacy-hero__layout">
+				<div class="privacy-hero__copy">
+					<p class="privacy-page__eyebrow">Datu aizsardzība</p>
+					<h1 id="privacy-page-title">Privātuma politika</h1>
+					<p>
+						Šajā politikā skaidrojam, kā Liepājas teltis apstrādā personas datus, sīkdatnes un pārlūka krātuvi,
+						kad izmantojat mūsu mājaslapu vai nosūtāt nomas pieteikumu.
+					</p>
+					<span>Atjaunināts: {updatedAt}</span>
+				</div>
+
+				<aside class="privacy-hero__contact" aria-label="Privātuma saziņa">
+					<ShieldCheck aria-hidden="true" />
+					<h2>Jautājumi par datiem</h2>
+					<p>Rakstiet mums, ja vēlaties precizēt, labot vai dzēst savus iesniegtos datus.</p>
+					<a href="mailto:info@liepajasteltis.lv">
+						<Mail aria-hidden="true" />
+						<span>info@liepajasteltis.lv</span>
+					</a>
+				</aside>
+			</div>
+		</section>
+
+		<section class="privacy-summary" aria-label="Apstrādātie dati">
+			{
+				dataItems.map(({ icon: Icon, title, text }) => (
+					<article>
+						<Icon aria-hidden="true" />
+						<h2>{title}</h2>
+						<p>{text}</p>
+					</article>
+				))
+			}
+		</section>
+
+		<section class="privacy-content" aria-label="Privātuma politikas teksts">
+			<div class="privacy-content__section">
+				<h2>1. Datu pārzinis</h2>
+				<p>
+					Vietnes <a href="/">liepajasteltis.lv</a> pakalpojuma sniedzējs un datu pārzinis ir Liepājas teltis.
+					Saziņai par personas datu apstrādi izmantojiet e-pastu
+					<a href="mailto:info@liepajasteltis.lv">info@liepajasteltis.lv</a> vai tālruni
+					<a href="tel:+37129373231">+371 29 373 231</a>.
+				</p>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>2. Kādus datus apstrādājam</h2>
+				<p>
+					Apstrādājam datus, kurus paši ievadāt saziņas vai nomas pieteikuma formās: vārdu, uzvārdu, tālruņa
+					numuru, e-pasta adresi, pasākuma datumu, norises vietu, vēlamo inventāru, papildu pakalpojumus un
+					ziņojuma saturu. Ja izmantojat nomas sarakstu, izvēlētie produkti, daudzums un nomas periods tiek
+					saglabāti tikai jūsu pārlūkā.
+				</p>
+				<p>
+					Produktu katalogs var tikt ielādēts no Supabase datubāzes. Šis pieslēgums tiek izmantots produktu
+					informācijas attēlošanai, nevis klientu pieteikumu glabāšanai jūsu pārlūkā.
+				</p>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>3. Kāpēc apstrādājam datus</h2>
+				<ul>
+					<li>Lai atbildētu uz jūsu jautājumiem un sagatavotu nomas piedāvājumu.</li>
+					<li>Lai precizētu inventāra pieejamību, piegādi, uzstādīšanu un pasākuma vajadzības.</li>
+					<li>Lai saglabātu nomas sarakstu šajā pārlūkā, kamēr pārvietojaties pa vietni.</li>
+					<li>Lai saglabātu jūsu sīkdatņu izvēli un, ar piekrišanu, uzlabotu vietni pēc anonimizētas statistikas.</li>
+				</ul>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>4. Tiesiskais pamats</h2>
+				<p>
+					Pieteikumu un saziņas datus apstrādājam, lai veiktu darbības pirms pakalpojuma sniegšanas un atbildētu
+					uz jūsu pieprasījumu. Nepieciešamās sīkdatnes un pārlūka krātuvi izmantojam vietnes pamatfunkciju
+					nodrošināšanai. Analītikas sīkdatnes izmantojam tikai ar jūsu piekrišanu.
+				</p>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>5. Sīkdatnes un pārlūka krātuve</h2>
+				<p>
+					Vietne izmanto nepieciešamās sīkdatnes un pārlūka krātuvi. Nomas saraksts nav servera grozs: tas tiek
+					glabāts jūsu ierīcē ar <code>localStorage</code>, nevis sīkdatnē. Analītikas sīkdatnes tiek izmantotas
+					tikai tad, ja vietnē ir pieslēgts Google Analytics un jūs tām piekrītat.
+				</p>
+
+				<div class="privacy-table-shell">
+					<table>
+						<thead>
+							<tr>
+								<th>Nosaukums</th>
+								<th>Veids</th>
+								<th>Pakalpojuma sniedzējs</th>
+								<th>Mērķis</th>
+								<th>Glabāšanas ilgums</th>
+								<th>Kategorija</th>
+							</tr>
+						</thead>
+						<tbody>
+							{
+								cookieRows.map((row) => (
+									<tr>
+										<td><code>{row.name}</code></td>
+										<td>{row.type}</td>
+										<td>{row.provider}</td>
+										<td>{row.purpose}</td>
+										<td>{row.duration}</td>
+										<td>{row.category}</td>
+									</tr>
+								))
+							}
+						</tbody>
+					</table>
+				</div>
+
+				<button class="privacy-cookie-button" type="button" data-cc="show-preferencesModal">
+					<Cookie aria-hidden="true" />
+					<span>Mainīt sīkdatņu iestatījumus</span>
+				</button>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>6. Kam dati var tikt nodoti</h2>
+				<p>
+					Pieteikumu apstrādei vietne izmanto Netlify formu funkcionalitāti. Saziņas dati var tikt apstrādāti
+					e-pasta un hostinga pakalpojumu vidē, lai mēs varētu saņemt jūsu ziņu un atbildēt uz to. Dati netiek
+					pārdoti vai nodoti mārketinga nolūkiem.
+				</p>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>7. Glabāšanas ilgums</h2>
+				<p>
+					Pieteikumu datus glabājam tik ilgi, cik nepieciešams saziņai, piedāvājuma sagatavošanai un ar nomas
+					pakalpojumu saistīto jautājumu risināšanai. Pārlūkā saglabāto nomas sarakstu varat dzēst, izņemot
+					produktus no saraksta vai notīrot pārlūka vietnes datus.
+				</p>
+			</div>
+
+			<div class="privacy-content__section">
+				<h2>8. Jūsu tiesības</h2>
+				<p>
+					Jums ir tiesības pieprasīt piekļuvi saviem datiem, to labošanu, dzēšanu, apstrādes ierobežošanu,
+					iebilst pret apstrādi un atsaukt piekrišanu analītikas sīkdatnēm. Par šiem jautājumiem rakstiet uz
+					<a href="mailto:info@liepajasteltis.lv">info@liepajasteltis.lv</a>.
+				</p>
+			</div>
+		</section>
+	</main>
+	<SiteFooter />
+</BaseLayout>
+
+<style>
+	.privacy-page {
+		position: relative;
+		padding: clamp(1.5rem, 3.6vw, 3rem) clamp(1rem, 3vw, 1.5rem) 0;
+		overflow: hidden;
+		background: var(--color-background);
+	}
+
+	.privacy-page::before {
+		position: absolute;
+		top: 9rem;
+		left: max(-5rem, calc(50% - 48rem));
+		width: clamp(9rem, 18vw, 14rem);
+		height: clamp(6rem, 12vw, 9rem);
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.28) 1.25px, transparent 1.55px);
+		background-size: 0.82rem 0.82rem;
+		content: "";
+		opacity: 0.72;
+		pointer-events: none;
+	}
+
+	.privacy-hero,
+	.privacy-summary,
+	.privacy-content {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 1160px);
+		margin-inline: auto;
+	}
+
+	.privacy-hero__breadcrumbs {
+		margin-bottom: clamp(1.5rem, 2.7vw, 2rem);
+	}
+
+	.privacy-hero__layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+		align-items: end;
+		gap: clamp(1.4rem, 4vw, 3.2rem);
+	}
+
+	.privacy-page__eyebrow {
+		margin: 0 0 0.8rem;
+		color: #8a9271;
+		font-size: 0.72rem;
+		font-weight: 820;
+		letter-spacing: 0.2em;
+		line-height: 1.3;
+		text-transform: uppercase;
+	}
+
+	.privacy-hero h1,
+	.privacy-hero__contact h2,
+	.privacy-summary h2,
+	.privacy-content h2 {
+		margin: 0;
+		color: var(--color-bark);
+		letter-spacing: 0;
+	}
+
+	.privacy-hero h1 {
+		max-width: 9.5em;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(2.8rem, 6.2vw, 5rem);
+		font-weight: 500;
+		line-height: 0.98;
+	}
+
+	.privacy-hero__copy > p:last-of-type {
+		max-width: 40rem;
+		margin: 1.15rem 0 0;
+		color: var(--color-text-muted);
+		font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+		font-weight: 500;
+		line-height: 1.68;
+	}
+
+	.privacy-hero__copy > span {
+		display: inline-flex;
+		margin-top: 1rem;
+		color: var(--color-text-muted);
+		font-size: 0.86rem;
+		font-weight: 650;
+	}
+
+	.privacy-hero__contact {
+		padding: 1.25rem;
+		background: rgba(255, 255, 255, 0.62);
+		border: 1px solid rgba(222, 212, 198, 0.86);
+		border-radius: 8px;
+		box-shadow: var(--shadow-soft);
+	}
+
+	.privacy-hero__contact > svg {
+		width: 2.9rem;
+		height: 2.9rem;
+		margin-bottom: 1rem;
+		color: var(--color-primary);
+		stroke-width: 1.5;
+	}
+
+	.privacy-hero__contact h2 {
+		font-size: 1.12rem;
+		font-weight: 760;
+	}
+
+	.privacy-hero__contact p {
+		margin: 0.55rem 0 1rem;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 520;
+		line-height: 1.52;
+	}
+
+	.privacy-hero__contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		color: var(--color-bark);
+		font-size: 0.88rem;
+		font-weight: 740;
+		text-decoration: none;
+	}
+
+	.privacy-hero__contact a svg {
+		width: 1rem;
+		height: 1rem;
+		color: var(--color-primary);
+		stroke-width: 2;
+	}
+
+	.privacy-summary {
+		margin-top: clamp(2rem, 4.5vw, 3.6rem);
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.privacy-summary article {
+		min-width: 0;
+		padding: 1.2rem;
+		background: rgba(255, 255, 255, 0.52);
+		border: 1px solid rgba(222, 212, 198, 0.82);
+		border-radius: 8px;
+		box-shadow: 0 14px 34px rgba(75, 64, 56, 0.06);
+	}
+
+	.privacy-summary svg {
+		width: 1.75rem;
+		height: 1.75rem;
+		margin-bottom: 0.95rem;
+		color: var(--color-primary);
+		stroke-width: 1.7;
+	}
+
+	.privacy-summary h2 {
+		font-size: 1rem;
+		font-weight: 760;
+		line-height: 1.2;
+	}
+
+	.privacy-summary p {
+		margin: 0.55rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.88rem;
+		font-weight: 520;
+		line-height: 1.52;
+	}
+
+	.privacy-content {
+		margin-top: clamp(1.6rem, 3.6vw, 2.6rem);
+		margin-bottom: clamp(2.5rem, 5vw, 4rem);
+		padding: clamp(1.25rem, 3vw, 2rem);
+		display: grid;
+		gap: 1.45rem;
+		background: rgba(255, 255, 255, 0.46);
+		border: 1px solid rgba(222, 212, 198, 0.84);
+		border-radius: 8px;
+		box-shadow: 0 18px 42px rgba(75, 64, 56, 0.06);
+	}
+
+	.privacy-content__section {
+		display: grid;
+		gap: 0.65rem;
+	}
+
+	.privacy-content__section + .privacy-content__section {
+		padding-top: 1.15rem;
+		border-top: 1px solid rgba(222, 212, 198, 0.72);
+	}
+
+	.privacy-content h2 {
+		font-size: clamp(1.12rem, 2vw, 1.35rem);
+		font-weight: 760;
+		line-height: 1.22;
+	}
+
+	.privacy-content p,
+	.privacy-content li {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: 0.95rem;
+		font-weight: 500;
+		line-height: 1.7;
+	}
+
+	.privacy-content ul {
+		margin: 0;
+		padding-left: 1.2rem;
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.privacy-content a {
+		font-weight: 700;
+	}
+
+	.privacy-content code {
+		padding: 0.12rem 0.28rem;
+		color: var(--color-bark);
+		background: rgba(237, 228, 215, 0.82);
+		border: 1px solid rgba(222, 212, 198, 0.72);
+		border-radius: 4px;
+		font-size: 0.86em;
+	}
+
+	.privacy-table-shell {
+		max-width: 100%;
+		margin-top: 0.4rem;
+		overflow-x: auto;
+		border: 1px solid rgba(222, 212, 198, 0.86);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.62);
+	}
+
+	.privacy-table-shell table {
+		width: 100%;
+		min-width: 56rem;
+		border-collapse: collapse;
+	}
+
+	.privacy-table-shell th,
+	.privacy-table-shell td {
+		padding: 0.85rem;
+		border-bottom: 1px solid rgba(222, 212, 198, 0.78);
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.privacy-table-shell th {
+		color: var(--color-bark);
+		background: rgba(237, 228, 215, 0.72);
+		font-size: 0.72rem;
+		font-weight: 820;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.privacy-table-shell td {
+		color: var(--color-text-muted);
+		font-size: 0.86rem;
+		font-weight: 500;
+		line-height: 1.45;
+	}
+
+	.privacy-table-shell tr:last-child td {
+		border-bottom: 0;
+	}
+
+	.privacy-cookie-button {
+		width: fit-content;
+		min-height: 2.9rem;
+		margin-top: 0.6rem;
+		padding: 0 1.15rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border: 0;
+		border-radius: 999px;
+		box-shadow: 0 12px 22px rgba(138, 146, 113, 0.22);
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.78rem;
+		font-weight: 820;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.privacy-cookie-button:hover {
+		background: var(--color-primary-hover);
+		transform: translateY(-2px);
+	}
+
+	.privacy-cookie-button svg {
+		width: 0.95rem;
+		height: 0.95rem;
+		stroke-width: 2;
+	}
+
+	@media (max-width: 860px) {
+		.privacy-hero__layout,
+		.privacy-summary {
+			grid-template-columns: 1fr;
+		}
+
+		.privacy-hero__contact {
+			max-width: 32rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.privacy-page {
+			padding-inline: 1rem;
+			padding-top: 1.25rem;
+		}
+
+		.privacy-page::before {
+			top: 8rem;
+			left: -6rem;
+			opacity: 0.42;
+		}
+
+		.privacy-hero__breadcrumbs {
+			margin-bottom: 1.1rem;
+		}
+
+		.privacy-hero h1 {
+			font-size: clamp(2.35rem, 11vw, 3.05rem);
+		}
+
+		.privacy-hero__copy > p:last-of-type,
+		.privacy-content p,
+		.privacy-content li {
+			font-size: 0.9rem;
+			line-height: 1.6;
+		}
+
+		.privacy-summary {
+			margin-top: 1.5rem;
+			gap: 0.75rem;
+		}
+
+		.privacy-content {
+			margin-top: 1.2rem;
+			padding: 1rem;
+		}
+
+		.privacy-cookie-button {
+			width: 100%;
+		}
+	}
+</style>

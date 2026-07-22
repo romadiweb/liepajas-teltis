@@ -1,0 +1,181 @@
+---
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
+---
+
+<script>
+	import * as CookieConsent from 'vanilla-cookieconsent';
+
+	CookieConsent.run({
+		mode: 'opt-in',
+		revision: 2,
+
+		cookie: {
+			name: 'cc_cookie',
+			expiresAfterDays: 182,
+			sameSite: 'Lax',
+			secure: true,
+		},
+
+		guiOptions: {
+			consentModal: {
+				layout: 'box',
+				position: 'bottom right',
+				equalWeightButtons: true,
+				flipButtons: false,
+			},
+
+			preferencesModal: {
+				layout: 'box',
+				equalWeightButtons: true,
+				flipButtons: false,
+			},
+		},
+
+		categories: {
+			necessary: {
+				enabled: true,
+				readOnly: true,
+			},
+
+			analytics: {
+				autoClear: {
+					cookies: [
+						{ name: /^_ga/ },
+						{ name: '_gid' },
+						{ name: /^_gat/ },
+					],
+				},
+			},
+		},
+
+		language: {
+			default: 'lv',
+
+			translations: {
+				lv: {
+					consentModal: {
+						title: 'Mēs izmantojam sīkdatnes',
+						description:
+							'Mēs izmantojam nepieciešamās sīkdatnes un pārlūka krātuvi vietnes darbībai, tostarp nomas saraksta saglabāšanai. Analītikas sīkdatnes izmantojam tikai ar jūsu piekrišanu.',
+						acceptAllBtn: 'Pieņemt visas',
+						acceptNecessaryBtn: 'Tikai nepieciešamās',
+						showPreferencesBtn: 'Pārvaldīt izvēles',
+						footer: '<a href="/privatuma-politika">Privātuma politika</a>',
+					},
+
+					preferencesModal: {
+						title: 'Sīkdatņu iestatījumi',
+						acceptAllBtn: 'Pieņemt visas',
+						acceptNecessaryBtn: 'Tikai nepieciešamās',
+						savePreferencesBtn: 'Saglabāt izvēli',
+						closeIconLabel: 'Aizvērt',
+
+						sections: [
+							{
+								description:
+									'Izvēlieties, vai atļaut analītikas sīkdatnes. Nepieciešamās sīkdatnes un pārlūka krātuve vienmēr paliek ieslēgtas, jo tās nodrošina vietnes pamatfunkcijas.',
+							},
+
+							{
+								title: 'Nepieciešamās sīkdatnes un krātuve',
+								description:
+									'Saglabā jūsu sīkdatņu izvēli un nomas sarakstu šajā pārlūkā. Šīs tehnoloģijas netiek izmantotas mārketingam.',
+								linkedCategory: 'necessary',
+								cookieTable: {
+									headers: {
+										name: 'Nosaukums',
+										expiration: 'Glabāšana',
+										description: 'Mērķis',
+									},
+									body: [
+										{
+											name: 'cc_cookie',
+											expiration: '182 dienas',
+											description: 'Saglabā jūsu sīkdatņu piekrišanas izvēli.',
+										},
+										{
+											name: 'liepajas-teltis-cart',
+											expiration: 'Līdz dzēšanai',
+											description: 'Saglabā nomas saraksta saturu jūsu pārlūka localStorage.',
+										},
+									],
+								},
+							},
+
+							{
+								title: 'Analītikas sīkdatnes',
+								description:
+									'Google Analytics sīkdatnes tiek aktivizētas tikai tad, ja analītika ir pieslēgta un jūs šai kategorijai piekrītat.',
+								linkedCategory: 'analytics',
+								cookieTable: {
+									headers: {
+										name: 'Nosaukums',
+										expiration: 'Glabāšana',
+										description: 'Mērķis',
+									},
+									body: [
+										{
+											name: '_ga, _ga_*',
+											expiration: 'Līdz 2 gadiem',
+											description: 'Atšķir apmeklētājus un apkopo vietnes lietojuma statistiku.',
+										},
+										{
+											name: '_gid',
+											expiration: '24 stundas',
+											description: 'Atšķir apmeklētājus īstermiņa statistikai.',
+										},
+										{
+											name: '_gat, _gat_*',
+											expiration: 'Līdz 1 minūtei',
+											description: 'Ierobežo pieprasījumu biežumu analītikas pakalpojumam.',
+										},
+									],
+								},
+							},
+
+							{
+								title: 'Papildu informācija',
+								description:
+									'Pilns sīkdatņu un pārlūka krātuves apraksts ir pieejams mūsu <a href="/privatuma-politika">privātuma politikā</a>. Savu izvēli varat mainīt jebkurā laikā lapas kājenē.',
+							},
+						],
+					},
+				},
+			},
+		},
+	});
+</script>
+
+<style is:global>
+	#cc-main {
+		--cc-font-family: inherit;
+		--cc-modal-border-radius: 0.75rem;
+
+		/* Normal radius for panels; pill radius only for toggles and action buttons. */
+		--cc-btn-border-radius: 0.55rem;
+		--cc-pm-toggle-border-radius: 999px;
+
+		--cc-btn-primary-bg: #7b8c59;
+		--cc-btn-primary-border-color: #7b8c59;
+		--cc-btn-primary-hover-bg: #68784c;
+		--cc-btn-primary-hover-border-color: #68784c;
+
+		--cc-toggle-on-bg: #7b8c59;
+		--cc-cookie-category-block-bg: #f1f3ef;
+		--cc-cookie-category-block-border: #e1e6dc;
+		--cc-cookie-category-block-hover-bg: #ebeee8;
+		--cc-cookie-category-block-hover-border: #d8ded3;
+		--cc-cookie-category-expanded-block-bg: #ffffff;
+		--cc-cookie-category-expanded-block-hover-bg: #ffffff;
+	}
+
+	#cc-main .cm__btn,
+	#cc-main .pm__btn {
+		border-radius: 999px;
+	}
+
+	/* Keep the cookie rows readable inside the preferences modal. */
+	#cc-main .section__toggle-wrapper + .pm__section-desc-wrapper table {
+		font-size: 0.82rem;
+	}
+</style>

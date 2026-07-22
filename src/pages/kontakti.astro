@@ -115,6 +115,11 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 					</label>
 				</div>
 
+				<p class="contact-form-card__privacy">
+					Nosūtot ziņojumu, piekrītat, ka sazināsimies par jūsu jautājumu. Plašāk:
+					<a href="/privatuma-politika">privātuma politika</a>.
+				</p>
+
 				<button class="contact-form-card__button" type="submit">
 					<span>Nosūtīt</span>
 					<ArrowRight aria-hidden="true" />
@@ -407,6 +412,19 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 		border-color: var(--color-primary);
 		outline: none;
 		box-shadow: var(--focus-ring);
+	}
+
+	.contact-form-card__privacy {
+		max-width: 26rem;
+		margin: 0.9rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		font-weight: 520;
+		line-height: 1.42;
+	}
+
+	.contact-form-card__privacy a {
+		font-weight: 700;
 	}
 
 	.contact-form-card__button,

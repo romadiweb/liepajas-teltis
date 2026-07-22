@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CartDrawer from '../components/common/CartDrawer.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
 	title?: string;
@@ -23,8 +24,11 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
+
 	<body>
 		<slot />
+
 		<CartDrawer />
+		<CookieConsent />
 	</body>
 </html>
