@@ -178,20 +178,30 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 					<ul class="site-header__mobile-list menu menu-vertical">
 						{
 							navItems.map((item) => (
-								<li>
-									<a class:list={{ 'is-active': isActiveNavItem(item.href) }} href={item.href} aria-current={isActiveNavItem(item.href) ? 'page' : undefined}>{item.label}</a>
-									{
-										item.hasDropdown && (
-											<ul class="site-header__mobile-sublist" aria-label="Nomas kategorijas">
-												{categoryItems.map((category) => (
-													<li>
-														<a class:list={{ 'is-active': isActiveNavItem(category.href) }} href={category.href}>{category.label}</a>
-													</li>
-												))}
-											</ul>
-										)
-									}
-								</li>
+								item.hasDropdown ? (
+									<li class:list={['site-header__mobile-item--dropdown', { 'is-open': isRentalCategoryActive }]}>
+										<button
+											class:list={['site-header__mobile-dropdown-toggle', { 'is-active': isRentalCategoryActive }]}
+											data-mobile-rental-toggle
+											type="button"
+											aria-expanded={isRentalCategoryActive ? 'true' : 'false'}
+										>
+											<span>{item.label}</span>
+											<ChevronDown aria-hidden="true" />
+										</button>
+										<ul class="site-header__mobile-sublist" aria-label="Nomas kategorijas" aria-hidden={isRentalCategoryActive ? 'false' : 'true'}>
+											{categoryItems.map((category) => (
+												<li>
+													<a class:list={{ 'is-active': isActiveNavItem(category.href) }} href={category.href}>{category.label}</a>
+												</li>
+											))}
+										</ul>
+									</li>
+								) : (
+									<li>
+										<a class:list={{ 'is-active': isActiveNavItem(item.href) }} href={item.href} aria-current={isActiveNavItem(item.href) ? 'page' : undefined}>{item.label}</a>
+									</li>
+								)
 							))
 						}
 						<li class="site-header__mobile-contact">
@@ -245,20 +255,73 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 	const mobileMenuToggle = document.querySelector<HTMLInputElement>('#site-header-mobile-menu');
 	const mobileMenuLinks = document.querySelectorAll<HTMLAnchorElement>('.site-header__mobile-panel a');
 	const mobileMenuButtons = document.querySelectorAll<HTMLButtonElement>('.site-header__mobile-panel button');
+	const mobileRentalToggles = document.querySelectorAll<HTMLButtonElement>('[data-mobile-rental-toggle]');
+	let mobileMenuScrollY = 0;
+	const shouldOpenMobileRentalByDefault = document.querySelector('.site-header__mobile-dropdown-toggle.is-active') !== null;
+
+	const closeMobileRentalDropdowns = () => {
+		mobileRentalToggles.forEach((button) => {
+			const item = button.closest('.site-header__mobile-item--dropdown');
+			const sublist = item?.querySelector<HTMLElement>('.site-header__mobile-sublist');
+
+			item?.classList.remove('is-open');
+			button.setAttribute('aria-expanded', 'false');
+			sublist?.setAttribute('aria-hidden', 'true');
+		});
+	};
+
+	const setMobileMenuOpen = (isOpen: boolean) => {
+		if (isOpen) {
+			if (!shouldOpenMobileRentalByDefault) {
+				closeMobileRentalDropdowns();
+			}
+			mobileMenuScrollY = window.scrollY;
+			document.body.classList.add('site-header-menu-open');
+			document.body.style.top = `-${mobileMenuScrollY}px`;
+			return;
+		}
+
+		document.body.classList.remove('site-header-menu-open');
+		document.body.style.top = '';
+		window.scrollTo(0, mobileMenuScrollY);
+		closeMobileRentalDropdowns();
+	};
+
+	mobileMenuToggle?.addEventListener('change', () => {
+		setMobileMenuOpen(mobileMenuToggle.checked);
+	});
 
 	mobileMenuLinks.forEach((link) => {
 		link.addEventListener('click', () => {
 			if (mobileMenuToggle) {
 				mobileMenuToggle.checked = false;
+				setMobileMenuOpen(false);
 			}
 		});
 	});
 
 	mobileMenuButtons.forEach((button) => {
 		button.addEventListener('click', () => {
+			if (button.matches('[data-mobile-rental-toggle]')) {
+				return;
+			}
+
 			if (mobileMenuToggle) {
 				mobileMenuToggle.checked = false;
+				setMobileMenuOpen(false);
 			}
+		});
+	});
+
+	mobileRentalToggles.forEach((button) => {
+		button.addEventListener('click', () => {
+			const item = button.closest('.site-header__mobile-item--dropdown');
+			const sublist = item?.querySelector<HTMLElement>('.site-header__mobile-sublist');
+			const isOpen = !item?.classList.contains('is-open');
+
+			item?.classList.toggle('is-open', isOpen);
+			button.setAttribute('aria-expanded', String(isOpen));
+			sublist?.setAttribute('aria-hidden', String(!isOpen));
 		});
 	});
 </script>
@@ -274,6 +337,14 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 
 	.site-header:has(.site-header__menu-toggle:checked) {
 		z-index: 90;
+	}
+
+	:global(body.site-header-menu-open) {
+		position: fixed;
+		right: 0;
+		left: 0;
+		width: 100%;
+		overflow: hidden;
 	}
 
 	.site-header__shell {
@@ -771,14 +842,14 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		height: 100vh;
 		height: 100dvh;
 		padding: 5.25rem clamp(1rem, 4vw, 1.35rem) 1.35rem;
-		overflow-y: auto;
+		overflow: hidden;
+		overscroll-behavior: contain;
 		background: var(--color-surface);
 		border: 1px solid rgba(75, 64, 56, 0.12);
 		border-block: 0;
 		border-right: 0;
 		border-radius: 1.4rem 0 0 1.4rem;
 		box-shadow: var(--shadow-strong);
-		overflow-x: hidden;
 		pointer-events: none;
 		transform: translateX(100%);
 		transition:
@@ -810,12 +881,31 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		font-weight: 700;
 	}
 
-	.site-header__mobile-list a.is-active {
-		color: var(--color-link-hover);
-		background: var(--color-background-soft);
+	.site-header__mobile-dropdown-toggle {
+		position: relative;
+		justify-content: space-between;
 	}
 
-	.site-header__mobile-list a.is-active::before {
+	.site-header__mobile-dropdown-toggle svg {
+		width: 1rem;
+		height: 1rem;
+		flex: 0 0 auto;
+		stroke-width: 2.25;
+		transition: transform 180ms ease;
+	}
+
+	.site-header__mobile-item--dropdown.is-open .site-header__mobile-dropdown-toggle svg {
+		transform: rotate(180deg);
+	}
+
+	.site-header__mobile-list a.is-active,
+	.site-header__mobile-dropdown-toggle.is-active {
+		color: var(--color-link-hover);
+		background: transparent;
+	}
+
+	.site-header__mobile-list a.is-active::before,
+	.site-header__mobile-dropdown-toggle.is-active::before {
 		position: absolute;
 		top: 0.78rem;
 		bottom: 0.78rem;
@@ -828,11 +918,24 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 
 	.site-header__mobile-sublist {
 		position: relative;
-		margin: -0.12rem 0 0.45rem;
+		max-height: 0;
+		margin: -0.12rem 0 0;
 		padding: 0 0 0 1.2rem;
 		display: grid;
 		gap: 0.12rem;
 		list-style: none;
+		overflow: hidden;
+		opacity: 0;
+		transition:
+			max-height 240ms ease,
+			margin-bottom 240ms ease,
+			opacity 180ms ease;
+	}
+
+	.site-header__mobile-item--dropdown.is-open .site-header__mobile-sublist {
+		max-height: 18rem;
+		margin-bottom: 0.45rem;
+		opacity: 1;
 	}
 
 	.site-header__mobile-sublist::before {
@@ -856,7 +959,7 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 
 	.site-header__mobile-sublist a.is-active {
 		color: var(--color-link-hover);
-		background: var(--color-background-soft);
+		background: transparent;
 	}
 
 	.site-header__mobile-sublist a.is-active::before {
@@ -882,10 +985,12 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		cursor: pointer;
 	}
 
-	.site-header__mobile-list a:hover,
-	.site-header__mobile-list button:hover {
-		color: var(--color-link-hover);
-		background: var(--color-background-soft);
+	@media (hover: hover) {
+		.site-header__mobile-list a:hover,
+		.site-header__mobile-list button:hover {
+			color: var(--color-link-hover);
+			background: var(--color-background-soft);
+		}
 	}
 
 	.site-header__mobile-cart-count {

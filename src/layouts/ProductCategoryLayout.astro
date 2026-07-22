@@ -51,6 +51,8 @@ interface Props {
 
 const { breadcrumbCurrent, description, filters, products, title } = Astro.props;
 const allFilterLabel = filters[0]?.label;
+const visibleFilterLimit = 3;
+const hasFilterOverflow = filters.length > visibleFilterLimit;
 const sizeOptions = Array.from(new Set(products.map((product) => product.size).filter(Boolean))).sort((first, second) =>
 	first.localeCompare(second, 'lv'),
 );
@@ -110,10 +112,10 @@ const modalProducts = products.map((product) => ({
 			<section class="product-category__controls" aria-label="Produktu filtri">
 				<div class="product-category__tabs">
 					{
-						filters.map((filter) => (
+						filters.map((filter, index) => (
 							<button
 								aria-pressed={filter.active ? 'true' : 'false'}
-								class:list={['product-category__tab', { 'is-active': filter.active }]}
+								class:list={['product-category__tab', { 'is-active': filter.active, 'product-category__tab--overflow': index >= visibleFilterLimit }]}
 								data-product-filter={filter.label === allFilterLabel ? 'all' : filter.label}
 								type="button"
 							>
@@ -121,7 +123,37 @@ const modalProducts = products.map((product) => ({
 							</button>
 						))
 					}
+					{
+						hasFilterOverflow && <span class="product-category__tabs-spacer" aria-hidden="true"></span>
+					}
 				</div>
+				{
+					hasFilterOverflow && (
+						<div class="product-category__filter-menu">
+							<button
+								class="product-category__filter-menu-toggle"
+								data-product-filter-menu-toggle
+								type="button"
+								aria-label="Atvērt visas kategorijas"
+								aria-expanded="false"
+							>
+								<ChevronDown aria-hidden="true" />
+							</button>
+							<div class="product-category__filter-menu-panel" data-product-filter-menu hidden>
+								{filters.map((filter) => (
+									<button
+										aria-pressed={filter.active ? 'true' : 'false'}
+										class:list={['product-category__filter-menu-option', { 'is-active': filter.active }]}
+										data-product-filter={filter.label === allFilterLabel ? 'all' : filter.label}
+										type="button"
+									>
+										{filter.label}
+									</button>
+								))}
+							</div>
+						</div>
+					)
+				}
 				<label class="product-category__size-filter product-category__size-filter--desktop">
 					<Ruler aria-hidden="true" />
 					<select data-product-size-filter aria-label="Filtrēt pēc izmēra">
@@ -405,15 +437,15 @@ const modalProducts = products.map((product) => ({
 	}
 
 	.product-category__tabs {
+		flex: 1 1 auto;
+		min-width: 0;
 		display: flex;
 		align-items: center;
 		gap: 0.42rem;
-		overflow-x: auto;
-		scrollbar-width: none;
-	}
-
-	.product-category__tabs::-webkit-scrollbar {
-		display: none;
+		flex-wrap: wrap;
+		padding-bottom: 0.62rem;
+		margin-bottom: -0.62rem;
+		overflow: visible;
 	}
 
 	.product-category__tab,
@@ -443,7 +475,7 @@ const modalProducts = products.map((product) => ({
 	.product-category__tab::after {
 		position: absolute;
 		right: 0.75rem;
-		bottom: -0.52rem;
+		bottom: -0.34rem;
 		left: 0.75rem;
 		height: 2px;
 		background: #6b7a4a;
@@ -516,6 +548,85 @@ const modalProducts = products.map((product) => ({
 	}
 
 	.product-category__size-filter--mobile {
+		display: none;
+	}
+
+	.product-category__filter-menu {
+		position: relative;
+		display: none;
+		flex: 0 0 auto;
+	}
+
+	.product-category__filter-menu-toggle {
+		width: 2.35rem;
+		height: 2.35rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: #6b7a4a;
+		border: 1px solid #6b7a4a;
+		border-radius: 0.7rem;
+		cursor: pointer;
+		transition:
+			background-color 160ms ease,
+			border-color 160ms ease,
+			transform 160ms ease;
+	}
+
+	.product-category__filter-menu-toggle:hover,
+	.product-category__filter-menu.is-open .product-category__filter-menu-toggle {
+		color: var(--color-surface);
+		background: #59683d;
+		border-color: #59683d;
+	}
+
+	.product-category__filter-menu-toggle svg {
+		width: 1rem;
+		height: 1rem;
+		stroke-width: 2.25;
+		transition: transform 180ms ease;
+	}
+
+	.product-category__filter-menu.is-open .product-category__filter-menu-toggle svg {
+		transform: rotate(180deg);
+	}
+
+	.product-category__filter-menu-panel {
+		position: absolute;
+		top: calc(100% + 0.45rem);
+		right: 0;
+		z-index: 12;
+		width: min(13.5rem, calc(100vw - 2.4rem));
+		padding: 0.45rem;
+		display: grid;
+		gap: 0.18rem;
+		background: var(--color-surface);
+		border: 1px solid rgba(222, 212, 198, 0.9);
+		border-radius: 12px;
+		box-shadow: var(--shadow-strong);
+	}
+
+	.product-category__filter-menu-option {
+		min-height: 2.35rem;
+		padding: 0 0.72rem;
+		color: var(--color-bark);
+		background: transparent;
+		border: 0;
+		border-radius: 8px;
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.78rem;
+		font-weight: 720;
+		text-align: left;
+	}
+
+	.product-category__filter-menu-option:hover,
+	.product-category__filter-menu-option.is-active {
+		color: var(--color-surface);
+		background: #6b7a4a;
+	}
+
+	.product-category__tabs-spacer {
 		display: none;
 	}
 
@@ -848,6 +959,7 @@ const modalProducts = products.map((product) => ({
 		min-height: 0;
 		overflow: hidden;
 		border-radius: 18px;
+		touch-action: pan-y;
 	}
 
 	.product-modal__image-stage img {
@@ -856,18 +968,18 @@ const modalProducts = products.map((product) => ({
 
 	.product-modal__image-stage.is-changing img,
 	.product-modal__fullscreen-stage.is-changing img {
-		animation: product-image-enter 240ms ease both;
+		animation: product-image-enter 220ms ease both;
 	}
 
 	@keyframes product-image-enter {
 		from {
 			opacity: 0;
-			transform: translateX(1.15rem) scale(1.01);
+			transform: translateX(0.85rem);
 		}
 
 		to {
 			opacity: 1;
-			transform: translateX(0) scale(1);
+			transform: translateX(0);
 		}
 	}
 
@@ -1169,12 +1281,14 @@ const modalProducts = products.map((product) => ({
 
 	.product-modal__dates {
 		margin-top: 1rem;
+		width: min(100%, 30rem);
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 0.75rem;
+		gap: 0.6rem;
 	}
 
 	.product-modal__dates label {
+		min-width: 0;
 		display: grid;
 		gap: 0.38rem;
 	}
@@ -1190,6 +1304,7 @@ const modalProducts = products.map((product) => ({
 
 	.product-modal__dates input {
 		min-height: 2.75rem;
+		min-width: 0;
 		width: 100%;
 		padding: 0 0.82rem;
 		color: var(--color-bark);
@@ -1329,6 +1444,7 @@ const modalProducts = products.map((product) => ({
 		display: grid;
 		place-items: center;
 		margin-top: 2.6rem;
+		touch-action: pan-y;
 	}
 
 	.product-modal__fullscreen-stage img {
@@ -1404,6 +1520,10 @@ const modalProducts = products.map((product) => ({
 		.product-category__controls {
 			align-items: stretch;
 			flex-direction: column;
+		}
+
+		.product-category__tabs {
+			width: 100%;
 		}
 
 		.product-category__size-filter--desktop {
@@ -1486,19 +1606,58 @@ const modalProducts = products.map((product) => ({
 		.product-category__controls {
 			margin-inline: -0.1rem;
 			padding: 0.65rem;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			align-items: center;
+			justify-content: center;
+			gap: 0.45rem;
 			border-radius: 14px;
 		}
 
+		.product-category__tabs {
+			width: 100%;
+			flex-wrap: nowrap;
+			justify-content: center;
+			gap: 0.18rem;
+			padding-bottom: 0.48rem;
+			margin-bottom: -0.48rem;
+			overflow: visible;
+		}
+
 		.product-category__tab {
+			flex: 0 1 auto;
+			min-width: 0;
 			min-height: 2.35rem;
-			padding-inline: 0.8rem;
-			font-size: 0.75rem;
+			padding-inline: clamp(0.28rem, 1.45vw, 0.48rem);
+			overflow: visible;
+			font-size: clamp(0.52rem, 2.45vw, 0.62rem);
+		}
+
+		.product-category__tab--overflow {
+			display: none;
+		}
+
+		.product-category__tabs-spacer {
+			width: 2.25rem;
+			height: 2.35rem;
+			display: block;
+			flex: 0 0 auto;
 		}
 
 		.product-category__tab::after {
 			right: 0.6rem;
 			bottom: -0.4rem;
 			left: 0.6rem;
+		}
+
+		.product-category__filter-menu {
+			z-index: 20;
+			display: grid;
+		}
+
+		.product-category__filter-menu-toggle {
+			width: 2.25rem;
+			height: 2.35rem;
 		}
 
 		.product-category__size-filter {
@@ -1546,10 +1705,14 @@ const modalProducts = products.map((product) => ({
 		}
 
 		.product-modal {
-			padding: 0.7rem;
+			padding: 0.45rem 0.7rem;
 		}
 
 		.product-modal__window {
+			height: min(94vh, 820px);
+			height: min(94dvh, 820px);
+			max-height: 94vh;
+			max-height: 94dvh;
 			border-radius: 18px;
 		}
 
@@ -1589,19 +1752,19 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__tabs {
 			order: 3;
-			margin-top: 0.85rem;
-			gap: 0.75rem;
-			overflow-x: auto;
-			scrollbar-width: none;
-		}
-
-		.product-modal__tabs::-webkit-scrollbar {
-			display: none;
+			min-height: 2.45rem;
+			margin-top: 0.95rem;
+			gap: 0.65rem;
+			overflow: visible;
 		}
 
 		.product-modal__tabs button {
-			flex: 0 0 auto;
-			font-size: 0.68rem;
+			flex: 1 1 0;
+			min-width: 0;
+			padding: 0.26rem 0 0.72rem;
+			font-size: 0.62rem;
+			line-height: 1.25;
+			text-align: left;
 		}
 
 		.product-modal__eyebrow {
@@ -1650,8 +1813,9 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__dates {
 			order: 4;
-			grid-template-columns: 1fr;
-			gap: 0.5rem;
+			width: 100%;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 0.45rem;
 			margin-top: 0.7rem;
 		}
 
@@ -1661,6 +1825,7 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__dates input {
 			min-height: 2.35rem;
+			padding-inline: 0.58rem;
 			font-size: 0.78rem;
 		}
 
@@ -1728,6 +1893,8 @@ const modalProducts = products.map((product) => ({
 	};
 
 	const productFilterButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-filter]');
+	const productFilterMenuToggles = document.querySelectorAll<HTMLButtonElement>('[data-product-filter-menu-toggle]');
+	const productFilterMenus = document.querySelectorAll<HTMLElement>('.product-category__filter-menu');
 	const productSizeFilters = document.querySelectorAll<HTMLSelectElement>('[data-product-size-filter]');
 	const productCards = document.querySelectorAll<HTMLElement>('[data-product-category]');
 	const productModalData = document.querySelector<HTMLScriptElement>('#product-modal-data');
@@ -1779,6 +1946,9 @@ const modalProducts = products.map((product) => ({
 	let activeProductSizeFilter = 'all';
 	let activeModalDateInput: HTMLInputElement | null = null;
 	let viewedGalleryIndexes = new Set<number>();
+	let gallerySwipeStartX = 0;
+	let gallerySwipeStartY = 0;
+	let gallerySwipePointerId: number | null = null;
 
 	const applyProductFilters = () => {
 		productCards.forEach((card) => {
@@ -1794,6 +1964,55 @@ const modalProducts = products.map((product) => ({
 		});
 	};
 
+	const closeProductFilterMenus = () => {
+		productFilterMenus.forEach((menu) => {
+			const toggle = menu.querySelector<HTMLButtonElement>('[data-product-filter-menu-toggle]');
+			const panel = menu.querySelector<HTMLElement>('[data-product-filter-menu]');
+
+			menu.classList.remove('is-open');
+			toggle?.setAttribute('aria-expanded', 'false');
+			if (panel) {
+				panel.hidden = true;
+			}
+		});
+	};
+
+	const syncProductCategoryFilterButtons = () => {
+		productFilterButtons.forEach((filterButton) => {
+			const isActive = (filterButton.dataset.productFilter ?? 'all') === activeProductCategoryFilter;
+			filterButton.classList.toggle('is-active', isActive);
+			filterButton.setAttribute('aria-pressed', String(isActive));
+		});
+	};
+
+	productFilterMenuToggles.forEach((toggle) => {
+		toggle.addEventListener('click', (event) => {
+			event.stopPropagation();
+			const menu = toggle.closest<HTMLElement>('.product-category__filter-menu');
+			const panel = menu?.querySelector<HTMLElement>('[data-product-filter-menu]');
+			const isOpen = !menu?.classList.contains('is-open');
+
+			closeProductFilterMenus();
+			menu?.classList.toggle('is-open', isOpen);
+			toggle.setAttribute('aria-expanded', String(isOpen));
+			if (panel) {
+				panel.hidden = !isOpen;
+			}
+		});
+	});
+
+	document.addEventListener('click', (event) => {
+		if (!(event.target as HTMLElement).closest('.product-category__filter-menu')) {
+			closeProductFilterMenus();
+		}
+	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') {
+			closeProductFilterMenus();
+		}
+	});
+
 	productFilterButtons.forEach((button) => {
 		button.addEventListener('click', () => {
 			activeProductCategoryFilter = button.dataset.productFilter ?? 'all';
@@ -1803,12 +2022,8 @@ const modalProducts = products.map((product) => ({
 				syncProductSizeFilters('all');
 			}
 
-			productFilterButtons.forEach((filterButton) => {
-				const isActive = filterButton === button;
-				filterButton.classList.toggle('is-active', isActive);
-				filterButton.setAttribute('aria-pressed', String(isActive));
-			});
-
+			syncProductCategoryFilterButtons();
+			closeProductFilterMenus();
 			applyProductFilters();
 		});
 	});
@@ -1997,6 +2212,41 @@ const modalProducts = products.map((product) => ({
 		updateGalleryImage();
 	};
 
+	const bindGallerySwipe = (stage: HTMLElement | null) => {
+		if (!stage) return;
+
+		stage.addEventListener('pointerdown', (event) => {
+			if (event.pointerType === 'mouse' || (event.target as HTMLElement).closest('button')) {
+				return;
+			}
+
+			gallerySwipePointerId = event.pointerId;
+			gallerySwipeStartX = event.clientX;
+			gallerySwipeStartY = event.clientY;
+			stage.setPointerCapture?.(event.pointerId);
+		});
+
+		stage.addEventListener('pointerup', (event) => {
+			if (gallerySwipePointerId !== event.pointerId) {
+				return;
+			}
+
+			const deltaX = event.clientX - gallerySwipeStartX;
+			const deltaY = event.clientY - gallerySwipeStartY;
+			const isHorizontalSwipe = Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25;
+
+			gallerySwipePointerId = null;
+
+			if (isHorizontalSwipe) {
+				moveGallery(deltaX < 0 ? 1 : -1);
+			}
+		});
+
+		stage.addEventListener('pointercancel', () => {
+			gallerySwipePointerId = null;
+		});
+	};
+
 	const setProductModalTab = (tab: string) => {
 		const isExtra = tab === 'extra';
 
@@ -2100,6 +2350,8 @@ const modalProducts = products.map((product) => ({
 
 	productModalPrev?.addEventListener('click', () => moveGallery(-1));
 	productModalNext?.addEventListener('click', () => moveGallery(1));
+	bindGallerySwipe(productModalImageStage);
+	bindGallerySwipe(productModalFullscreenStage);
 	productModalThumbsPrev?.addEventListener('click', () => {
 		productModalThumbs?.scrollBy({ behavior: 'smooth', left: -220 });
 	});
