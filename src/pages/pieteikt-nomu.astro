@@ -1,0 +1,1210 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import CalendarDays from '@lucide/astro/icons/calendar-days';
+import Check from '@lucide/astro/icons/check';
+import ClipboardCheck from '@lucide/astro/icons/clipboard-check';
+import Clock3 from '@lucide/astro/icons/clock-3';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import MessageCircle from '@lucide/astro/icons/message-circle';
+import PackageCheck from '@lucide/astro/icons/package-check';
+import Phone from '@lucide/astro/icons/phone';
+import Search from '@lucide/astro/icons/search';
+import Send from '@lucide/astro/icons/send';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import Sparkles from '@lucide/astro/icons/sparkles';
+import Truck from '@lucide/astro/icons/truck';
+import UserRound from '@lucide/astro/icons/user-round';
+import X from '@lucide/astro/icons/x';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+import { getAllActiveProducts } from '../lib/tentProducts';
+
+const requestSteps = [
+	{
+		icon: ClipboardCheck,
+		title: 'Aizpildiet pieteikumu',
+		text: 'Pastāstiet par datumu, vietu un vēlamo inventāru bez groza aizpildīšanas.',
+	},
+	{
+		icon: MessageCircle,
+		title: 'Precizējam detaļas',
+		text: 'Sazināsimies, lai saprastu izmērus, piegādi, uzstādīšanu un pasākuma vajadzības.',
+	},
+	{
+		icon: Sparkles,
+		title: 'Nosūtām piedāvājumu',
+		text: 'Sagatavosim nomas piedāvājumu ar pieejamību, cenu un nākamajiem soļiem.',
+	},
+];
+
+const noteItems = [
+	'Šis nav maksājuma grozs - pieteikums tikai sāk sarunu.',
+	'Cena tiek precizēta pēc datuma, vietas, inventāra un piegādes vajadzībām.',
+	'Ja jau zini konkrētu inventāru, ieraksti to laukā “Vēlamais inventārs”.',
+];
+
+const optionalServices = [
+	{ label: 'Dekorēšana', value: 'Dekorēšana' },
+	{ label: 'Skaņas sistēma', value: 'Skaņas sistēma' },
+	{ label: 'Gaismas sistēma', value: 'Gaismas sistēma' },
+	{ label: 'Vakara vadītājs', value: 'Vakara vadītājs' },
+];
+
+const requestProducts = await getAllActiveProducts();
+const productPickerItems = requestProducts.map(({ category, id, image, size, title }) => ({
+	category,
+	id,
+	image,
+	size,
+	title,
+}));
+---
+
+<BaseLayout
+	title="Pieteikt nomu | Liepājas teltis"
+	description="Nosūtiet ātru telšu un pasākumu inventāra nomas pieteikumu bez groza aizpildīšanas."
+>
+	<div class="page-shell request-page">
+		<SiteHeader />
+		<main class="request-page__main" aria-labelledby="request-page-title">
+			<FloatingActions />
+			<ScrollToTop />
+
+			<section class="request-hero">
+				<div class="request-hero__copy">
+					<nav class="breadcrumb-trail request-hero__breadcrumbs" aria-label="Lapas ceļš">
+						<a href="/">Sākums</a>
+						<ArrowRight aria-hidden="true" />
+						<span>Pieteikt nomu</span>
+					</nav>
+					<p class="request-hero__eyebrow">Pieteikums</p>
+					<h1 id="request-page-title">Pieteikt telšu un inventāra <span>nomu</span></h1>
+					<p>
+						Ātrais pieteikums gadījumiem, kad vēlaties uzreiz pastāstīt par pasākumu, nevis veidot nomas sarakstu
+						grozā.
+					</p>
+				</div>
+
+				<aside class="request-hero__panel" aria-label="Pieteikuma kopsavilkums">
+					<div class="request-hero__panel-icon">
+						<ShieldCheck aria-hidden="true" />
+					</div>
+					<h2>Bez tiešsaistes apmaksas</h2>
+					<p>Pieteikumu izskatām individuāli un atbildam ar piemērotu piedāvājumu.</p>
+					<div class="request-hero__panel-meta">
+						<span>
+							<Clock3 aria-hidden="true" />
+							24h laikā
+						</span>
+						<span>
+							<Truck aria-hidden="true" />
+							Visa Latvija
+						</span>
+					</div>
+				</aside>
+			</section>
+
+			<section class="request-workspace" aria-label="Nomas pieteikuma forma">
+				<div class="request-workspace__aside">
+					<div>
+						<p class="request-workspace__eyebrow">Kas notiek tālāk?</p>
+						<h2>Skaidrs process bez liekas minēšanas</h2>
+					</div>
+
+					<ol class="request-steps">
+						{
+							requestSteps.map(({ icon: Icon, title, text }) => (
+								<li>
+									<span>
+										<Icon aria-hidden="true" />
+									</span>
+									<div>
+										<h3>{title}</h3>
+										<p>{text}</p>
+									</div>
+								</li>
+							))
+						}
+					</ol>
+
+					<div class="request-note">
+						<h3>Svarīgi zināt</h3>
+						<ul>
+							{
+								noteItems.map((item) => (
+									<li>
+										<Check aria-hidden="true" />
+										<span>{item}</span>
+									</li>
+								))
+							}
+						</ul>
+					</div>
+				</div>
+
+				<form class="request-form" name="nomas-pieteikums" method="post" data-netlify="true">
+					<input type="hidden" name="form-name" value="nomas-pieteikums" />
+					<div class="request-form__header">
+						<p class="request-workspace__eyebrow">Pieteikuma forma</p>
+						<h2>Pastāstiet par savu pasākumu</h2>
+					</div>
+
+					<fieldset class="fieldset request-form__field">
+						<legend class="fieldset-legend">Vārds, uzvārds</legend>
+						<label class="request-form__control" for="request-name">
+							<UserRound aria-hidden="true" />
+							<input id="request-name" class="input" name="vards_uzvards" type="text" autocomplete="name" required />
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field">
+						<legend class="fieldset-legend">Telefona numurs</legend>
+						<label class="request-form__control" for="request-phone">
+							<Phone aria-hidden="true" />
+							<input id="request-phone" class="input" name="telefona_numurs" type="tel" autocomplete="tel" required />
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field request-form__field--full">
+						<legend class="fieldset-legend">Epasts</legend>
+						<label class="request-form__control" for="request-email">
+							<Mail aria-hidden="true" />
+							<input id="request-email" class="input" name="epasts" type="email" autocomplete="email" required />
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field">
+						<legend class="fieldset-legend">Pasākuma datums</legend>
+						<label class="request-form__control" for="request-date">
+							<CalendarDays aria-hidden="true" />
+							<input id="request-date" class="input" name="pasakuma_datums" type="date" required />
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field">
+						<legend class="fieldset-legend">Pasākuma norises vieta</legend>
+						<label class="request-form__control" for="request-location">
+							<MapPin aria-hidden="true" />
+							<input
+								id="request-location"
+								class="input"
+								name="pasakuma_norises_vieta"
+								type="text"
+								autocomplete="address-line1"
+								placeholder="Pilsēta, novads vai adrese"
+								required
+							/>
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field request-form__field--full">
+						<legend class="fieldset-legend">Vēlamais inventārs</legend>
+						<div class="request-product-picker" data-request-product-picker>
+							<label class="request-form__control request-product-picker__search" for="request-product-search">
+								<Search aria-hidden="true" />
+								<input
+									id="request-product-search"
+									class="input"
+									type="search"
+									autocomplete="off"
+									placeholder="Meklēt inventāru katalogā"
+									data-request-product-search
+								/>
+							</label>
+							<div class="request-product-picker__results" data-request-product-results hidden></div>
+							<div class="request-product-picker__selected" data-request-product-selected hidden aria-label="Izvēlētais inventārs"></div>
+							<input data-request-product-hidden type="hidden" name="izveletie_produkti" value="" />
+							<p class="request-product-picker__hint">Pievienojiet zināmos produktus no kataloga vai zemāk aprakstiet vajadzīgo brīvā tekstā.</p>
+							<template data-request-product-chip-template>
+								<span class="badge request-product-chip">
+									<span data-request-product-chip-label></span>
+									<button data-request-product-chip-remove type="button" aria-label="Noņemt produktu">
+										<X aria-hidden="true" />
+									</button>
+								</span>
+							</template>
+						</div>
+						<label class="request-form__control request-form__control--textarea" for="request-inventory">
+							<PackageCheck aria-hidden="true" />
+							<textarea
+								id="request-inventory"
+								class="textarea"
+								name="velamais_inventars"
+								rows="5"
+								placeholder="Piemēram: telts 80 viesiem, galdi, krēsli, grīda, apgaismojums..."
+							></textarea>
+						</label>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field request-form__field--full">
+						<legend class="fieldset-legend">Papildu pakalpojumi</legend>
+						<div class="request-service-options">
+							{
+								optionalServices.map(({ label, value }) => (
+									<label>
+										<input class="checkbox" type="checkbox" name="papildu_pakalpojumi" value={value} />
+										<span>{label}</span>
+									</label>
+								))
+							}
+						</div>
+					</fieldset>
+
+					<fieldset class="fieldset request-form__field request-form__field--full">
+						<legend class="fieldset-legend">Papildu ziņa</legend>
+						<label class="request-form__control request-form__control--textarea" for="request-message">
+							<MessageCircle aria-hidden="true" />
+							<textarea
+								id="request-message"
+								class="textarea"
+								name="papildu_zina"
+								rows="4"
+								placeholder="Īpašas vēlmes, viesu skaits, piekļuve norises vietai vai citi jautājumi."
+							></textarea>
+						</label>
+					</fieldset>
+
+					<div class="request-form__footer">
+						<p>Nosūtot pieteikumu, piekrītat, ka sazināsimies par jūsu nomas pieprasījumu.</p>
+						<button class="btn request-form__submit" type="submit">
+							<span>Nosūtīt pieteikumu</span>
+							<Send aria-hidden="true" />
+						</button>
+					</div>
+				</form>
+			</section>
+		</main>
+		<SiteFooter />
+	</div>
+	<script id="request-product-data" type="application/json" set:html={JSON.stringify(productPickerItems)}></script>
+</BaseLayout>
+
+<script>
+	type RequestProductOption = {
+		category: string;
+		id: string;
+		image: string;
+		size: string;
+		title: string;
+	};
+
+	const productDataNode = document.querySelector<HTMLScriptElement>('#request-product-data');
+	const productPicker = document.querySelector<HTMLElement>('[data-request-product-picker]');
+	const productSearch = document.querySelector<HTMLInputElement>('[data-request-product-search]');
+	const productResults = document.querySelector<HTMLElement>('[data-request-product-results]');
+	const productSelected = document.querySelector<HTMLElement>('[data-request-product-selected]');
+	const productHidden = document.querySelector<HTMLInputElement>('[data-request-product-hidden]');
+	const productChipTemplate = document.querySelector<HTMLTemplateElement>('[data-request-product-chip-template]');
+	const requestProducts: RequestProductOption[] = productDataNode?.textContent ? JSON.parse(productDataNode.textContent) : [];
+	let selectedRequestProducts: RequestProductOption[] = [];
+
+	const normalizeRequestSearch = (value: string) =>
+		value
+			.toLocaleLowerCase('lv-LV')
+			.normalize('NFD')
+			.replace(/\p{Diacritic}/gu, '');
+
+	const formatRequestProductMeta = (product: RequestProductOption) =>
+		[product.category, product.size].filter(Boolean).join(' · ');
+
+	const updateSelectedProductField = () => {
+		if (productHidden) {
+			productHidden.value = selectedRequestProducts
+				.map((product) => `${product.title}${formatRequestProductMeta(product) ? ` (${formatRequestProductMeta(product)})` : ''}`)
+				.join('\n');
+		}
+	};
+
+	const renderSelectedProducts = () => {
+		if (!productSelected || !productChipTemplate) return;
+
+		productSelected.replaceChildren();
+		productSelected.hidden = selectedRequestProducts.length === 0;
+
+		selectedRequestProducts.forEach((product) => {
+			const chip = productChipTemplate.content.cloneNode(true) as DocumentFragment;
+			const label = chip.querySelector<HTMLElement>('[data-request-product-chip-label]');
+			const remove = chip.querySelector<HTMLButtonElement>('[data-request-product-chip-remove]');
+
+			if (label) label.textContent = product.title;
+			remove?.addEventListener('click', () => {
+				selectedRequestProducts = selectedRequestProducts.filter((selected) => selected.id !== product.id);
+				renderSelectedProducts();
+				updateSelectedProductField();
+				renderProductResults(productSearch?.value ?? '');
+			});
+
+			productSelected.append(chip);
+		});
+
+		updateSelectedProductField();
+	};
+
+	const addRequestProduct = (product: RequestProductOption) => {
+		if (selectedRequestProducts.some((selected) => selected.id === product.id)) return;
+
+		selectedRequestProducts = [...selectedRequestProducts, product];
+		if (productSearch) productSearch.value = '';
+		renderSelectedProducts();
+		renderProductResults('');
+		productSearch?.focus();
+	};
+
+	const renderProductResults = (query: string) => {
+		if (!productResults) return;
+
+		const normalizedQuery = normalizeRequestSearch(query.trim());
+
+		if (!normalizedQuery) {
+			productResults.replaceChildren();
+			productResults.hidden = true;
+			return;
+		}
+
+		const availableProducts = requestProducts.filter(
+			(product) => !selectedRequestProducts.some((selected) => selected.id === product.id),
+		);
+		const matches = availableProducts
+			.filter((product) => normalizeRequestSearch(product.title).includes(normalizedQuery))
+			.slice(0, 7);
+
+		productResults.replaceChildren();
+
+		if (!requestProducts.length) {
+			const empty = document.createElement('p');
+			empty.className = 'request-product-picker__empty';
+			empty.textContent = 'Produktu saraksts pašlaik nav ielādēts.';
+			productResults.append(empty);
+			productResults.hidden = false;
+			return;
+		}
+
+		if (!matches.length) {
+			const empty = document.createElement('p');
+			empty.className = 'request-product-picker__empty';
+			empty.textContent = 'Nekas netika atrasts. Vari aprakstīt vajadzīgo brīvā tekstā.';
+			productResults.append(empty);
+			productResults.hidden = false;
+			return;
+		}
+
+		matches.forEach((product) => {
+			const button = document.createElement('button');
+			button.className = 'request-product-result';
+			button.type = 'button';
+			button.addEventListener('click', () => addRequestProduct(product));
+
+			const copy = document.createElement('span');
+			copy.className = 'request-product-result__copy';
+
+			const title = document.createElement('strong');
+			title.textContent = product.title;
+			copy.append(title);
+
+			const meta = document.createElement('span');
+			meta.textContent = formatRequestProductMeta(product);
+			copy.append(meta);
+
+			const action = document.createElement('span');
+			action.className = 'request-product-result__action';
+			action.textContent = 'Pievienot';
+			button.append(copy, action);
+			productResults.append(button);
+		});
+
+		productResults.hidden = false;
+	};
+
+	productSearch?.addEventListener('input', () => {
+		renderProductResults(productSearch.value);
+	});
+
+	document.addEventListener('click', (event) => {
+		if (!productPicker?.contains(event.target as Node) && productResults) {
+			productResults.hidden = true;
+		}
+	});
+</script>
+
+<style>
+	.request-page {
+		position: relative;
+		overflow: hidden;
+	}
+
+	.request-page::before,
+	.request-page::after {
+		position: absolute;
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.34) 1.25px, transparent 1.55px);
+		background-size: 0.82rem 0.82rem;
+		content: "";
+		pointer-events: none;
+	}
+
+	.request-page::before {
+		left: max(-4rem, calc(50% - 48rem));
+		top: 9rem;
+		width: clamp(10rem, 20vw, 17rem);
+		height: clamp(7rem, 13vw, 10rem);
+		opacity: 0.56;
+	}
+
+	.request-page::after {
+		right: max(-4rem, calc(50% - 47rem));
+		bottom: 15rem;
+		width: clamp(9rem, 18vw, 15rem);
+		height: clamp(6.5rem, 12vw, 9.5rem);
+		opacity: 0.42;
+	}
+
+	.request-page__main {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 1220px);
+		margin: 0 auto;
+		padding: clamp(1.8rem, 4vw, 3.4rem) clamp(1rem, 3vw, 1.5rem) clamp(4.3rem, 7vw, 6.2rem);
+	}
+
+	.request-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+		align-items: end;
+		gap: clamp(1.5rem, 4vw, 3.5rem);
+		margin-bottom: clamp(1.8rem, 4vw, 3.1rem);
+	}
+
+	.request-hero__breadcrumbs {
+		margin-bottom: clamp(1.45rem, 2.7vw, 2.1rem);
+	}
+
+	.request-hero__eyebrow,
+	.request-workspace__eyebrow {
+		margin: 0 0 0.78rem;
+		color: #8A9271;
+		font-size: 0.72rem;
+		font-weight: 820;
+		letter-spacing: 0.2em;
+		line-height: 1.3;
+		text-transform: uppercase;
+	}
+
+	.request-hero h1,
+	.request-workspace h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-weight: 500;
+		letter-spacing: 0;
+	}
+
+	.request-hero h1 {
+		max-width: 10.4em;
+		font-size: clamp(2.8rem, 6.4vw, 5.9rem);
+		line-height: 0.96;
+	}
+
+	.request-hero h1 span {
+		color: var(--color-primary);
+	}
+
+	.request-hero__copy > p:last-child {
+		max-width: 38rem;
+		margin: 1.25rem 0 0;
+		color: var(--color-text-muted);
+		font-size: clamp(0.98rem, 1.4vw, 1.12rem);
+		font-weight: 520;
+		line-height: 1.68;
+	}
+
+	.request-hero__panel {
+		padding: 1.25rem;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.58)),
+			radial-gradient(circle at 82% 0, rgba(203, 183, 154, 0.3), transparent 8rem);
+		border: 1px solid rgba(222, 212, 198, 0.86);
+		border-radius: 22px;
+		box-shadow: var(--shadow-soft);
+	}
+
+	.request-hero__panel-icon {
+		width: 3.1rem;
+		height: 3.1rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border-radius: 999px;
+	}
+
+	.request-hero__panel-icon svg {
+		width: 1.35rem;
+		height: 1.35rem;
+		stroke-width: 1.8;
+	}
+
+	.request-hero__panel h2 {
+		margin: 1rem 0 0;
+		color: var(--color-bark);
+		font-size: 1.15rem;
+		font-weight: 760;
+		letter-spacing: 0;
+		line-height: 1.2;
+	}
+
+	.request-hero__panel p {
+		margin: 0.55rem 0 1rem;
+		color: var(--color-text-muted);
+		font-size: 0.92rem;
+		font-weight: 520;
+		line-height: 1.5;
+	}
+
+	.request-hero__panel-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.55rem;
+	}
+
+	.request-hero__panel-meta span {
+		min-height: 2.25rem;
+		padding: 0 0.78rem;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.42rem;
+		color: var(--color-bark);
+		background: rgba(237, 228, 215, 0.76);
+		border: 1px solid rgba(222, 212, 198, 0.84);
+		border-radius: 999px;
+		font-size: 0.78rem;
+		font-weight: 720;
+	}
+
+	.request-hero__panel-meta svg {
+		width: 0.95rem;
+		height: 0.95rem;
+		color: var(--color-primary);
+	}
+
+	.request-workspace {
+		display: grid;
+		grid-template-columns: minmax(17rem, 0.58fr) minmax(0, 1fr);
+		gap: clamp(1.15rem, 3vw, 2rem);
+		align-items: stretch;
+	}
+
+	.request-workspace__aside,
+	.request-form {
+		border: 1px solid rgba(185, 167, 143, 0.5);
+		box-shadow: 0 24px 58px rgba(75, 64, 56, 0.11);
+	}
+
+	.request-workspace__aside {
+		position: relative;
+		padding: clamp(1.3rem, 3vw, 2rem);
+		overflow: hidden;
+		display: grid;
+		align-content: start;
+		gap: clamp(1.35rem, 3vw, 2rem);
+		background:
+			linear-gradient(180deg, rgba(237, 228, 215, 0.4), rgba(255, 255, 255, 0.12)),
+			radial-gradient(circle at 14% 8%, rgba(203, 183, 154, 0.42), transparent 12rem),
+			#eef0e4;
+		border-radius: 26px;
+	}
+
+	.request-workspace__aside::before {
+		position: absolute;
+		right: -3.2rem;
+		top: 7.2rem;
+		width: 13rem;
+		height: 9rem;
+		background-image: radial-gradient(circle, rgba(95, 111, 60, 0.2) 1.2px, transparent 1.45px);
+		background-size: 0.72rem 0.72rem;
+		content: "";
+		pointer-events: none;
+	}
+
+	.request-workspace__aside > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	.request-workspace h2 {
+		max-width: 9.4em;
+		font-size: clamp(2rem, 4vw, 3.15rem);
+		line-height: 1;
+	}
+
+	.request-steps {
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.85rem;
+		list-style: none;
+	}
+
+	.request-steps li {
+		display: grid;
+		grid-template-columns: 2.75rem minmax(0, 1fr);
+		gap: 0.85rem;
+		align-items: start;
+	}
+
+	.request-steps li > span {
+		width: 2.75rem;
+		height: 2.75rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-primary);
+		background: rgba(255, 255, 255, 0.56);
+		border: 1px solid rgba(222, 212, 198, 0.78);
+		border-radius: 999px;
+	}
+
+	.request-steps svg {
+		width: 1.18rem;
+		height: 1.18rem;
+		stroke-width: 1.9;
+	}
+
+	.request-steps h3,
+	.request-note h3 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: 0.98rem;
+		font-weight: 740;
+		letter-spacing: 0;
+		line-height: 1.2;
+	}
+
+	.request-steps p {
+		margin: 0.32rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.88rem;
+		font-weight: 520;
+		line-height: 1.48;
+	}
+
+	.request-note {
+		padding: 1rem;
+		background: rgba(255, 255, 255, 0.5);
+		border: 1px solid rgba(222, 212, 198, 0.74);
+		border-radius: 18px;
+	}
+
+	.request-note ul {
+		margin: 0.75rem 0 0;
+		padding: 0;
+		display: grid;
+		gap: 0.65rem;
+		list-style: none;
+	}
+
+	.request-note li {
+		display: grid;
+		grid-template-columns: 1.1rem minmax(0, 1fr);
+		gap: 0.55rem;
+		color: var(--color-text-muted);
+		font-size: 0.84rem;
+		font-weight: 540;
+		line-height: 1.45;
+	}
+
+	.request-note svg {
+		width: 1.05rem;
+		height: 1.05rem;
+		color: var(--color-primary);
+		stroke-width: 2.1;
+	}
+
+	.request-form {
+		padding: clamp(1.1rem, 2.8vw, 2rem);
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		background: rgba(255, 255, 255, 0.74);
+		border-radius: 30px;
+	}
+
+	.request-form__header,
+	.request-form__field--full,
+	.request-form__footer {
+		grid-column: 1 / -1;
+	}
+
+	.request-form__header h2 {
+		max-width: none;
+		font-size: clamp(1.75rem, 3vw, 2.45rem);
+	}
+
+	.request-form__field {
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+	}
+
+	.request-form .fieldset-legend {
+		margin: 0 0 0.42rem;
+		padding: 0;
+		color: #344234;
+		font-size: 0.66rem;
+		font-weight: 650;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	.request-form__control {
+		position: relative;
+		display: block;
+		color: var(--color-text-muted);
+	}
+
+	.request-form__control svg {
+		position: absolute;
+		top: 50%;
+		left: 1rem;
+		z-index: 1;
+		width: 1rem;
+		height: 1rem;
+		color: #7f8a64;
+		stroke-width: 2;
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+
+	.request-form__control--textarea svg {
+		top: 1rem;
+		transform: none;
+	}
+
+	.request-product-picker {
+		position: relative;
+		z-index: 2;
+		margin-bottom: 0.85rem;
+	}
+
+	.request-product-picker:focus-within {
+		z-index: 7;
+	}
+
+	.request-product-picker__search {
+		margin-bottom: 0.58rem;
+	}
+
+	.request-product-picker__search input::-webkit-search-cancel-button {
+		display: none;
+	}
+
+	.request-product-picker__results {
+		position: absolute;
+		inset: 3.35rem 0 auto;
+		z-index: 8;
+		max-height: min(22rem, 58vh);
+		padding: 0.45rem;
+		display: grid;
+		gap: 0.26rem;
+		overflow-y: auto;
+		background: rgba(255, 255, 255, 0.96);
+		border: 1px solid rgba(185, 167, 143, 0.62);
+		border-radius: 18px;
+		box-shadow: 0 18px 34px rgba(75, 64, 56, 0.16);
+	}
+
+	:global(.request-product-result) {
+		width: 100%;
+		min-height: 2.8rem;
+		padding: 0.52rem 0.68rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.8rem;
+		color: var(--color-bark);
+		background: transparent;
+		border: 1px solid transparent;
+		border-radius: 13px;
+		cursor: pointer;
+		font: inherit;
+		text-align: left;
+	}
+
+	:global(.request-product-result:hover),
+	:global(.request-product-result:focus-visible) {
+		background: rgba(237, 228, 215, 0.72);
+		border-color: rgba(185, 167, 143, 0.38);
+	}
+
+	:global(.request-product-result__copy) {
+		min-width: 0;
+		display: grid;
+		gap: 0.18rem;
+	}
+
+	:global(.request-product-result__copy strong) {
+		overflow: hidden;
+		color: var(--color-bark);
+		font-size: 0.9rem;
+		font-weight: 750;
+		letter-spacing: 0;
+		line-height: 1.18;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	:global(.request-product-result__copy span) {
+		overflow: hidden;
+		color: var(--color-text-muted);
+		font-size: 0.75rem;
+		font-weight: 560;
+		line-height: 1.2;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	:global(.request-product-result__action) {
+		padding: 0.42rem 0.68rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border-radius: 999px;
+		font-size: 0.68rem;
+		font-weight: 820;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	:global(.request-product-picker__empty) {
+		margin: 0;
+		padding: 0.72rem 0.82rem;
+		color: var(--color-text-muted);
+		font-size: 0.84rem;
+		font-weight: 560;
+		line-height: 1.42;
+	}
+
+	.request-product-picker__selected {
+		margin: 0.7rem 0 0.48rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.48rem;
+	}
+
+	.request-product-chip {
+		width: fit-content;
+		max-width: 100%;
+		min-height: 2.15rem;
+		padding: 0.26rem 0.35rem 0.26rem 0.78rem;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.38rem;
+		color: var(--color-bark);
+		background: rgba(237, 228, 215, 0.82);
+		border: 1px solid rgba(185, 167, 143, 0.54);
+		border-radius: 999px;
+		font-size: 0.78rem;
+		font-weight: 680;
+		line-height: 1.1;
+	}
+
+	.request-product-chip > span {
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.request-product-chip button {
+		width: 1.55rem;
+		height: 1.55rem;
+		display: grid;
+		place-items: center;
+		flex: 0 0 auto;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.64);
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.request-product-chip button:hover {
+		color: var(--color-surface);
+		background: var(--color-primary);
+	}
+
+	.request-product-chip svg {
+		width: 0.82rem;
+		height: 0.82rem;
+		stroke-width: 2.2;
+	}
+
+	.request-product-picker__hint {
+		margin: 0.48rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		font-weight: 520;
+		line-height: 1.4;
+	}
+
+	.request-service-options {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.7rem;
+	}
+
+	.request-service-options label {
+		min-height: 3rem;
+		padding: 0.72rem 0.85rem;
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		color: var(--color-bark);
+		background: rgba(246, 241, 231, 0.56);
+		border: 1px solid rgba(185, 167, 143, 0.5);
+		border-radius: 16px;
+		cursor: pointer;
+		font-size: 0.88rem;
+		font-weight: 680;
+		line-height: 1.18;
+	}
+
+	.request-service-options label:hover {
+		background: rgba(237, 228, 215, 0.78);
+		border-color: rgba(138, 146, 113, 0.42);
+	}
+
+	.request-service-options label:has(input:checked) {
+		background: rgba(138, 146, 113, 0.14);
+		border-color: rgba(138, 146, 113, 0.72);
+		box-shadow: inset 0 0 0 1px rgba(138, 146, 113, 0.1);
+	}
+
+	.request-service-options .checkbox {
+		flex: 0 0 auto;
+		width: 1.1rem;
+		height: 1.1rem;
+		appearance: none;
+		background: rgba(255, 255, 255, 0.94);
+		border: 1.5px solid rgba(138, 146, 113, 0.72);
+		border-radius: 4px;
+		color: var(--color-surface);
+	}
+
+	.request-service-options .checkbox:checked {
+		background:
+			center / 0.75rem 0.75rem no-repeat
+				url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 8.2 6.5 11 12.5 5' stroke='white' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+			var(--color-primary);
+		border-color: var(--color-primary);
+	}
+
+	.request-form .input,
+	.request-form .textarea {
+		width: 100%;
+		color: var(--color-bark);
+		background: rgba(255, 255, 255, 0.9);
+		border: 1px solid rgba(185, 167, 143, 0.62);
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 2px 8px rgba(75, 64, 56, 0.08);
+		font: inherit;
+		font-size: 0.96rem;
+	}
+
+	.request-form .input {
+		min-height: 2.85rem;
+		padding: 0 1rem 0 2.55rem;
+		border-radius: 999px;
+	}
+
+	.request-form .input[type="date"] {
+		color-scheme: light;
+		background: rgba(246, 241, 231, 0.96);
+	}
+
+	.request-form .textarea {
+		min-height: 7.5rem;
+		padding: 0.92rem 1rem 0.92rem 2.55rem;
+		border-radius: 18px;
+		line-height: 1.5;
+		resize: vertical;
+	}
+
+	.request-form .input:focus,
+	.request-form .textarea:focus {
+		border-color: #8A9271;
+		outline: none;
+		box-shadow: var(--focus-ring), 0 2px 10px rgba(75, 64, 56, 0.1);
+	}
+
+	.request-form__footer {
+		margin-top: 0.35rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.request-form__footer p {
+		max-width: 20rem;
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		font-weight: 520;
+		line-height: 1.42;
+	}
+
+	.request-form__submit {
+		min-height: 3.15rem;
+		padding: 0 1.55rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.72rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border: 0;
+		border-radius: 999px;
+		box-shadow: 0 12px 22px rgba(138, 146, 113, 0.24);
+		font-size: 0.8rem;
+		font-weight: 850;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.request-form__submit:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+		transform: translateY(-2px);
+	}
+
+	.request-form__submit svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	@media (max-width: 900px) {
+		.request-hero,
+		.request-workspace {
+			grid-template-columns: 1fr;
+		}
+
+		.request-hero__panel {
+			max-width: 32rem;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.request-page::before {
+			left: -6rem;
+			top: 7rem;
+			opacity: 0.38;
+		}
+
+		.request-page::after {
+			right: -6rem;
+			bottom: 10rem;
+			opacity: 0.28;
+		}
+
+		.request-page__main {
+			padding: 1.3rem 1rem 4rem;
+		}
+
+		.request-hero {
+			gap: 1.1rem;
+			margin-bottom: 1.35rem;
+		}
+
+		.request-hero__breadcrumbs {
+			margin-bottom: 1.1rem;
+		}
+
+		.request-hero__eyebrow,
+		.request-workspace__eyebrow {
+			font-size: 0.62rem;
+			letter-spacing: 0.17em;
+		}
+
+		.request-hero h1 {
+			font-size: clamp(2.5rem, 12vw, 3.45rem);
+		}
+
+		.request-hero__copy > p:last-child {
+			margin-top: 1rem;
+			font-size: 0.92rem;
+			line-height: 1.58;
+		}
+
+		.request-hero__panel,
+		.request-workspace__aside,
+		.request-form {
+			border-radius: 20px;
+		}
+
+		.request-workspace__aside {
+			padding: 1rem;
+		}
+
+		.request-workspace h2 {
+			font-size: clamp(1.75rem, 8vw, 2.35rem);
+		}
+
+		.request-steps li {
+			grid-template-columns: 2.45rem minmax(0, 1fr);
+			gap: 0.72rem;
+		}
+
+		.request-steps li > span {
+			width: 2.45rem;
+			height: 2.45rem;
+		}
+
+		.request-form {
+			grid-template-columns: 1fr;
+			padding: 1rem;
+		}
+
+		.request-form__header h2 {
+			font-size: clamp(1.58rem, 7.6vw, 2.1rem);
+		}
+
+		.request-form__footer {
+			grid-template-columns: 1fr;
+		}
+
+		.request-form__footer p {
+			max-width: none;
+		}
+
+		.request-form__submit {
+			width: 100%;
+		}
+
+		.request-service-options {
+			grid-template-columns: 1fr;
+			gap: 0.55rem;
+		}
+
+		.request-service-options label {
+			min-height: 2.75rem;
+			padding: 0.65rem 0.75rem;
+			border-radius: 14px;
+			font-size: 0.84rem;
+		}
+
+		.request-product-picker__results {
+			top: 3.1rem;
+			max-height: 18rem;
+			border-radius: 16px;
+		}
+
+		:global(.request-product-result) {
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 0.55rem;
+		}
+
+		:global(.request-product-result__action) {
+			width: fit-content;
+		}
+	}
+</style>

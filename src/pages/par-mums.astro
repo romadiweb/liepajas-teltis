@@ -1,0 +1,21 @@
+---
+import AboutSection from '../components/sections/AboutSection.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FloatingActions from '../components/common/FloatingActions.astro';
+import ScrollToTop from '../components/common/ScrollToTop.astro';
+import SiteFooter from '../components/common/SiteFooter.astro';
+import SiteHeader from '../components/common/SiteHeader.astro';
+---
+
+<BaseLayout
+	title="Par mums - Liepājas Teltis"
+	description="Uzziniet vairāk par Liepājas Teltis komandu, telšu nomu un pasākumu inventāra risinājumiem visā Latvijā."
+>
+	<SiteHeader />
+	<main id="top" class="page-shell" aria-label="Par Liepājas Teltis">
+		<FloatingActions />
+		<ScrollToTop />
+		<AboutSection />
+	</main>
+	<SiteFooter />
+</BaseLayout>

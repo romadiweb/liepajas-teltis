@@ -1,13 +1,10 @@
 ---
 import ArrowRight from '@lucide/astro/icons/arrow-right';
-import Armchair from '@lucide/astro/icons/armchair';
 import Award from '@lucide/astro/icons/award';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CalendarDays from '@lucide/astro/icons/calendar-days';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
 import FloatingActions from '../components/common/FloatingActions.astro';
-import Heater from '@lucide/astro/icons/heater';
-import Layers from '@lucide/astro/icons/layers';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import MessageCircle from '@lucide/astro/icons/message-circle';
@@ -18,11 +15,9 @@ import Send from '@lucide/astro/icons/send';
 import ShieldCheck from '@lucide/astro/icons/shield-check';
 import SiteFooter from '../components/common/SiteFooter.astro';
 import SiteHeader from '../components/common/SiteHeader.astro';
-import Sparkles from '@lucide/astro/icons/sparkles';
-import Table from '@lucide/astro/icons/table';
-import Tent from '@lucide/astro/icons/tent';
 import Truck from '@lucide/astro/icons/truck';
 import UserRound from '@lucide/astro/icons/user-round';
+import hugeIcons from '@iconify-json/hugeicons/icons.json';
 
 const heroImage = '/images/landing-tent-pic.svg';
 
@@ -44,11 +39,69 @@ const heroFeatures = [
 	},
 ];
 
+type IconifyIcon = {
+	body: string;
+	height?: number;
+	width?: number;
+};
+
+const hugeIconSet = hugeIcons as {
+	height: number;
+	icons: Record<string, IconifyIcon>;
+	width: number;
+};
+
+const getHugeIcon = (name: string) => {
+	const icon = hugeIconSet.icons[name];
+
+	if (!icon) {
+		throw new Error(`Missing Huge Icons symbol: ${name}`);
+	}
+
+	return {
+		body: icon.body,
+		height: icon.height ?? hugeIconSet.height,
+		width: icon.width ?? hugeIconSet.width,
+	};
+};
+
+const customCategoryIcons = {
+	beanBag: {
+		body: `
+			<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45">
+				<path d="M7.1 20.25h9.8c2.08 0 3.45-1.42 3.15-3.48C19.36 11.93 16.63 6.5 12 6.5s-7.36 5.43-8.05 10.27c-.3 2.06 1.07 3.48 3.15 3.48Z" />
+				<path d="M8.15 18.05c1.7-.8 5.99-.8 7.7 0" />
+				<path d="M9.1 8.75c1.42 1.02 4.38 1.02 5.8 0" />
+				<path d="M12 6.75v11.1" />
+			</g>
+		`,
+		height: 24,
+		width: 24,
+	},
+	eventTent: {
+		body: `
+			<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.45">
+				<path d="M2.75 10.25h18.5L17.5 5.5h-11l-3.75 4.75Z" />
+				<path d="M5 10.25v9.25" />
+				<path d="M9.65 10.25v9.25" />
+				<path d="M14.35 10.25v9.25" />
+				<path d="M19 10.25v9.25" />
+				<path d="M3.75 19.5h16.5" />
+				<path d="M7.8 10.25l2-4.75" />
+				<path d="M12 10.25V5.5" />
+				<path d="M16.2 10.25l-2-4.75" />
+			</g>
+		`,
+		height: 24,
+		width: 24,
+	},
+};
+
 const categoryItems = [
 	{
 		alt: 'Balta pasākumu telts plašā zālienā',
 		href: '/teltis',
-		icon: Tent,
+		icon: customCategoryIcons.eventTent,
 		image:
 			'https://images.unsplash.com/photo-1675376616537-c8aa9ddc9977?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Teltis',
@@ -56,31 +109,31 @@ const categoryItems = [
 	{
 		alt: 'Pasākumu telts interjers ar grīdas segumu un gaismām',
 		href: '/gridas-segumi',
-		icon: Layers,
+		icon: getHugeIcon('floor-plan'),
 		image:
-			'https://images.unsplash.com/photo-1724125082683-49b0e812046f?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+			'https://images.unsplash.com/photo-1724125082683-49b0e812046f?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Grīdas segumi',
 	},
 	{
 		alt: 'Āra pasākuma zona ar baltiem krēsliem un galdiem',
 		href: '/galdi-un-kresli',
-		icon: Table,
+		icon: getHugeIcon('dining-table'),
 		image:
-			'https://images.unsplash.com/photo-1653518882586-588362773209?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
+			'https://images.unsplash.com/photo-1618055620740-24c9cf2305e5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Galdi un krēsli',
 	},
 	{
 		alt: 'Iedegts āra sildītājs vakara pasākumā',
 		href: '/ara-silditaji',
-		icon: Heater,
+		icon: getHugeIcon('heater'),
 		image:
-			'https://images.unsplash.com/photo-1563692309855-3a626e81e518?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
+			'https://images.unsplash.com/photo-1779249245434-9c4fec8aebed?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Āra sildītāji',
 	},
 	{
 		alt: 'Āra atpūtas zona ar mīkstām sēdvietām',
 		href: '/pufi',
-		icon: Armchair,
+		icon: customCategoryIcons.beanBag,
 		image:
 			'https://images.unsplash.com/photo-1776008107357-0c18d761ca72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
 		title: 'Pufi',
@@ -88,7 +141,7 @@ const categoryItems = [
 	{
 		alt: 'Pasākuma galda dekori ar svecēm un aksesuāriem',
 		href: '#kontakti',
-		icon: Sparkles,
+		icon: getHugeIcon('balloons'),
 		image:
 			'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=900',
 		title: 'Pasākumu aksesuāri',
@@ -148,7 +201,7 @@ const contactLinks = [
 						}
 					</div>
 
-					<a class="landing-hero__cta" href="#kontakti">
+					<a class="landing-hero__cta" href="/pieteikt-nomu">
 						<span>Pieteikt nomu</span>
 						<ArrowRight aria-hidden="true" />
 					</a>
@@ -177,13 +230,13 @@ const contactLinks = [
 
 				<div class="categories-section__grid" aria-label="Nomas inventāra kategorijas">
 					{
-						categoryItems.map(({ alt, href, icon: Icon, image, title }, index) => (
+						categoryItems.map(({ alt, href, icon, image, title }, index) => (
 							<a class="card category-card" href={href} style={`--card-index: ${index};`} aria-label={`${title} - pieteikt nomu`}>
 								<figure class="category-card__image">
 									<img alt={alt} decoding="async" loading="lazy" src={image} />
 								</figure>
 								<span class="category-card__badge" aria-hidden="true">
-									<Icon />
+									<svg aria-hidden="true" viewBox={`0 0 ${icon.width} ${icon.height}`} set:html={icon.body} />
 								</span>
 								<div class="card-body category-card__body">
 									<h3 class="card-title">{title}</h3>
@@ -379,7 +432,7 @@ const contactLinks = [
 
 	.landing-hero__eyebrow {
 		margin: 0 0 1rem;
-		color: var(--color-primary);
+		color: #8A9271;
 		font-size: 0.75rem;
 		font-weight: 800;
 		letter-spacing: 0.14em;
@@ -568,7 +621,7 @@ const contactLinks = [
 
 	.categories-section__eyebrow {
 		margin: 0 0 0.58rem;
-		color: var(--color-primary);
+		color: #8A9271;
 		font-size: 0.68rem;
 		font-weight: 850;
 		letter-spacing: 0.15em;
@@ -652,7 +705,6 @@ const contactLinks = [
 		place-items: center;
 		color: var(--color-surface);
 		background: #6b7a4a;
-		border: 1px solid rgba(255, 255, 255, 0.26);
 		border-radius: 999px;
 		box-shadow: 0 14px 26px rgba(75, 64, 56, 0.14);
 	}
@@ -736,7 +788,7 @@ const contactLinks = [
 
 	.contact-section__eyebrow {
 		margin: 0 0 1.1rem;
-		color: var(--color-primary);
+		color: #8A9271;
 		font-size: 0.74rem;
 		font-weight: 850;
 		letter-spacing: 0.24em;

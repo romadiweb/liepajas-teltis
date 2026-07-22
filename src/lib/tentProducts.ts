@@ -133,6 +133,20 @@ export async function getProductsByPageSlug(pageSlug: string) {
 	return products;
 }
 
+export async function getAllActiveProducts() {
+	const tableName = import.meta.env.SUPABASE_PRODUCTS_TABLE || 'products';
+	const rows = await fetchSupabaseRows<ProductRow>(tableName, {
+		params: {
+			is_active: 'eq.true',
+			order: 'page_slug.asc,sort_order.asc',
+		},
+	});
+
+	const products = sortRows(rows).map(mapProductRow).filter(Boolean) as ProductItem[];
+
+	return products;
+}
+
 export async function getTentProducts() {
 	return getProductsByPageSlug('teltis');
 }

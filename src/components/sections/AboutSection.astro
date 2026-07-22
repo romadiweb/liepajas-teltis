@@ -1,0 +1,688 @@
+---
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Award from '@lucide/astro/icons/award';
+import Tent from '@lucide/astro/icons/tent';
+import Truck from '@lucide/astro/icons/truck';
+import UsersRound from '@lucide/astro/icons/users-round';
+import Wrench from '@lucide/astro/icons/wrench';
+
+const aboutHeroImage =
+	'https://images.unsplash.com/photo-1653518882586-588362773209?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=1400';
+
+const aboutStoryImage =
+	'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=1300';
+
+const aboutBenefits = [
+	{
+		description: 'Tīri, pārbaudīti un koptas kvalitātes teltis, aksesuāri un inventārs.',
+		icon: Award,
+		title: 'Kvalitatīvs inventārs',
+	},
+	{
+		description: 'Piegādājam un uzstādām laikā, lai pasākuma dienā viss būtu mierīgi.',
+		icon: Truck,
+		title: 'Ātra piegāde',
+	},
+	{
+		description: 'Palīdzam saplānot nepieciešamo, no telts izmēra līdz grīdas segumam.',
+		icon: Wrench,
+		title: 'Pārdomāta uzstādīšana',
+	},
+	{
+		description: 'Pielāgojam risinājumu jūsu vietai, viesu skaitam un svinību noskaņai.',
+		icon: UsersRound,
+		title: 'Individuāla pieeja',
+	},
+];
+
+const aboutStats = [
+	{ label: 'Īstenoti pasākumi', value: '100+' },
+	{ label: 'Telšu veidi', value: '8+' },
+	{ label: 'Piegāde un uzstādīšana', value: 'Visa Latvija' },
+	{ label: 'Apmierinātu klientu', value: '100%' },
+];
+
+const aboutGallery = [
+	{
+		alt: 'Balta svinību telts vakarā ar gaismām',
+		image:
+			'https://images.unsplash.com/photo-1675376616537-c8aa9ddc9977?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=800',
+	},
+	{
+		alt: 'Pasākuma telts interjers ar galdiem un gaismu virtenēm',
+		image:
+			'https://images.unsplash.com/photo-1724125082683-49b0e812046f?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.1.0',
+	},
+	{
+		alt: 'Svinību zona ar pufiem zem telts',
+		image:
+			'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&ixlib=rb-4.1.0&q=80&w=800',
+	},
+	{
+		alt: 'Āra vakariņu galds zem svētku telts',
+		image:
+			'https://images.unsplash.com/photo-1618055620740-24c9cf2305e5?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.1.0',
+	},
+];
+---
+
+<section class="about-section" id="par-mums" aria-labelledby="about-title">
+	<div class="about-section__inner">
+		<div class="about-section__hero">
+			<div class="about-section__copy">
+				<nav class="breadcrumb-trail about-section__breadcrumbs" aria-label="Lapas ceļš">
+					<a href="/">Sākums</a>
+					<ArrowRight aria-hidden="true" />
+					<span>Par mums</span>
+				</nav>
+				<p class="about-section__eyebrow">Par mums</p>
+				<h1 id="about-title">Telšu noma īpašiem notikumiem</h1>
+				<div class="about-section__rule" aria-hidden="true"></div>
+				<p>
+					Mēs nodrošinām kvalitatīvu telšu un pasākumu inventāra nomu Liepājā un visā Latvijā, palīdzot radīt
+					ērtu, skaistu un drošu vietu jūsu svinībām.
+				</p>
+				<p>
+					Mūsu mērķis ir padarīt gatavošanos mierīgāku - ar uzticamu aprīkojumu, pārdomātu uzstādīšanu un
+					attieksmi pret katru detaļu.
+				</p>
+			</div>
+			<figure class="about-section__hero-media">
+				<img src={aboutHeroImage} alt="Balta pasākumu telts zaļā dārzā saulrietā" loading="lazy" decoding="async" />
+			</figure>
+		</div>
+
+		<div class="about-section__story">
+			<figure class="about-section__story-media">
+				<img src={aboutStoryImage} alt="Mājīga svinību zona ar gaismām zem telts" loading="lazy" decoding="async" />
+			</figure>
+			<div class="about-section__story-copy">
+				<p class="about-section__eyebrow">Kas mēs esam?</p>
+				<h2>Risinājums, kas pielāgojas jūsu pasākumam</h2>
+				<div class="about-section__rule" aria-hidden="true"></div>
+				<p>
+					Esam telšu un pasākumu inventāra nomas komanda, kas palīdz no nelielām ģimenes svinībām līdz lielākiem
+					notikumiem.
+				</p>
+				<p>
+					Mēs parūpējamies par praktisko pusi, lai jūs varētu koncentrēties uz cilvēkiem, atmosfēru un notikuma
+					sajūtu.
+				</p>
+				<a class="about-section__button" href="/pieteikt-nomu">
+					<span>Pieteikt nomu</span>
+					<ArrowRight aria-hidden="true" />
+				</a>
+			</div>
+		</div>
+
+		<div class="about-section__benefits" aria-labelledby="about-benefits-title">
+			<div class="about-section__center-heading">
+				<h2 id="about-benefits-title">Kāpēc izvēlas mūs?</h2>
+				<div class="about-section__rule" aria-hidden="true"></div>
+			</div>
+			<div class="about-section__benefit-grid">
+				{
+					aboutBenefits.map(({ description, icon: Icon, title }) => (
+						<article class="about-benefit">
+							<Icon aria-hidden="true" />
+							<h3>{title}</h3>
+							<p>{description}</p>
+						</article>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="about-section__stats" aria-label="Pieredzes skaitļi">
+			{
+				aboutStats.map(({ label, value }) => (
+					<div class="about-stat">
+						<strong>{value}</strong>
+						<span>{label}</span>
+					</div>
+				))
+			}
+		</div>
+
+		<div class="about-section__works" aria-labelledby="about-works-title">
+			<div class="about-section__center-heading">
+				<h2 id="about-works-title">Mūsu darbi</h2>
+				<div class="about-section__rule" aria-hidden="true"></div>
+			</div>
+			<div class="about-section__gallery">
+				{
+					aboutGallery.map(({ alt, image }) => (
+						<figure>
+							<img src={image} alt={alt} loading="lazy" decoding="async" />
+						</figure>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="about-section__cta">
+			<span class="about-section__cta-icon" aria-hidden="true">
+				<Tent aria-hidden="true" />
+			</span>
+			<div>
+				<h2>Plāno savu pasākumu?</h2>
+				<p>Mēs palīdzēsim radīt tādu atmosfēru, kādu esi iecerējis.</p>
+			</div>
+			<a class="about-section__button" href="/pieteikt-nomu">
+				<span>Pieteikt nomu</span>
+				<ArrowRight aria-hidden="true" />
+			</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.about-section {
+		position: relative;
+		padding: clamp(1.35rem, 3vw, 2.1rem) clamp(1.2rem, 4vw, 2rem) clamp(4.4rem, 7vw, 6.4rem);
+		background: var(--color-background);
+		overflow: hidden;
+	}
+
+	.about-section::before,
+	.about-section::after {
+		position: absolute;
+		background-image: radial-gradient(circle, rgba(155, 135, 115, 0.3) 1.25px, transparent 1.55px);
+		background-size: 0.82rem 0.82rem;
+		content: "";
+		pointer-events: none;
+	}
+
+	.about-section::before {
+		left: max(1rem, calc(50% - 42rem));
+		top: clamp(1.5rem, 3.4vw, 2.5rem);
+		width: clamp(7rem, 13vw, 11rem);
+		height: clamp(5rem, 9vw, 7.4rem);
+		opacity: 0.58;
+	}
+
+	.about-section::after {
+		right: max(1rem, calc(50% - 41rem));
+		bottom: clamp(7rem, 13vw, 10rem);
+		width: clamp(7.5rem, 15vw, 12rem);
+		height: clamp(5.4rem, 10vw, 8rem);
+		opacity: 0.5;
+	}
+
+	.about-section__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 1160px;
+		margin: 0 auto;
+		display: grid;
+		gap: clamp(3rem, 6vw, 4.8rem);
+	}
+
+	.about-section__hero,
+	.about-section__story {
+		display: grid;
+		grid-template-columns: minmax(18rem, 0.78fr) minmax(24rem, 1.18fr);
+		gap: clamp(2rem, 5vw, 4rem);
+		align-items: center;
+	}
+
+	.about-section__story {
+		grid-template-columns: minmax(24rem, 1.12fr) minmax(18rem, 0.82fr);
+	}
+
+	.about-section__copy,
+	.about-section__story-copy {
+		max-width: 34rem;
+	}
+
+	.about-section__breadcrumbs {
+		margin-bottom: clamp(2rem, 3.2vw, 2.65rem);
+	}
+
+	.about-section__eyebrow {
+		margin: 0 0 1rem;
+		color: #8A9271;
+		font-size: 0.72rem;
+		font-weight: 850;
+		letter-spacing: 0.2em;
+		line-height: 1.3;
+		text-transform: uppercase;
+	}
+
+	.about-section h1,
+	.about-section h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-weight: 500;
+		letter-spacing: 0;
+	}
+
+	.about-section h1 {
+		max-width: 9em;
+		font-size: clamp(2.8rem, 5.2vw, 4.7rem);
+		line-height: 1;
+	}
+
+	.about-section__story-copy h2,
+	.about-section__center-heading h2,
+	.about-section__cta h2 {
+		font-size: clamp(1.7rem, 3.1vw, 2.45rem);
+		line-height: 1.05;
+	}
+
+	.about-section__rule {
+		width: 3.4rem;
+		height: 1px;
+		margin: 1.12rem 0 1.2rem;
+		background: var(--color-primary);
+		opacity: 0.85;
+	}
+
+	.about-section__copy p,
+	.about-section__story-copy p,
+	.about-section__cta p {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: clamp(0.95rem, 1.25vw, 1.04rem);
+		font-weight: 500;
+		line-height: 1.66;
+	}
+
+	.about-section__copy p + p,
+	.about-section__story-copy p + p {
+		margin-top: 1rem;
+	}
+
+	.about-section__hero-media,
+	.about-section__story-media,
+	.about-section__gallery figure {
+		margin: 0;
+		overflow: hidden;
+		background: var(--color-background-soft);
+		box-shadow: 0 18px 42px rgba(75, 64, 56, 0.11);
+	}
+
+	.about-section__hero-media {
+		aspect-ratio: 1.74 / 1;
+		border-radius: 0 8px 8px 0;
+		clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+	}
+
+	.about-section__story-media {
+		aspect-ratio: 1.78 / 1;
+		border-radius: 8px;
+	}
+
+	.about-section__hero-media img,
+	.about-section__story-media img,
+	.about-section__gallery img {
+		width: 100%;
+		height: 100%;
+		display: block;
+		object-fit: cover;
+	}
+
+	.about-section__button {
+		width: fit-content;
+		min-height: 3rem;
+		margin-top: 1.35rem;
+		padding: 0.3rem 1.35rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.7rem;
+		color: var(--color-surface);
+		background: var(--color-primary);
+		border-radius: 999px;
+		box-shadow: 0 14px 26px rgba(75, 64, 56, 0.13);
+		font-size: 0.78rem;
+		font-weight: 850;
+		letter-spacing: 0.04em;
+		line-height: 1;
+		text-decoration: none;
+		text-transform: uppercase;
+		transition:
+			background 180ms ease,
+			transform 180ms ease;
+	}
+
+	.about-section__button:hover {
+		color: var(--color-surface);
+		background: var(--color-primary-hover);
+		transform: translateY(-2px);
+	}
+
+	.about-section__button svg {
+		width: 1rem;
+		height: 1rem;
+		stroke-width: 2.2;
+	}
+
+	.about-section__center-heading {
+		display: grid;
+		justify-items: center;
+		text-align: center;
+	}
+
+	.about-section__center-heading .about-section__rule {
+		margin: 0.85rem 0 0;
+		width: 2.4rem;
+	}
+
+	.about-section__benefit-grid {
+		margin-top: clamp(1.7rem, 3vw, 2.3rem);
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		background: rgba(255, 255, 255, 0.55);
+		border: 1px solid rgba(222, 212, 198, 0.58);
+		border-radius: 8px;
+		box-shadow: 0 16px 34px rgba(75, 64, 56, 0.08);
+	}
+
+	.about-benefit {
+		min-width: 0;
+		padding: clamp(1.3rem, 2.4vw, 1.9rem) clamp(0.9rem, 1.8vw, 1.35rem);
+		text-align: center;
+	}
+
+	.about-benefit + .about-benefit {
+		border-left: 1px solid rgba(222, 212, 198, 0.68);
+	}
+
+	.about-benefit svg {
+		width: 2.25rem;
+		height: 2.25rem;
+		margin: 0 auto 0.85rem;
+		color: var(--color-primary);
+		stroke-width: 1.7;
+	}
+
+	.about-benefit h3 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: 0.98rem;
+		font-weight: 650;
+		line-height: 1.2;
+	}
+
+	.about-benefit p {
+		margin: 0.62rem auto 0;
+		color: var(--color-text-muted);
+		font-size: 0.82rem;
+		font-weight: 500;
+		line-height: 1.48;
+	}
+
+	.about-section__stats {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		background: rgba(255, 255, 255, 0.66);
+		border: 1px solid rgba(222, 212, 198, 0.56);
+		border-radius: 8px;
+		box-shadow: 0 14px 28px rgba(75, 64, 56, 0.07);
+	}
+
+	.about-stat {
+		min-width: 0;
+		padding: 1.25rem 1rem;
+		text-align: center;
+	}
+
+	.about-stat + .about-stat {
+		border-left: 1px solid rgba(222, 212, 198, 0.68);
+	}
+
+	.about-stat strong {
+		display: block;
+		color: var(--color-bark);
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(1.65rem, 3vw, 2.25rem);
+		font-weight: 500;
+		line-height: 1;
+	}
+
+	.about-stat span {
+		display: block;
+		margin-top: 0.42rem;
+		color: var(--color-text-muted);
+		font-size: 0.78rem;
+		font-weight: 600;
+		line-height: 1.25;
+	}
+
+	.about-section__gallery {
+		margin-top: clamp(1.6rem, 3vw, 2.2rem);
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: clamp(0.8rem, 1.7vw, 1.15rem);
+	}
+
+	.about-section__gallery figure {
+		aspect-ratio: 1.42 / 1;
+		border-radius: 8px;
+		box-shadow: 0 12px 28px rgba(75, 64, 56, 0.1);
+	}
+
+	.about-section__cta {
+		padding: clamp(1.1rem, 2.4vw, 1.45rem);
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: clamp(1rem, 3vw, 1.75rem);
+		background: rgba(255, 255, 255, 0.64);
+		border: 1px solid rgba(222, 212, 198, 0.66);
+		border-radius: 8px;
+		box-shadow: 0 16px 34px rgba(75, 64, 56, 0.08);
+	}
+
+	.about-section__cta-icon {
+		width: 4.4rem;
+		height: 4.4rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-primary);
+		background: rgba(138, 146, 113, 0.1);
+		border-radius: 999px;
+	}
+
+	.about-section__cta-icon svg {
+		width: 2rem;
+		height: 2rem;
+		stroke-width: 1.7;
+	}
+
+	.about-section__cta .about-section__button {
+		margin: 0;
+	}
+
+	@media (max-width: 960px) {
+		.about-section {
+			padding-top: clamp(1.2rem, 3.4vw, 1.8rem);
+		}
+
+		.about-section__hero,
+		.about-section__story {
+			grid-template-columns: 1fr;
+			gap: 1.8rem;
+		}
+
+		.about-section__copy,
+		.about-section__story-copy {
+			max-width: 42rem;
+		}
+
+		.about-section__story-media {
+			order: -1;
+		}
+
+		.about-section__benefit-grid,
+		.about-section__stats {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.about-benefit + .about-benefit,
+		.about-stat + .about-stat {
+			border-left: 0;
+		}
+
+		.about-benefit:nth-child(2n),
+		.about-stat:nth-child(2n) {
+			border-left: 1px solid rgba(222, 212, 198, 0.68);
+		}
+
+		.about-benefit:nth-child(n + 3),
+		.about-stat:nth-child(n + 3) {
+			border-top: 1px solid rgba(222, 212, 198, 0.68);
+		}
+
+		.about-section__gallery {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.about-section__cta {
+			grid-template-columns: auto minmax(0, 1fr);
+		}
+
+		.about-section__cta .about-section__button {
+			grid-column: 2;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.about-section {
+			padding: 1.35rem 1.05rem 3.6rem;
+		}
+
+		.about-section::before {
+			left: -2.4rem;
+			top: 1.55rem;
+			width: 8rem;
+			height: 5.6rem;
+			opacity: 0.42;
+		}
+
+		.about-section::after {
+			right: -2.6rem;
+			bottom: 6rem;
+			width: 8.5rem;
+			height: 6rem;
+			opacity: 0.34;
+		}
+
+		.about-section__inner {
+			gap: 2.5rem;
+		}
+
+		.about-section__breadcrumbs {
+			margin-bottom: 1.75rem;
+		}
+
+		.about-section__hero,
+		.about-section__story {
+			gap: 1.35rem;
+		}
+
+		.about-section__hero-media,
+		.about-section__story-media {
+			aspect-ratio: 1.28 / 1;
+			border-radius: 8px;
+			clip-path: none;
+		}
+
+		.about-section h1 {
+			max-width: 8.5em;
+			font-size: clamp(2.35rem, 11vw, 3.35rem);
+		}
+
+		.about-section__story-copy h2,
+		.about-section__center-heading h2,
+		.about-section__cta h2 {
+			font-size: clamp(1.55rem, 7.4vw, 2.15rem);
+		}
+
+		.about-section__eyebrow {
+			margin-bottom: 0.7rem;
+			font-size: 0.62rem;
+			letter-spacing: 0.17em;
+		}
+
+		.about-section__rule {
+			margin: 0.82rem 0 0.95rem;
+		}
+
+		.about-section__copy p,
+		.about-section__story-copy p,
+		.about-section__cta p {
+			font-size: 0.88rem;
+			line-height: 1.55;
+		}
+
+		.about-section__button {
+			min-height: 2.75rem;
+			padding-inline: 1.18rem;
+			font-size: 0.68rem;
+		}
+
+		.about-section__benefit-grid,
+		.about-section__stats,
+		.about-section__gallery {
+			grid-template-columns: 1fr;
+		}
+
+		.about-benefit:nth-child(2n),
+		.about-stat:nth-child(2n) {
+			border-left: 0;
+		}
+
+		.about-benefit:nth-child(n + 2),
+		.about-stat:nth-child(n + 2) {
+			border-top: 1px solid rgba(222, 212, 198, 0.68);
+		}
+
+		.about-benefit {
+			padding: 1.25rem;
+			display: grid;
+			grid-template-columns: 2.3rem minmax(0, 1fr);
+			column-gap: 0.9rem;
+			text-align: left;
+		}
+
+		.about-benefit svg {
+			grid-row: span 2;
+			margin: 0;
+		}
+
+		.about-benefit p {
+			margin: 0.38rem 0 0;
+		}
+
+		.about-stat {
+			padding: 1rem;
+		}
+
+		.about-section__gallery {
+			max-width: 22rem;
+			margin-inline: auto;
+		}
+
+		.about-section__gallery figure {
+			aspect-ratio: 1.55 / 1;
+		}
+
+		.about-section__cta {
+			grid-template-columns: 1fr;
+			justify-items: start;
+			gap: 0.9rem;
+		}
+
+		.about-section__cta-icon {
+			width: 3.5rem;
+			height: 3.5rem;
+		}
+
+		.about-section__cta .about-section__button {
+			grid-column: auto;
+		}
+	}
+</style>

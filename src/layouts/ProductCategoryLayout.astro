@@ -90,7 +90,7 @@ const modalProducts = products.map((product) => ({
 						<p>{description}</p>
 					</div>
 					<div class="product-category__intro-actions">
-						<a class="product-category__help" href="#kontakti">
+						<a class="product-category__help" href="/kontakti">
 							<MessageCircleQuestionMark aria-hidden="true" />
 							<span>
 								<strong>Nepieciešama palīdzība?</strong>
@@ -99,6 +99,7 @@ const modalProducts = products.map((product) => ({
 						</a>
 						<label class="product-category__size-filter product-category__size-filter--mobile">
 							<Ruler aria-hidden="true" />
+							<span class="product-category__size-filter-label" data-product-size-filter-label>Visi izmēri</span>
 							<select data-product-size-filter aria-label="Filtrēt pēc izmēra">
 								<option value="all">Visi izmēri</option>
 								{sizeOptions.map((size) => <option value={size}>{size}</option>)}
@@ -156,6 +157,7 @@ const modalProducts = products.map((product) => ({
 				}
 				<label class="product-category__size-filter product-category__size-filter--desktop">
 					<Ruler aria-hidden="true" />
+					<span class="product-category__size-filter-label" data-product-size-filter-label>Visi izmēri</span>
 					<select data-product-size-filter aria-label="Filtrēt pēc izmēra">
 						<option value="all">Visi izmēri</option>
 						{sizeOptions.map((size) => <option value={size}>{size}</option>)}
@@ -214,7 +216,7 @@ const modalProducts = products.map((product) => ({
 					<h2>Neatradi piemērotu izmēru?</h2>
 					<p>Piedāvājam teltis dažādos izmēros un konfigurācijās. Sazinies ar mums - palīdzēsim atrast labāko risinājumu.</p>
 				</div>
-				<a href="#kontakti">
+				<a href="/kontakti">
 					<span>Sazināties</span>
 					<ArrowRight aria-hidden="true" />
 				</a>
@@ -510,6 +512,13 @@ const modalProducts = products.map((product) => ({
 		border-color: rgba(222, 212, 198, 0.96);
 	}
 
+	.product-category__size-filter-label {
+		min-width: 7.5rem;
+		padding-right: 1.25rem;
+		line-height: 1;
+		pointer-events: none;
+	}
+
 	.product-category__size-filter:hover {
 		background: var(--color-background-soft);
 	}
@@ -522,23 +531,30 @@ const modalProducts = products.map((product) => ({
 	}
 
 	.product-category__size-filter select {
-		min-width: 7.5rem;
-		padding: 0 1.25rem 0 0;
-		color: inherit;
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		color: transparent;
 		background: transparent;
 		border: 0;
 		cursor: pointer;
-		font: inherit;
-		font-size: inherit;
-		font-weight: inherit;
 		outline: none;
 		appearance: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.product-category__size-filter select option {
+		color: var(--color-bark);
+		background: var(--color-surface);
+	}
+
+	.product-category__size-filter select:focus {
+		outline: none;
 	}
 
 	.product-category__size-filter select:focus-visible {
-		outline: 2px solid rgba(107, 122, 74, 0.35);
-		outline-offset: 4px;
-		border-radius: 0.45rem;
+		outline: none;
 	}
 
 	.product-category__size-filter svg:last-child {
@@ -1149,7 +1165,7 @@ const modalProducts = products.map((product) => ({
 
 	.product-modal__eyebrow {
 		margin: 0 3rem 0.6rem 0;
-		color: var(--color-primary);
+		color: #8A9271;
 		font-size: 0.72rem;
 		font-weight: 820;
 		letter-spacing: 0.16em;
@@ -1665,7 +1681,7 @@ const modalProducts = products.map((product) => ({
 			font-size: 0.75rem;
 		}
 
-		.product-category__size-filter select {
+		.product-category__size-filter-label {
 			min-width: 5.6rem;
 			max-width: 6.8rem;
 		}
@@ -1896,6 +1912,7 @@ const modalProducts = products.map((product) => ({
 	const productFilterMenuToggles = document.querySelectorAll<HTMLButtonElement>('[data-product-filter-menu-toggle]');
 	const productFilterMenus = document.querySelectorAll<HTMLElement>('.product-category__filter-menu');
 	const productSizeFilters = document.querySelectorAll<HTMLSelectElement>('[data-product-size-filter]');
+	const productSizeFilterLabels = document.querySelectorAll<HTMLElement>('[data-product-size-filter-label]');
 	const productCards = document.querySelectorAll<HTMLElement>('[data-product-category]');
 	const productModalData = document.querySelector<HTMLScriptElement>('#product-modal-data');
 	const productModal = document.querySelector<HTMLElement>('[data-product-modal]');
@@ -1958,9 +1975,20 @@ const modalProducts = products.map((product) => ({
 		});
 	};
 
+	const getProductSizeFilterLabel = (size: string) => {
+		if (size === 'all') {
+			return productSizeFilters[0]?.querySelector<HTMLOptionElement>('option[value="all"]')?.textContent?.trim() || 'Visi izmēri';
+		}
+
+		return size;
+	};
+
 	const syncProductSizeFilters = (size: string) => {
 		productSizeFilters.forEach((filter) => {
 			filter.value = size;
+		});
+		productSizeFilterLabels.forEach((label) => {
+			label.textContent = getProductSizeFilterLabel(size);
 		});
 	};
 
