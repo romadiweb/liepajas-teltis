@@ -443,6 +443,8 @@ const cartEditProducts = products.map((product) => ({
 	}
 
 	.cart-editor__dates label {
+		width: 100%;
+		min-width: 0;
 		display: grid;
 		gap: 0.35rem;
 	}
@@ -456,14 +458,30 @@ const cartEditProducts = products.map((product) => ({
 
 	.cart-editor__dates input {
 		width: 100%;
+		min-width: 0;
+		max-width: 100%;
 		min-height: 2.7rem;
+		display: block;
+		box-sizing: border-box;
 		padding: 0 0.75rem;
 		color: var(--color-bark);
 		background: var(--color-surface);
 		border: 1px solid rgba(222, 212, 198, 0.96);
 		border-radius: 10px;
+		appearance: none;
+		-webkit-appearance: none;
 		font: inherit;
 		font-size: 0.88rem;
+	}
+
+	.cart-editor__dates input::-webkit-date-and-time-value {
+		min-height: 1.2em;
+		text-align: left;
+	}
+
+	.cart-editor__dates input::-webkit-calendar-picker-indicator {
+		flex: 0 0 auto;
+		margin-left: auto;
 	}
 
 	.cart-editor__bottom {
@@ -688,6 +706,7 @@ const cartEditProducts = products.map((product) => ({
 		}
 
 		.cart-editor__dates {
+			min-width: 0;
 			grid-template-columns: 1fr;
 		}
 

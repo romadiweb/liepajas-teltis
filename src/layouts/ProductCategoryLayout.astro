@@ -1164,6 +1164,7 @@ const modalProducts = products.map((product) => ({
 	.product-modal__content {
 		min-width: 0;
 		padding: clamp(1.5rem, 3vw, 2.45rem);
+		overflow-x: hidden;
 		overflow-y: auto;
 		color: var(--color-bark);
 	}
@@ -1303,12 +1304,15 @@ const modalProducts = products.map((product) => ({
 	.product-modal__dates {
 		margin-top: 1rem;
 		width: min(100%, 30rem);
+		min-width: 0;
+		max-width: 100%;
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 0.6rem;
 	}
 
 	.product-modal__dates label {
+		width: 100%;
 		min-width: 0;
 		display: grid;
 		gap: 0.38rem;
@@ -1325,13 +1329,21 @@ const modalProducts = products.map((product) => ({
 
 	.product-modal__dates input {
 		min-height: 2.75rem;
+		inline-size: 100%;
+		max-inline-size: 100%;
 		min-width: 0;
 		width: 100%;
+		max-width: 100%;
+		display: block;
+		box-sizing: border-box;
+		overflow: hidden;
 		padding: 0 0.82rem;
 		color: var(--color-bark);
 		background: rgba(255, 255, 255, 0.68);
 		border: 1px solid rgba(222, 212, 198, 0.9);
 		border-radius: 10px;
+		appearance: none;
+		-webkit-appearance: none;
 		font: inherit;
 		font-size: 0.9rem;
 	}
@@ -1339,6 +1351,16 @@ const modalProducts = products.map((product) => ({
 	.product-modal__dates input:focus {
 		outline: 2px solid rgba(107, 122, 74, 0.35);
 		outline-offset: 2px;
+	}
+
+	.product-modal__dates input::-webkit-date-and-time-value {
+		min-height: 1.2em;
+		text-align: left;
+	}
+
+	.product-modal__dates input::-webkit-calendar-picker-indicator {
+		flex: 0 0 auto;
+		margin-left: auto;
 	}
 
 	.product-modal__actions {
@@ -1766,6 +1788,7 @@ const modalProducts = products.map((product) => ({
 			display: flex;
 			flex-direction: column;
 			padding: 1.15rem;
+			overflow-x: hidden;
 		}
 
 		.product-modal__fullscreen-button {
@@ -1848,6 +1871,7 @@ const modalProducts = products.map((product) => ({
 		.product-modal__dates {
 			order: 4;
 			width: 100%;
+			min-width: 0;
 			grid-template-columns: 1fr;
 			gap: 0.55rem;
 			margin-top: 0.7rem;
@@ -1855,6 +1879,8 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__dates label {
 			width: 100%;
+			min-width: 0;
+			max-width: 100%;
 		}
 
 		.product-modal__dates span {
@@ -1863,6 +1889,8 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__dates input {
 			min-height: 2.35rem;
+			min-width: 0;
+			width: 100%;
 			max-width: 100%;
 			padding-inline: 0.58rem;
 			font-size: 0.78rem;
