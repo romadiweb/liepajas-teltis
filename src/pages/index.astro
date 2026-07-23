@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CalendarDays from '@lucide/astro/icons/calendar-days';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
 import FloatingActions from '../components/common/FloatingActions.astro';
+import LandingAnimations from '../components/common/LandingAnimations.astro';
 import Mail from '@lucide/astro/icons/mail';
 import MapPin from '@lucide/astro/icons/map-pin';
 import MessageCircle from '@lucide/astro/icons/message-circle';
@@ -173,18 +174,22 @@ const contactLinks = [
 
 <BaseLayout>
 	<SiteHeader />
-	<main id="top" class="page-shell" aria-label="Liepājas Teltis">
+	<main id="top" class="page-shell" aria-label="Liepājas Teltis" data-landing-page>
 		<FloatingActions />
 		<ScrollToTop />
-		<section class="landing-hero" aria-labelledby="landing-hero-title" data-reveal="up">
+		<section class="landing-hero" aria-labelledby="landing-hero-title" data-landing-hero>
 			<div class="landing-hero__shell">
 				<div class="landing-hero__content">
-					<p class="landing-hero__eyebrow">Telšu noma Liepājā un visā Latvijā</p>
-					<h1 id="landing-hero-title">
-						<span class="landing-hero__title-accent">Radām vietu</span>
-						<span class="landing-hero__title-rest">īpašiem mirkļiem</span>
+					<p class="landing-hero__eyebrow" data-hero-eyebrow>Telšu noma Liepājā un visā Latvijā</p>
+					<h1 id="landing-hero-title" aria-label="Radām vietu īpašiem mirkļiem">
+						<span class="landing-title-line">
+							<span class="landing-hero__title-accent" data-hero-line>Radām vietu</span>
+						</span>
+						<span class="landing-title-line">
+							<span class="landing-hero__title-rest" data-hero-line>īpašiem mirkļiem</span>
+						</span>
 					</h1>
-					<p class="landing-hero__lead">
+					<p class="landing-hero__lead" data-hero-copy>
 						Kvalitatīvas teltis un inventārs jebkuram pasākumam - no nelielām svinībām līdz lieliem
 						notikumiem.
 					</p>
@@ -192,7 +197,7 @@ const contactLinks = [
 					<div class="landing-hero__features" aria-label="Pakalpojuma priekšrocības">
 						{
 							heroFeatures.map(({ description, icon: Icon, label }) => (
-								<article class="landing-hero__feature">
+								<article class="landing-hero__feature" data-hero-copy>
 									<Icon aria-hidden="true" />
 									<strong>{label}</strong>
 									<span>{description}</span>
@@ -201,13 +206,13 @@ const contactLinks = [
 						}
 					</div>
 
-					<a class="landing-hero__cta" href="/pieteikt-nomu">
+					<a class="landing-hero__cta" href="/pieteikt-nomu" data-hero-actions>
 						<span>Pieteikt nomu</span>
 						<ArrowRight aria-hidden="true" />
 					</a>
 				</div>
 
-				<figure class="landing-hero__media" aria-label="Pasākumu telts piemērs">
+				<figure class="landing-hero__media" aria-label="Pasākumu telts piemērs" data-hero-media>
 					<img
 						alt="Balta pasākumu telts ar dekoratīvām gaismām zaļā ārtelpā"
 						decoding="async"
@@ -218,9 +223,15 @@ const contactLinks = [
 			</div>
 		</section>
 
-		<section class="categories-section" id="kategorijas" aria-labelledby="categories-title" data-reveal-section data-reveal="up">
+		<section
+			class="categories-section"
+			id="kategorijas"
+			aria-labelledby="categories-title"
+			data-landing-section
+			data-enter="left"
+		>
 			<div class="categories-section__inner">
-				<div class="categories-section__intro">
+				<div class="categories-section__intro" data-section-item>
 					<p class="categories-section__eyebrow">Kategorijas</p>
 					<h2 id="categories-title">Nomas inventārs</h2>
 					<p>
@@ -228,10 +239,10 @@ const contactLinks = [
 					</p>
 				</div>
 
-				<div class="categories-section__grid" aria-label="Nomas inventāra kategorijas">
+				<div class="categories-section__grid" aria-label="Nomas inventāra kategorijas" data-landing-grid>
 					{
 						categoryItems.map(({ alt, href, icon, image, title }, index) => (
-							<a class="card category-card" href={href} style={`--card-index: ${index};`} aria-label={`${title} - pieteikt nomu`}>
+							<a class="card category-card" href={href} style={`--card-index: ${index};`} aria-label={`${title} - pieteikt nomu`} data-grid-item>
 								<figure class="category-card__image">
 									<img alt={alt} decoding="async" loading="lazy" src={image} />
 								</figure>
@@ -249,10 +260,16 @@ const contactLinks = [
 			</div>
 		</section>
 
-		<section class="contact-section" id="pieteikums" aria-labelledby="contact-title" data-reveal="left">
+		<section
+			class="contact-section"
+			id="pieteikums"
+			aria-labelledby="contact-title"
+			data-landing-section
+			data-enter="right"
+		>
 			<div class="contact-section__inner">
 				<div class="contact-section__info">
-					<div>
+					<div data-section-item>
 						<p class="contact-section__eyebrow">Sazināties</p>
 						<h2 id="contact-title">Pastāstiet par savu <span>pasākumu</span></h2>
 						<p class="contact-section__lead">
@@ -264,7 +281,7 @@ const contactLinks = [
 					<div class="contact-section__links" aria-label="Kontaktinformācija">
 						{
 							contactLinks.map(({ href, icon: Icon, label, value }) => (
-								<a href={href} class="contact-link">
+								<a href={href} class="contact-link" data-section-item>
 									<span class="contact-link__icon">
 										<Icon aria-hidden="true" />
 									</span>
@@ -278,7 +295,7 @@ const contactLinks = [
 					</div>
 				</div>
 
-				<div class="contact-form-shell" data-contact-form-shell>
+				<div class="contact-form-shell" data-contact-form-shell data-section-media>
 					<button
 						class="contact-form-toggle"
 						type="button"
@@ -392,6 +409,7 @@ const contactLinks = [
 		</section>
 	</main>
 	<SiteFooter />
+	<LandingAnimations />
 </BaseLayout>
 
 <style>
@@ -1028,52 +1046,6 @@ const contactLinks = [
 		height: 1rem;
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		.reveal-ready .categories-section__intro,
-		.reveal-ready .category-card {
-			opacity: 0;
-			filter: blur(10px);
-			transform: translateY(2rem);
-		}
-
-		.reveal-ready .categories-section.is-visible .categories-section__intro {
-			animation: categories-intro-in 720ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-		}
-
-		.reveal-ready .categories-section.is-visible .category-card {
-			animation: category-card-in 760ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-			animation-delay: calc(120ms + (var(--card-index) * 85ms));
-		}
-	}
-
-	@keyframes categories-intro-in {
-		to {
-			opacity: 1;
-			filter: blur(0);
-			transform: translateY(0);
-		}
-	}
-
-	@keyframes category-card-in {
-		0% {
-			opacity: 0;
-			filter: blur(12px);
-			transform: translateY(2.25rem) scale(0.96);
-		}
-
-		62% {
-			opacity: 1;
-			filter: blur(0);
-			transform: translateY(-0.2rem) scale(1.01);
-		}
-
-		100% {
-			opacity: 1;
-			filter: blur(0);
-			transform: translateY(0) scale(1);
-		}
-	}
-
 	@media (max-width: 960px) {
 		.landing-hero {
 			--hero-art-height: auto;
@@ -1153,14 +1125,16 @@ const contactLinks = [
 			margin-bottom: 0.55rem;
 			font-size: 0.56rem;
 			letter-spacing: 0.12em;
-			transform: translateY(-1.45rem);
+			position: relative;
+			top: -1.45rem;
 		}
 
 		.landing-hero h1 {
 			max-width: 8.8em;
 			font-size: clamp(1.86rem, 8.1vw, 2.34rem);
 			line-height: 0.98;
-			transform: translateY(-1.45rem);
+			position: relative;
+			top: -1.45rem;
 		}
 
 		.landing-hero__lead {
@@ -1451,7 +1425,6 @@ const contactLinks = [
 </style>
 
 <script>
-	const revealSection = document.querySelector('[data-reveal-section]');
 	const contactFormShell = document.querySelector('[data-contact-form-shell]');
 	const contactFormToggle = document.querySelector('[data-contact-form-toggle]');
 	const contactFormToggleLabel = document.querySelector('[data-contact-form-toggle-label]');
@@ -1501,21 +1474,4 @@ const contactLinks = [
 	}
 
 	updateContactFormState();
-
-	if (revealSection && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		document.documentElement.classList.add('reveal-ready');
-
-		const revealObserver = new IntersectionObserver(
-			(entries, observer) => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting) continue;
-					entry.target.classList.add('is-visible');
-					observer.unobserve(entry.target);
-				}
-			},
-			{ rootMargin: '0px 0px -18% 0px', threshold: 0.2 },
-		);
-
-		revealObserver.observe(revealSection);
-	}
 </script>

@@ -1,0 +1,359 @@
+<script>
+	import { animate, inView, scroll, stagger } from 'motion';
+
+	function initialiseLandingAnimations() {
+		const page =
+			document.querySelector<HTMLElement>('[data-landing-page]');
+
+		if (!page || page.dataset.motionReady === 'true') {
+			return;
+		}
+
+		page.dataset.motionReady = 'true';
+
+		const reduceMotion = window.matchMedia(
+			'(prefers-reduced-motion: reduce)'
+		).matches;
+
+		if (reduceMotion) {
+			return;
+		}
+
+		const mobile = window.matchMedia('(max-width: 700px)').matches;
+		const distance = mobile ? 34 : 72;
+
+		/*
+		 * Hero entrance
+		 */
+		const hero =
+			page.querySelector<HTMLElement>('[data-landing-hero]');
+
+		if (hero) {
+			const media =
+				hero.querySelector<HTMLElement>('[data-hero-media]');
+
+			const eyebrow =
+				hero.querySelector<HTMLElement>('[data-hero-eyebrow]');
+
+			const titleLines =
+				hero.querySelectorAll<HTMLElement>('[data-hero-line]');
+
+			const copy =
+				hero.querySelectorAll<HTMLElement>('[data-hero-copy]');
+
+			const actions =
+				hero.querySelector<HTMLElement>('[data-hero-actions]');
+
+			if (media) {
+				const mediaRadius = getComputedStyle(media).getPropertyValue('--landing-hero-media-radius').trim() || '0px';
+
+				animate(
+					media,
+					{
+						opacity: [0, 1],
+						scale: [1.1, 1],
+						clipPath: [
+							`inset(0 100% 0 0 round ${mediaRadius})`,
+							`inset(0 0% 0 0 round ${mediaRadius})`,
+						],
+					},
+					{
+						duration: 1.25,
+						ease: [0.22, 1, 0.36, 1],
+					}
+				);
+			}
+
+			if (eyebrow) {
+				animate(
+					eyebrow,
+					{
+						opacity: [0, 1],
+						y: [24, 0],
+					},
+					{
+						duration: 0.65,
+						delay: 0.15,
+						ease: [0.22, 1, 0.36, 1],
+					}
+				);
+			}
+
+			if (titleLines.length) {
+				animate(
+					titleLines,
+					{
+						y: ['115%', '0%'],
+						rotate: [2, 0],
+					},
+					{
+						duration: 0.9,
+						delay: stagger(0.11, {
+							startDelay: 0.22,
+						}),
+						ease: [0.22, 1, 0.36, 1],
+					}
+				);
+			}
+
+			if (copy.length) {
+				animate(
+					copy,
+					{
+						opacity: [0, 1],
+						y: [36, 0],
+					},
+					{
+						duration: 0.8,
+						delay: stagger(0.1, {
+							startDelay: 0.55,
+						}),
+						ease: [0.22, 1, 0.36, 1],
+					}
+				);
+			}
+
+			if (actions) {
+				animate(
+					actions,
+					{
+						opacity: [0, 1],
+						y: [28, 0],
+						scale: [0.94, 1],
+					},
+					{
+						duration: 0.75,
+						delay: 0.78,
+						ease: [0.22, 1, 0.36, 1],
+					}
+				);
+			}
+		}
+
+		/*
+		 * Alternating large section reveals
+		 */
+		const sections =
+			page.querySelectorAll<HTMLElement>('[data-landing-section]');
+
+		sections.forEach((section, index) => {
+			const media =
+				section.querySelector<HTMLElement>('[data-section-media]');
+
+			const items =
+				section.querySelectorAll<HTMLElement>('[data-section-item]');
+
+			const specifiedDirection = section.dataset.enter;
+
+			const direction =
+				specifiedDirection === 'right'
+					? 1
+					: specifiedDirection === 'left'
+						? -1
+						: index % 2 === 0
+							? -1
+							: 1;
+
+			if (media) {
+				animate(
+					media,
+					{
+						opacity: 0,
+						x: direction * distance,
+						scale: 0.94,
+						rotate: direction * 1.5,
+					},
+					{
+						duration: 0,
+					}
+				);
+			}
+
+			if (items.length) {
+				animate(
+					items,
+					{
+						opacity: 0,
+						y: mobile ? 28 : 48,
+					},
+					{
+						duration: 0,
+					}
+				);
+			}
+
+			inView(
+				section,
+				() => {
+					if (media) {
+						animate(
+							media,
+							{
+								opacity: 1,
+								x: 0,
+								scale: 1,
+								rotate: 0,
+							},
+							{
+								duration: 1,
+								ease: [0.22, 1, 0.36, 1],
+							}
+						);
+					}
+
+					if (items.length) {
+						animate(
+							items,
+							{
+								opacity: 1,
+								y: 0,
+							},
+							{
+								duration: 0.8,
+								delay: stagger(0.1, {
+									startDelay: 0.12,
+								}),
+								ease: [0.22, 1, 0.36, 1],
+							}
+						);
+					}
+				},
+				{
+					amount: 0.18,
+					margin: '0px 0px -8% 0px',
+				}
+			);
+		});
+
+		/*
+		 * Product/service card wave
+		 */
+		const grids =
+			page.querySelectorAll<HTMLElement>('[data-landing-grid]');
+
+		grids.forEach((grid) => {
+			const cards =
+				grid.querySelectorAll<HTMLElement>('[data-grid-item]');
+
+			if (!cards.length) {
+				return;
+			}
+
+			animate(
+				cards,
+				{
+					opacity: 0,
+					y: mobile ? 32 : 58,
+					scale: 0.92,
+					rotate: -1.5,
+				},
+				{
+					duration: 0,
+				}
+			);
+
+			inView(
+				grid,
+				() => {
+					animate(
+						cards,
+						{
+							opacity: 1,
+							y: 0,
+							scale: 1,
+							rotate: 0,
+						},
+						{
+							duration: 0.8,
+							delay: stagger(0.1),
+							ease: [0.22, 1, 0.36, 1],
+						}
+					);
+				},
+				{
+					amount: 0.12,
+					margin: '0px 0px -6% 0px',
+				}
+			);
+		});
+
+		/*
+		 * Subtle image parallax on desktop only
+		 */
+		if (!mobile) {
+			const parallaxElements =
+				page.querySelectorAll<HTMLElement>('[data-parallax]');
+
+			parallaxElements.forEach((element) => {
+				const target =
+					element.closest<HTMLElement>('[data-parallax-section]') ??
+					element;
+
+				const animation = animate(
+					element,
+					{
+						y: ['-4%', '4%'],
+						scale: [1.04, 1.09],
+					},
+					{
+						ease: 'linear',
+					}
+				);
+
+				scroll(animation, {
+					target,
+					offset: ['start end', 'end start'],
+				});
+			});
+		}
+	}
+
+	initialiseLandingAnimations();
+
+	document.addEventListener(
+		'astro:page-load',
+		initialiseLandingAnimations
+	);
+</script>
+
+<style is:global>
+	.landing-title-line {
+		display: block;
+		overflow: hidden;
+		padding-bottom: 0.08em;
+		margin-bottom: -0.08em;
+	}
+
+	[data-hero-line] {
+		display: block;
+		transform-origin: left bottom;
+	}
+
+	[data-hero-media],
+	[data-section-media],
+	[data-grid-item] {
+		will-change: opacity, transform;
+	}
+
+	[data-hero-media],
+	[data-section-media] {
+		overflow: hidden;
+	}
+
+	[data-parallax] {
+		will-change: transform;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		[data-hero-line],
+		[data-hero-media],
+		[data-section-media],
+		[data-section-item],
+		[data-grid-item],
+		[data-parallax] {
+			opacity: 1 !important;
+			transform: none !important;
+			clip-path: none !important;
+		}
+	}
+</style>
