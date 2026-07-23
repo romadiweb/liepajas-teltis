@@ -21,6 +21,7 @@
 
 		const mobile = window.matchMedia('(max-width: 700px)').matches;
 		const distance = mobile ? 34 : 72;
+		const firstViewportHeight = window.innerHeight || document.documentElement.clientHeight;
 
 		/*
 		 * Hero entrance
@@ -158,7 +159,7 @@
 				animate(
 					media,
 					{
-						opacity: 0,
+						opacity: 0.36,
 						x: direction * distance,
 						scale: 0.94,
 						rotate: direction * 1.5,
@@ -173,7 +174,7 @@
 				animate(
 					items,
 					{
-						opacity: 0,
+						opacity: 0.5,
 						y: mobile ? 28 : 48,
 					},
 					{
@@ -219,8 +220,8 @@
 					}
 				},
 				{
-					amount: 0.18,
-					margin: '0px 0px -8% 0px',
+					amount: mobile ? 0.32 : 0.3,
+					margin: '0px 0px -18% 0px',
 				}
 			);
 		});
@@ -233,16 +234,65 @@
 
 		grids.forEach((grid) => {
 			const cards =
-				grid.querySelectorAll<HTMLElement>('[data-grid-item]');
+				Array.from(grid.querySelectorAll<HTMLElement>('[data-grid-item]'));
 
 			if (!cards.length) {
 				return;
 			}
 
+			grid.classList.add('is-previewing');
+
+			const getGridColumnCount = () => {
+				const columns = getComputedStyle(grid)
+					.gridTemplateColumns
+					.split(' ')
+					.filter(Boolean).length;
+
+				return Math.max(1, columns || (mobile ? 2 : 3));
+			};
+
+			let cardsPlayed = false;
+
+			const playCardsInRows = () => {
+				if (cardsPlayed) {
+					return;
+				}
+
+				cardsPlayed = true;
+				grid.classList.remove('is-previewing');
+				grid.classList.add('is-revealed');
+				const columns = getGridColumnCount();
+				const rows = cards.reduce<HTMLElement[][]>((groups, card, index) => {
+					const rowIndex = Math.floor(index / columns);
+					groups[rowIndex] ??= [];
+					groups[rowIndex].push(card);
+					return groups;
+				}, []);
+
+				rows.forEach((row, rowIndex) => {
+					animate(
+						row,
+						{
+							opacity: 1,
+							y: 0,
+							scale: 1,
+							rotate: 0,
+						},
+						{
+							duration: 0.72,
+							delay: stagger(mobile ? 0.05 : 0.07, {
+								startDelay: rowIndex * (mobile ? 0.16 : 0.14),
+							}),
+							ease: [0.22, 1, 0.36, 1],
+						}
+					);
+				});
+			};
+
 			animate(
 				cards,
 				{
-					opacity: 0,
+					opacity: 0.34,
 					y: mobile ? 32 : 58,
 					scale: 0.92,
 					rotate: -1.5,
@@ -252,27 +302,35 @@
 				}
 			);
 
+			if (mobile && grid.getBoundingClientRect().top < firstViewportHeight) {
+				const triggerVisibleGrid = () => {
+					if (cardsPlayed) {
+						return;
+					}
+
+					const triggerPoint = firstViewportHeight * 0.7;
+
+					if (grid.getBoundingClientRect().top > triggerPoint) {
+						return;
+					}
+
+					window.removeEventListener('scroll', triggerVisibleGrid);
+					window.removeEventListener('resize', triggerVisibleGrid);
+					playCardsInRows();
+				};
+
+				window.addEventListener('scroll', triggerVisibleGrid, { passive: true });
+				window.addEventListener('resize', triggerVisibleGrid);
+				triggerVisibleGrid();
+				return;
+			}
+
 			inView(
 				grid,
-				() => {
-					animate(
-						cards,
-						{
-							opacity: 1,
-							y: 0,
-							scale: 1,
-							rotate: 0,
-						},
-						{
-							duration: 0.8,
-							delay: stagger(0.1),
-							ease: [0.22, 1, 0.36, 1],
-						}
-					);
-				},
+				playCardsInRows,
 				{
-					amount: 0.12,
-					margin: '0px 0px -6% 0px',
+					amount: mobile ? 0.22 : 0.28,
+					margin: '0px 0px -18% 0px',
 				}
 			);
 		});
@@ -306,6 +364,8 @@
 				});
 			});
 		}
+
+		page.removeAttribute('data-landing-preview');
 	}
 
 	initialiseLandingAnimations();
@@ -333,6 +393,59 @@
 	[data-section-media],
 	[data-grid-item] {
 		will-change: opacity, transform;
+	}
+
+	[data-landing-grid] {
+		position: relative;
+	}
+
+	[data-landing-page][data-landing-preview] [data-section-media] {
+		opacity: 0.36;
+		transform: translateX(34px) scale(0.94) rotate(1.5deg);
+	}
+
+	[data-landing-page][data-landing-preview] [data-section-item] {
+		opacity: 0.5;
+		transform: translateY(48px);
+	}
+
+	[data-landing-page][data-landing-preview] [data-grid-item] {
+		opacity: 0.34;
+		transform: translateY(58px) scale(0.92) rotate(-1.5deg);
+	}
+
+	[data-landing-grid]::before {
+		position: absolute;
+		inset: 1.15rem -0.75rem auto;
+		z-index: 2;
+		height: min(5.5rem, 20%);
+		background: linear-gradient(180deg, var(--color-background, #f6f1e7) 0%, rgba(246, 241, 231, 0.56) 48%, rgba(246, 241, 231, 0) 100%);
+		content: "";
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 420ms ease;
+	}
+
+	[data-landing-grid].is-previewing::before {
+		opacity: 1;
+	}
+
+	[data-landing-page][data-landing-preview] [data-landing-grid]::before {
+		opacity: 1;
+	}
+
+	[data-landing-grid].is-revealed::before {
+		opacity: 0;
+	}
+
+	@media (max-width: 700px) {
+		[data-landing-page][data-landing-preview] [data-section-item] {
+			transform: translateY(28px);
+		}
+
+		[data-landing-page][data-landing-preview] [data-grid-item] {
+			transform: translateY(32px) scale(0.92) rotate(-1.5deg);
+		}
 	}
 
 	[data-hero-media],

@@ -7,11 +7,13 @@ import ScrollAnimations from '../components/common/ScrollAnimations.astro';
 interface Props {
 	title?: string;
 	description?: string;
+	resetScrollOnLoad?: boolean;
 }
 
 const {
 	title = 'Liepājas Teltis',
 	description = 'Pasākumu telšu un inventāra noma Liepājā.',
+	resetScrollOnLoad = false,
 } = Astro.props;
 ---
 
@@ -24,6 +26,21 @@ const {
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		{
+			resetScrollOnLoad && (
+				<script
+					is:inline
+					set:html={`(() => {
+						if (window.location.hash) return;
+						if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+						window.scrollTo(0, 0);
+						window.addEventListener('pageshow', () => {
+							if (!window.location.hash) requestAnimationFrame(() => window.scrollTo(0, 0));
+						});
+					})();`}
+				/>
+			)
+		}
 	</head>
 
 	<body>
