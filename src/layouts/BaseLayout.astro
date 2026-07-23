@@ -25,6 +25,18 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
+		<script
+			is:inline
+			set:html={`(() => {
+				try {
+					if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+						document.documentElement.classList.add('motion-preload');
+					}
+				} catch {
+					document.documentElement.classList.add('motion-preload');
+				}
+			})();`}
+		/>
 		<title>{title}</title>
 		{
 			resetScrollOnLoad && (

@@ -20,9 +20,9 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 				<span>Šis nav maksājuma grozs - nosūtiet pieprasījumu, un mēs precizēsim pieejamību, piegādi un gala piedāvājumu.</span>
 			</section>
 
-			<section class="cart-page__layout">
+			<section class="cart-page__layout" data-cart-page-layout data-cart-page-hydrating>
 				<div class="cart-page__items" data-cart-page-items></div>
-				<div class="cart-page__empty" data-cart-page-empty>
+				<div class="cart-page__empty" data-cart-page-empty hidden>
 					<h2>Saraksts vēl ir tukšs</h2>
 					<p>Atveriet produktu kartītes un pievienojiet nepieciešamo inventāru nomas sarakstam.</p>
 					<a href="/teltis">Apskatīt teltis</a>
@@ -120,11 +120,13 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	.cart-page__layout {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+		grid-template-areas: "content summary";
 		gap: clamp(1.2rem, 3vw, 2rem);
 		align-items: start;
 	}
 
 	.cart-page__items {
+		grid-area: content;
 		display: grid;
 		gap: 1rem;
 	}
@@ -139,6 +141,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	}
 
 	.cart-page__empty {
+		grid-area: content;
 		padding: 1.4rem;
 	}
 
@@ -277,6 +280,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	}
 
 	.cart-page__summary {
+		grid-area: summary;
 		position: sticky;
 		top: 6rem;
 		padding: 1.3rem;
@@ -333,6 +337,9 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	@media (max-width: 820px) {
 		.cart-page__layout {
 			grid-template-columns: 1fr;
+			grid-template-areas:
+				"content"
+				"summary";
 		}
 
 		.cart-page__summary {
@@ -472,6 +479,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	const formatter = new Intl.NumberFormat('lv-LV', { currency: 'EUR', style: 'currency' });
 	const itemContainer = document.querySelector<HTMLElement>('[data-cart-page-items]');
 	const emptyState = document.querySelector<HTMLElement>('[data-cart-page-empty]');
+	const cartLayout = document.querySelector<HTMLElement>('[data-cart-page-layout]');
 	const template = document.querySelector<HTMLTemplateElement>('[data-cart-page-item-template]');
 	const countNode = document.querySelector<HTMLElement>('[data-cart-page-count]');
 	const totalNode = document.querySelector<HTMLElement>('[data-cart-page-total]');
@@ -556,6 +564,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		const total = pageItems.reduce((sum, item) => sum + item.quantity * item.priceCents, 0);
 		if (countNode) countNode.textContent = String(count);
 		if (totalNode) totalNode.textContent = formatter.format(total / 100);
+		cartLayout?.removeAttribute('data-cart-page-hydrating');
 	};
 
 	function updatePageQuantity(id: string, quantity: number) {
