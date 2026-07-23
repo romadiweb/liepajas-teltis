@@ -48,7 +48,7 @@ const aboutGallery = await getAboutWorkImages();
 
 <section class="about-section" id="par-mums" aria-labelledby="about-title">
 	<div class="about-section__inner">
-		<div class="about-section__hero">
+		<div class="about-section__hero" data-reveal="right">
 			<div class="about-section__copy">
 				<nav class="breadcrumb-trail about-section__breadcrumbs" aria-label="Lapas ceļš">
 					<a href="/">Sākums</a>
@@ -72,7 +72,7 @@ const aboutGallery = await getAboutWorkImages();
 			</figure>
 		</div>
 
-		<div class="about-section__story">
+		<div class="about-section__story" data-reveal="left">
 			<figure class="about-section__story-media">
 				<img src={aboutStoryImage} alt="Mājīga svinību zona ar gaismām zem telts" loading="lazy" decoding="async" />
 			</figure>
@@ -99,7 +99,7 @@ const aboutGallery = await getAboutWorkImages();
 			</div>
 		</div>
 
-		<div class="about-section__benefits" aria-labelledby="about-benefits-title">
+		<div class="about-section__benefits" aria-labelledby="about-benefits-title" data-reveal="up">
 			<div class="about-section__center-heading">
 				<h2 id="about-benefits-title">Kāpēc izvēlas mūs?</h2>
 				<div class="about-section__rule" aria-hidden="true"></div>
@@ -128,7 +128,7 @@ const aboutGallery = await getAboutWorkImages();
 			}
 		</div>
 
-		<div class="about-section__works" aria-labelledby="about-works-title">
+		<div class="about-section__works" aria-labelledby="about-works-title" data-reveal="up">
 			<div class="about-section__center-heading">
 				<h2 id="about-works-title">Mūsu darbi</h2>
 				<div class="about-section__rule" aria-hidden="true"></div>
@@ -144,7 +144,7 @@ const aboutGallery = await getAboutWorkImages();
 			</div>
 		</div>
 
-		<div class="about-section__cta">
+		<div class="about-section__cta" data-reveal="up">
 			<span class="about-section__cta-icon" aria-hidden="true">
 				<Tent aria-hidden="true" />
 			</span>

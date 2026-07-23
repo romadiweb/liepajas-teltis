@@ -51,7 +51,7 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 		<FloatingActions />
 		<ScrollToTop />
 
-		<section class="contact-page__hero">
+		<section class="contact-page__hero" data-reveal="up">
 			<nav class="breadcrumb-trail contact-page__breadcrumbs" aria-label="Lapas ceļš">
 				<a href="/">Sākums</a>
 				<ArrowRight aria-hidden="true" />
@@ -65,7 +65,7 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 			</div>
 		</section>
 
-		<section class="contact-methods" aria-label="Kontaktinformācija">
+		<section class="contact-methods" aria-label="Kontaktinformācija" data-reveal="up">
 			{
 				contactMethods.map(({ href, icon: Icon, title, value }) => {
 					const content = (
@@ -87,7 +87,7 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 			}
 		</section>
 
-		<section class="contact-message" aria-label="Rakstiet mums">
+		<section class="contact-message" aria-label="Rakstiet mums" data-reveal="up">
 			<form class="contact-form-card" name="kontaktu-zina" method="post" data-netlify="true">
 				<input type="hidden" name="form-name" value="kontaktu-zina" />
 				<div class="contact-form-card__heading">
@@ -144,7 +144,7 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 			</aside>
 		</section>
 
-		<section class="contact-map" aria-label="Atrašanās vieta">
+		<section class="contact-map" aria-label="Atrašanās vieta" data-reveal="up">
 			<div class="contact-map__visual" aria-hidden="true">
 				<span class="contact-map__water"></span>
 				<span class="contact-map__road contact-map__road--one"></span>
@@ -171,7 +171,7 @@ const supportPoints = ['Ātra atbilde', 'Individuāla pieeja', 'Profesionāls se
 			</div>
 		</section>
 
-		<section class="contact-cta" aria-label="Pieteikt nomu">
+		<section class="contact-cta" aria-label="Pieteikt nomu" data-reveal="left">
 			<div class="contact-cta__icon">
 				<CalendarDays aria-hidden="true" />
 			</div>

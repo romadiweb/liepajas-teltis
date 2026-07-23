@@ -16,12 +16,28 @@
 		).matches;
 
 		if (reduceMotion) {
+			page.removeAttribute('data-landing-preview');
 			return;
 		}
 
 		const mobile = window.matchMedia('(max-width: 700px)').matches;
 		const distance = mobile ? 34 : 72;
 		const firstViewportHeight = window.innerHeight || document.documentElement.clientHeight;
+		const setPreviewState = (
+			elements: HTMLElement | HTMLElement[] | NodeListOf<HTMLElement>,
+			opacity: number,
+			transform: string
+		) => {
+			const targets =
+				elements instanceof HTMLElement
+					? [elements]
+					: Array.from(elements);
+
+			targets.forEach((element) => {
+				element.style.opacity = String(opacity);
+				element.style.transform = transform;
+			});
+		};
 
 		/*
 		 * Hero entrance
@@ -156,30 +172,18 @@
 							: 1;
 
 			if (media) {
-				animate(
+				setPreviewState(
 					media,
-					{
-						opacity: 0.36,
-						x: direction * distance,
-						scale: 0.94,
-						rotate: direction * 1.5,
-					},
-					{
-						duration: 0,
-					}
+					0.36,
+					`translateX(${direction * distance}px) scale(0.94)`
 				);
 			}
 
 			if (items.length) {
-				animate(
+				setPreviewState(
 					items,
-					{
-						opacity: 0.5,
-						y: mobile ? 28 : 48,
-					},
-					{
-						duration: 0,
-					}
+					0.5,
+					`translateY(${mobile ? 28 : 48}px)`
 				);
 			}
 
@@ -193,7 +197,6 @@
 								opacity: 1,
 								x: 0,
 								scale: 1,
-								rotate: 0,
 							},
 							{
 								duration: 1,
@@ -276,7 +279,6 @@
 							opacity: 1,
 							y: 0,
 							scale: 1,
-							rotate: 0,
 						},
 						{
 							duration: 0.72,
@@ -289,17 +291,10 @@
 				});
 			};
 
-			animate(
+			setPreviewState(
 				cards,
-				{
-					opacity: 0.34,
-					y: mobile ? 32 : 58,
-					scale: 0.92,
-					rotate: -1.5,
-				},
-				{
-					duration: 0,
-				}
+				0.34,
+				`translateY(${mobile ? 32 : 58}px) scale(0.92)`
 			);
 
 			if (mobile && grid.getBoundingClientRect().top < firstViewportHeight) {
@@ -403,7 +398,7 @@
 
 	[data-landing-page][data-landing-preview] [data-section-media] {
 		opacity: 0.36;
-		transform: translateX(34px) scale(0.94) rotate(1.5deg);
+		transform: translateX(34px) scale(0.94);
 	}
 
 	[data-landing-page][data-landing-preview] [data-section-item] {
@@ -413,7 +408,7 @@
 
 	[data-landing-page][data-landing-preview] [data-grid-item] {
 		opacity: 0.34;
-		transform: translateY(58px) scale(0.92) rotate(-1.5deg);
+		transform: translateY(58px) scale(0.92);
 	}
 
 	[data-landing-grid]::before {
@@ -446,7 +441,7 @@
 		}
 
 		[data-landing-page][data-landing-preview] [data-grid-item] {
-			transform: translateY(32px) scale(0.92) rotate(-1.5deg);
+			transform: translateY(32px) scale(0.92);
 		}
 	}
 
