@@ -4,6 +4,18 @@ import Minus from '@lucide/astro/icons/minus';
 import Plus from '@lucide/astro/icons/plus';
 import Trash2 from '@lucide/astro/icons/trash-2';
 import X from '@lucide/astro/icons/x';
+import { getAllActiveProducts, getProductRouteMap } from '../../lib/tentProducts';
+
+const [productRouteMap, products] = await Promise.all([getProductRouteMap(), getAllActiveProducts()]);
+const cartEditProducts = products.map((product) => ({
+	id: product.id,
+	image: product.image,
+	priceCents: product.priceCents,
+	productPath: productRouteMap[product.id] || '/teltis',
+	size: product.size,
+	title: product.title,
+	variant: product.variant ?? '',
+}));
 ---
 
 <aside class="cart-drawer" data-cart-drawer hidden aria-label="Nomas saraksts">
@@ -28,7 +40,7 @@ import X from '@lucide/astro/icons/x';
 				<a class="cart-drawer__secondary" href="/cart">
 					<span>Apskatīt sarakstu</span>
 				</a>
-				<a class="cart-drawer__primary" href="/cart">
+				<a class="cart-drawer__primary" href="/pieteikt-nomu?from=cart#nomas-pieteikums">
 					<span>Veikt rezervācijas pieprasījumu</span>
 					<ArrowRight aria-hidden="true" />
 				</a>
@@ -37,12 +49,55 @@ import X from '@lucide/astro/icons/x';
 	</section>
 </aside>
 
+<div class="cart-editor" data-cart-editor hidden role="dialog" aria-modal="true" aria-labelledby="cart-editor-title">
+	<button class="cart-editor__backdrop" data-cart-editor-close type="button" aria-label="Aizvērt rediģēšanu"></button>
+	<section class="cart-editor__window" tabindex="-1">
+		<button class="cart-editor__close" data-cart-editor-close type="button" aria-label="Aizvērt">
+			<X aria-hidden="true" />
+		</button>
+		<img class="cart-editor__image" data-cart-editor-image src="" alt="" />
+		<div class="cart-editor__content">
+			<p class="cart-editor__eyebrow">Rediģēt sarakstā</p>
+			<h2 id="cart-editor-title" data-cart-editor-title></h2>
+			<p class="cart-editor__meta" data-cart-editor-meta></p>
+			<strong class="cart-editor__price" data-cart-editor-price></strong>
+			<div class="cart-editor__dates" aria-label="Nomas periods">
+				<label>
+					<span>No</span>
+					<input data-cart-editor-date-start type="date" />
+				</label>
+				<label>
+					<span>Līdz</span>
+					<input data-cart-editor-date-end type="date" />
+				</label>
+			</div>
+			<div class="cart-editor__bottom">
+				<div class="cart-editor__quantity" aria-label="Daudzums">
+					<button data-cart-editor-quantity-decrease type="button" aria-label="Samazināt daudzumu">
+						<Minus aria-hidden="true" />
+					</button>
+					<span data-cart-editor-quantity>1</span>
+					<button data-cart-editor-quantity-increase type="button" aria-label="Palielināt daudzumu">
+						<Plus aria-hidden="true" />
+					</button>
+				</div>
+				<button class="cart-editor__save" data-cart-editor-save type="button">Saglabāt</button>
+			</div>
+		</div>
+	</section>
+</div>
+
 <template data-cart-item-template>
 	<article class="cart-drawer__item">
-		<img data-cart-item-image src="" alt="" />
+		<button class="cart-drawer__item-image-button" data-cart-edit type="button">
+			<img data-cart-item-image src="" alt="" />
+		</button>
 		<div class="cart-drawer__item-body">
-			<h3 data-cart-item-title></h3>
+			<h3>
+				<button class="cart-drawer__item-title-button" data-cart-edit data-cart-item-title type="button"></button>
+			</h3>
 			<p data-cart-item-variant></p>
+			<p class="cart-drawer__date" data-cart-item-date></p>
 			<div class="cart-drawer__item-controls">
 				<div class="cart-drawer__stepper" aria-label="Daudzums">
 					<button data-cart-decrease type="button" aria-label="Samazināt daudzumu">
@@ -61,6 +116,8 @@ import X from '@lucide/astro/icons/x';
 		</button>
 	</article>
 </template>
+
+<script id="cart-edit-products" type="application/json" set:html={JSON.stringify(cartEditProducts)}></script>
 
 <style>
 	.cart-drawer[hidden] {
@@ -124,6 +181,10 @@ import X from '@lucide/astro/icons/x';
 		overflow: hidden;
 	}
 
+	:global(body.cart-editor-open) {
+		overflow: hidden;
+	}
+
 	.cart-drawer__header {
 		display: flex;
 		align-items: center;
@@ -141,6 +202,8 @@ import X from '@lucide/astro/icons/x';
 
 	.cart-drawer__close,
 	.cart-drawer__remove,
+	.cart-drawer__item-image-button,
+	.cart-drawer__item-title-button,
 	.cart-drawer__stepper button {
 		display: grid;
 		place-items: center;
@@ -164,6 +227,18 @@ import X from '@lucide/astro/icons/x';
 		color: #ffff;
 		background: #E65B65;
 		opacity: 0.7;
+	}
+
+	.cart-drawer__item-image-button,
+	.cart-drawer__item-title-button {
+		padding: 0;
+		place-items: stretch;
+		text-align: left;
+	}
+
+	.cart-drawer__item-image-button:hover img,
+	.cart-drawer__item-title-button:hover {
+		opacity: 0.82;
 	}
 
 	.cart-drawer__stepper button:hover {
@@ -223,12 +298,232 @@ import X from '@lucide/astro/icons/x';
 		line-height: 1.32;
 	}
 
+	.cart-drawer__item-title-button {
+		color: inherit;
+		font: inherit;
+		line-height: inherit;
+	}
+
 	.cart-drawer__item p {
 		margin: 0.52rem 0 0;
 		color: var(--color-text-muted);
 		font-size: 0.82rem;
 		font-weight: 560;
 		line-height: 1.3;
+	}
+
+	.cart-drawer__item p.cart-drawer__date {
+		margin-top: 0.28rem;
+	}
+
+	.cart-drawer__date.is-missing {
+		color: #C34242;
+	}
+
+	.cart-editor[hidden] {
+		display: none;
+	}
+
+	.cart-editor {
+		position: fixed;
+		inset: 0;
+		z-index: 170;
+		padding: clamp(1rem, 3vw, 1.5rem);
+		display: grid;
+		place-items: center;
+	}
+
+	.cart-editor__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(75, 64, 56, 0.28);
+		border: 0;
+		-webkit-backdrop-filter: blur(10px);
+		backdrop-filter: blur(10px);
+		cursor: pointer;
+	}
+
+	.cart-editor__window {
+		position: relative;
+		z-index: 1;
+		width: min(100%, 42rem);
+		display: grid;
+		grid-template-columns: minmax(11rem, 0.8fr) minmax(0, 1fr);
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.97);
+		border: 1px solid rgba(222, 212, 198, 0.92);
+		border-radius: 20px;
+		box-shadow: 0 30px 80px rgba(75, 64, 56, 0.26);
+		opacity: 0;
+		transform: translateY(0.8rem) scale(0.98);
+		transition:
+			opacity 180ms ease,
+			transform 180ms ease;
+	}
+
+	.cart-editor.is-open .cart-editor__window {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+
+	.cart-editor__close {
+		position: absolute;
+		top: 0.85rem;
+		right: 0.85rem;
+		z-index: 2;
+		width: 2.3rem;
+		height: 2.3rem;
+		display: grid;
+		place-items: center;
+		color: var(--color-bark);
+		background: rgba(246, 241, 231, 0.9);
+		border: 1px solid rgba(222, 212, 198, 0.96);
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.cart-editor__close svg {
+		width: 1rem;
+		height: 1rem;
+		stroke-width: 2.2;
+	}
+
+	.cart-editor__image {
+		width: 100%;
+		height: 100%;
+		min-height: 22rem;
+		display: block;
+		object-fit: cover;
+		background: var(--color-background-soft);
+	}
+
+	.cart-editor__content {
+		padding: clamp(1.35rem, 3vw, 2rem);
+		display: grid;
+		align-content: start;
+	}
+
+	.cart-editor__eyebrow {
+		margin: 0 0 0.55rem;
+		color: var(--color-primary);
+		font-size: 0.68rem;
+		font-weight: 820;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.cart-editor__content h2 {
+		margin: 0;
+		color: var(--color-bark);
+		font-size: clamp(1.35rem, 3vw, 2rem);
+		font-weight: 640;
+		line-height: 1.1;
+		letter-spacing: 0;
+	}
+
+	.cart-editor__meta {
+		margin: 0.7rem 0 0;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 560;
+		line-height: 1.4;
+	}
+
+	.cart-editor__price {
+		margin-top: 0.75rem;
+		color: var(--color-bark);
+		font-size: 1rem;
+	}
+
+	.cart-editor__dates {
+		margin-top: 1.15rem;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.65rem;
+	}
+
+	.cart-editor__dates label {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	.cart-editor__dates span {
+		color: var(--color-text-muted);
+		font-size: 0.72rem;
+		font-weight: 760;
+		text-transform: uppercase;
+	}
+
+	.cart-editor__dates input {
+		width: 100%;
+		min-height: 2.7rem;
+		padding: 0 0.75rem;
+		color: var(--color-bark);
+		background: var(--color-surface);
+		border: 1px solid rgba(222, 212, 198, 0.96);
+		border-radius: 10px;
+		font: inherit;
+		font-size: 0.88rem;
+	}
+
+	.cart-editor__bottom {
+		margin-top: 1.15rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.85rem;
+	}
+
+	.cart-editor__quantity {
+		min-height: 2.75rem;
+		display: inline-grid;
+		grid-template-columns: 2.2rem 2rem 2.2rem;
+		align-items: center;
+		justify-items: center;
+		color: var(--color-bark);
+		border: 1px solid #6B7A4A;
+		border-radius: 999px;
+		font-weight: 720;
+	}
+
+	.cart-editor__quantity button {
+		width: 2.2rem;
+		height: 2.2rem;
+		display: grid;
+		place-items: center;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.cart-editor__quantity button:disabled {
+		cursor: default;
+		opacity: 0.4;
+	}
+
+	.cart-editor__quantity svg {
+		width: 0.82rem;
+		height: 0.82rem;
+		stroke-width: 2.2;
+	}
+
+	.cart-editor__save {
+		min-height: 2.75rem;
+		padding: 0 1.25rem;
+		color: var(--color-surface);
+		background: #6B7A4A;
+		border: 0;
+		border-radius: 999px;
+		font-size: 0.82rem;
+		font-weight: 820;
+		cursor: pointer;
+	}
+
+	.cart-editor__save:hover {
+		background: var(--color-primary-hover);
+		transform: translateY(-1px);
 	}
 
 	.cart-drawer__item-controls {
@@ -333,13 +628,15 @@ import X from '@lucide/astro/icons/x';
 
 	.cart-drawer__primary {
 		color: var(--color-surface);
-		background: #6B7A4A;
+		background: #4B4038;
 	}
 
-	.cart-drawer__secondary:hover,
+	.cart-drawer__secondary:hover{
+		background: var(--color-primary-hover);
+	}
 	.cart-drawer__primary:hover {
 		color: var(--color-surface);
-		background: var(--color-primary-hover);
+		background: #4B4038;
 		transform: translateY(-1px);
 	}
 
@@ -369,6 +666,43 @@ import X from '@lucide/astro/icons/x';
 			grid-template-columns: 1fr;
 			gap: 0.7rem;
 		}
+
+		.cart-editor {
+			padding: 0.75rem;
+		}
+
+		.cart-editor__window {
+			max-height: calc(100dvh - 1.5rem);
+			grid-template-columns: 1fr;
+			overflow-y: auto;
+			border-radius: 18px;
+		}
+
+		.cart-editor__image {
+			height: 13rem;
+			min-height: 13rem;
+		}
+
+		.cart-editor__content {
+			padding: 1.2rem;
+		}
+
+		.cart-editor__dates {
+			grid-template-columns: 1fr;
+		}
+
+		.cart-editor__bottom {
+			align-items: center;
+			flex-direction: column;
+		}
+
+		.cart-editor__save {
+			width: 100%;
+		}
+
+		.cart-editor__quantity {
+			width: max-content;
+		}
 	}
 </style>
 
@@ -379,6 +713,7 @@ import X from '@lucide/astro/icons/x';
 		image: string;
 		priceCents: number;
 		productId?: string;
+		productPath?: string;
 		quantity: number;
 		size?: string;
 		startDate?: string;
@@ -388,6 +723,16 @@ import X from '@lucide/astro/icons/x';
 
 	type AddCartItem = Omit<CartItem, 'quantity'> & {
 		quantity?: number;
+	};
+
+	type CartEditorProduct = {
+		id: string;
+		image: string;
+		priceCents: number;
+		productPath: string;
+		size: string;
+		title: string;
+		variant: string;
 	};
 
 	const CART_STORAGE_KEY = 'liepajas-teltis-cart';
@@ -402,7 +747,27 @@ import X from '@lucide/astro/icons/x';
 	const cartTotal = document.querySelector<HTMLElement>('[data-cart-total]');
 	const cartCloseButtons = document.querySelectorAll<HTMLButtonElement>('[data-cart-close]');
 	const cartOpenButtons = document.querySelectorAll<HTMLButtonElement>('[data-cart-open]');
+	const cartEditProductsNode = document.querySelector<HTMLScriptElement>('#cart-edit-products');
+	const cartEditProducts: CartEditorProduct[] = cartEditProductsNode?.textContent
+		? JSON.parse(cartEditProductsNode.textContent)
+		: [];
+	const cartEditProductById = new Map(cartEditProducts.map((product) => [product.id, product]));
+	const cartEditor = document.querySelector<HTMLElement>('[data-cart-editor]');
+	const cartEditorWindow = document.querySelector<HTMLElement>('.cart-editor__window');
+	const cartEditorCloseButtons = document.querySelectorAll<HTMLButtonElement>('[data-cart-editor-close]');
+	const cartEditorImage = document.querySelector<HTMLImageElement>('[data-cart-editor-image]');
+	const cartEditorTitle = document.querySelector<HTMLElement>('[data-cart-editor-title]');
+	const cartEditorMeta = document.querySelector<HTMLElement>('[data-cart-editor-meta]');
+	const cartEditorPrice = document.querySelector<HTMLElement>('[data-cart-editor-price]');
+	const cartEditorDateStart = document.querySelector<HTMLInputElement>('[data-cart-editor-date-start]');
+	const cartEditorDateEnd = document.querySelector<HTMLInputElement>('[data-cart-editor-date-end]');
+	const cartEditorQuantity = document.querySelector<HTMLElement>('[data-cart-editor-quantity]');
+	const cartEditorQuantityDecrease = document.querySelector<HTMLButtonElement>('[data-cart-editor-quantity-decrease]');
+	const cartEditorQuantityIncrease = document.querySelector<HTMLButtonElement>('[data-cart-editor-quantity-increase]');
+	const cartEditorSave = document.querySelector<HTMLButtonElement>('[data-cart-editor-save]');
 	let cartItems: CartItem[] = [];
+	let activeEditorItemId: string | null = null;
+	let activeEditorQuantity = 1;
 
 	const readCart = () => {
 		try {
@@ -420,14 +785,111 @@ import X from '@lucide/astro/icons/x';
 
 	const formatMoney = (cents: number) => currencyFormatter.format(cents / 100);
 
-	const formatCartMeta = (item: CartItem) => {
-		const details = [item.variant || item.size].filter(Boolean);
+	const formatCartMeta = (item: CartItem) => [item.variant || item.size].filter(Boolean).join(' - ');
 
-		if (item.startDate || item.endDate) {
-			details.push(`Periods: ${item.startDate || '...'} - ${item.endDate || '...'}`);
+	const formatCartDate = (item: CartItem) => {
+		if (!item.startDate && !item.endDate) {
+			return 'Nav izvēlēts datums';
 		}
 
-		return details.join(' - ');
+		return `Periods: ${item.startDate || '...'} - ${item.endDate || '...'}`;
+	};
+
+	const getEditorProduct = (item: CartItem) => (item.productId ? cartEditProductById.get(item.productId) : undefined);
+
+	const setEditorQuantity = (quantity: number) => {
+		activeEditorQuantity = Math.min(99, Math.max(1, quantity));
+
+		if (cartEditorQuantity) {
+			cartEditorQuantity.textContent = String(activeEditorQuantity);
+		}
+
+		if (cartEditorQuantityDecrease) {
+			cartEditorQuantityDecrease.disabled = activeEditorQuantity <= 1;
+		}
+	};
+
+	const closeCartEditor = () => {
+		if (!cartEditor || cartEditor.hidden) return;
+
+		cartEditor.classList.remove('is-open');
+		document.body.classList.remove('cart-editor-open');
+		window.setTimeout(() => {
+			cartEditor.hidden = true;
+			activeEditorItemId = null;
+		}, 180);
+	};
+
+	const openCartEditor = (id: string) => {
+		const item = cartItems.find((cartItem) => cartItem.id === id);
+		if (!item || !cartEditor) return;
+
+		const product = getEditorProduct(item);
+		activeEditorItemId = item.id;
+		setEditorQuantity(item.quantity);
+
+		if (cartEditorImage) {
+			cartEditorImage.src = product?.image || item.image;
+			cartEditorImage.alt = product?.title || item.title;
+		}
+
+		if (cartEditorTitle) cartEditorTitle.textContent = product?.title || item.title;
+		if (cartEditorMeta) {
+			const meta = [product?.variant || item.variant, product?.size || item.size].filter(Boolean).join(' - ');
+			cartEditorMeta.textContent = meta;
+			cartEditorMeta.hidden = meta.length === 0;
+		}
+		if (cartEditorPrice) cartEditorPrice.textContent = formatMoney(product?.priceCents ?? item.priceCents);
+		if (cartEditorDateStart) cartEditorDateStart.value = item.startDate || '';
+		if (cartEditorDateEnd) {
+			cartEditorDateEnd.value = item.endDate || '';
+			cartEditorDateEnd.min = item.startDate || '';
+		}
+
+		cartEditor.hidden = false;
+		document.body.classList.add('cart-editor-open');
+		window.requestAnimationFrame(() => {
+			cartEditor.classList.add('is-open');
+			cartEditorWindow?.focus();
+		});
+	};
+
+	const saveCartEditor = () => {
+		const existingItem = activeEditorItemId ? cartItems.find((item) => item.id === activeEditorItemId) : null;
+		if (!existingItem) return;
+
+		const product = getEditorProduct(existingItem);
+		const startDate = cartEditorDateStart?.value || '';
+		const endDate = cartEditorDateEnd?.value || '';
+		const productId = existingItem.productId || product?.id || existingItem.id;
+		const updatedId = [productId, startDate, endDate].filter(Boolean).join('::') || productId;
+		const updatedItem: CartItem = {
+			...existingItem,
+			endDate,
+			id: updatedId,
+			image: product?.image || existingItem.image,
+			priceCents: product?.priceCents ?? existingItem.priceCents,
+			productId,
+			productPath: product?.productPath || existingItem.productPath,
+			quantity: activeEditorQuantity,
+			size: product?.size || existingItem.size,
+			startDate,
+			title: product?.title || existingItem.title,
+			variant: product?.variant || existingItem.variant,
+		};
+		const originalIndex = cartItems.findIndex((item) => item.id === existingItem.id);
+		cartItems = cartItems.filter((item) => item.id !== existingItem.id);
+		const matchingItem = cartItems.find((item) => item.id === updatedItem.id);
+
+		if (matchingItem) {
+			matchingItem.quantity += updatedItem.quantity;
+		} else {
+			cartItems.splice(Math.min(Math.max(originalIndex, 0), cartItems.length), 0, updatedItem);
+		}
+
+		writeCart();
+		renderCart();
+		closeCartEditor();
 	};
 
 	const getCartCount = () => cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -454,11 +916,13 @@ import X from '@lucide/astro/icons/x';
 			const image = fragment.querySelector<HTMLImageElement>('[data-cart-item-image]');
 			const title = fragment.querySelector<HTMLElement>('[data-cart-item-title]');
 			const variant = fragment.querySelector<HTMLElement>('[data-cart-item-variant]');
+			const date = fragment.querySelector<HTMLElement>('[data-cart-item-date]');
 			const quantity = fragment.querySelector<HTMLElement>('[data-cart-item-quantity]');
 			const price = fragment.querySelector<HTMLElement>('[data-cart-item-price]');
 			const decrease = fragment.querySelector<HTMLButtonElement>('[data-cart-decrease]');
 			const increase = fragment.querySelector<HTMLButtonElement>('[data-cart-increase]');
 			const remove = fragment.querySelector<HTMLButtonElement>('[data-cart-remove]');
+			const editButtons = fragment.querySelectorAll<HTMLButtonElement>('[data-cart-edit]');
 
 			if (element) {
 				element.dataset.cartId = item.id;
@@ -470,9 +934,24 @@ import X from '@lucide/astro/icons/x';
 			}
 
 			if (title) title.textContent = item.title;
-			if (variant) variant.textContent = formatCartMeta(item);
+			if (variant) {
+				const meta = formatCartMeta(item);
+				variant.textContent = meta;
+				variant.hidden = meta.length === 0;
+			}
+			if (date) {
+				date.textContent = formatCartDate(item);
+				date.classList.toggle('is-missing', !item.startDate && !item.endDate);
+			}
 			if (quantity) quantity.textContent = String(item.quantity);
 			if (price) price.textContent = formatMoney(item.priceCents);
+			editButtons.forEach((button) => {
+				button.disabled = !item.productId;
+				button.setAttribute('aria-label', `Atvērt produktu: ${item.title}`);
+				button.addEventListener('click', () => {
+					openCartEditor(item.id);
+				});
+			});
 			decrease?.addEventListener('click', () => window.LiepajasCart.updateQuantity(item.id, item.quantity - 1));
 			increase?.addEventListener('click', () => window.LiepajasCart.updateQuantity(item.id, item.quantity + 1));
 			remove?.addEventListener('click', () => window.LiepajasCart.removeItem(item.id));
@@ -525,6 +1004,7 @@ import X from '@lucide/astro/icons/x';
 		close: closeCart,
 		getItems: () => [...cartItems],
 		open: openCart,
+		openEditor: openCartEditor,
 		removeItem(id: string) {
 			cartItems = cartItems.filter((item) => item.id !== id);
 			writeCart();
@@ -544,10 +1024,32 @@ import X from '@lucide/astro/icons/x';
 
 	cartOpenButtons.forEach((button) => button.addEventListener('click', openCart));
 	cartCloseButtons.forEach((button) => button.addEventListener('click', closeCart));
+	cartEditorCloseButtons.forEach((button) => button.addEventListener('click', closeCartEditor));
+	cartEditorQuantityDecrease?.addEventListener('click', () => setEditorQuantity(activeEditorQuantity - 1));
+	cartEditorQuantityIncrease?.addEventListener('click', () => setEditorQuantity(activeEditorQuantity + 1));
+	cartEditorSave?.addEventListener('click', saveCartEditor);
+	cartEditorDateStart?.addEventListener('change', () => {
+		if (!cartEditorDateEnd || !cartEditorDateStart) return;
+
+		cartEditorDateEnd.min = cartEditorDateStart.value;
+		if (cartEditorDateEnd.value && cartEditorDateStart.value > cartEditorDateEnd.value) {
+			cartEditorDateEnd.value = cartEditorDateStart.value;
+		}
+	});
 	document.addEventListener('keydown', (event) => {
 		if (event.key === 'Escape') {
+			if (cartEditor && !cartEditor.hidden) {
+				closeCartEditor();
+				return;
+			}
+
 			closeCart();
 		}
+	});
+
+	window.addEventListener('liepajas-cart-edit-request', (event) => {
+		const id = (event as CustomEvent<{ id?: string }>).detail?.id;
+		if (id) openCartEditor(id);
 	});
 
 	window.addEventListener('liepajas-cart-updated', (event) => {

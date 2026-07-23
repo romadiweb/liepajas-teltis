@@ -176,7 +176,7 @@ const contactLinks = [
 	<main id="top" class="page-shell" aria-label="Liepājas Teltis">
 		<FloatingActions />
 		<ScrollToTop />
-		<section class="landing-hero" aria-labelledby="landing-hero-title">
+		<section class="landing-hero" aria-labelledby="landing-hero-title" data-reveal="up">
 			<div class="landing-hero__shell">
 				<div class="landing-hero__content">
 					<p class="landing-hero__eyebrow">Telšu noma Liepājā un visā Latvijā</p>
@@ -218,7 +218,7 @@ const contactLinks = [
 			</div>
 		</section>
 
-		<section class="categories-section" id="kategorijas" aria-labelledby="categories-title" data-reveal-section>
+		<section class="categories-section" id="kategorijas" aria-labelledby="categories-title" data-reveal-section data-reveal="up">
 			<div class="categories-section__inner">
 				<div class="categories-section__intro">
 					<p class="categories-section__eyebrow">Kategorijas</p>
@@ -249,7 +249,7 @@ const contactLinks = [
 			</div>
 		</section>
 
-		<section class="contact-section" id="pieteikums" aria-labelledby="contact-title">
+		<section class="contact-section" id="pieteikums" aria-labelledby="contact-title" data-reveal="left">
 			<div class="contact-section__inner">
 				<div class="contact-section__info">
 					<div>
@@ -1153,12 +1153,14 @@ const contactLinks = [
 			margin-bottom: 0.55rem;
 			font-size: 0.56rem;
 			letter-spacing: 0.12em;
+			transform: translateY(-1.45rem);
 		}
 
 		.landing-hero h1 {
 			max-width: 8.8em;
 			font-size: clamp(1.86rem, 8.1vw, 2.34rem);
 			line-height: 0.98;
+			transform: translateY(-1.45rem);
 		}
 
 		.landing-hero__lead {

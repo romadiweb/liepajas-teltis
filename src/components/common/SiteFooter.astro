@@ -88,6 +88,32 @@ const year = new Date().getFullYear();
 		</div>
 	</div>
 
+	<div class="site-footer__mobile-bottom" aria-label="Papildu saites">
+		<span>
+			Mājaslapu veidoja -&nbsp;
+			<a
+				class="underline"
+				href="https://www.romadi.lv/"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Romadi
+			</a>
+		</span>
+		<span class="site-footer__separator"></span>
+		<button
+			type="button"
+			class="site-footer__cookie-settings underline"
+			data-cc="show-preferencesModal"
+		>
+			Sīkdatņu iestatījumi
+		</button>
+
+		<a class="underline" href="/privatuma-politika">Privātuma politika</a>
+
+
+	</div>
+
 	<div class="site-footer__bottom">
 		<span>
 			<button
@@ -306,6 +332,10 @@ const year = new Date().getFullYear();
 	margin: 0 0.5rem;
 }
 
+	.site-footer__mobile-bottom {
+		display: none;
+	}
+
 	.site-footer__wordmark span {
 		display: block;
 		font-weight: 700;
@@ -335,6 +365,10 @@ const year = new Date().getFullYear();
 	}
 
 	@media (max-width: 640px) {
+		.site-footer {
+			padding-bottom: 0.9rem;
+		}
+
 		.site-footer__meta,
 		.site-footer__bottom {
 			display: none;
@@ -348,6 +382,8 @@ const year = new Date().getFullYear();
 
 		.site-footer__panel {
 			align-items: flex-start;
+			min-height: 20.25rem;
+			padding: 2.55rem 1.65rem 0;
 		}
 
 		.site-footer__wordmark {
@@ -358,6 +394,30 @@ const year = new Date().getFullYear();
 			flex-direction: column;
 			align-items: flex-start;
 			gap: 0.95rem;
+		}
+
+		.site-footer__mobile-bottom {
+			width: 100%;
+			max-width: calc(100% - 1.9rem);
+			margin: -0.18rem auto 0;
+			display: flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			justify-content: center;
+			gap: 0.28rem;
+			color: var(--footer-muted);
+			font-size: clamp(0.455rem, 1.7vw, 0.56rem);
+			font-weight: 560;
+			line-height: 1.35;
+			text-align: center;
+			white-space: nowrap;
+		}
+
+		.site-footer__mobile-bottom a,
+		.site-footer__mobile-bottom button {
+			color: inherit;
+			text-decoration-thickness: 0.08em;
+			text-underline-offset: 0.18em;
 		}
 
 		.site-footer__tents {

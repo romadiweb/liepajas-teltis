@@ -146,8 +146,9 @@ const productPickerItems = requestProducts.map(({ category, id, image, size, tit
 					</div>
 				</div>
 
-				<form class="request-form" name="nomas-pieteikums" method="post" data-netlify="true">
+				<form id="nomas-pieteikums" class="request-form" name="nomas-pieteikums" method="post" data-netlify="true">
 					<input type="hidden" name="form-name" value="nomas-pieteikums" />
+					<input data-request-cart-hidden type="hidden" name="nomas_saraksts" value="" />
 					<div class="request-form__header">
 						<p class="request-workspace__eyebrow">Pieteikuma forma</p>
 						<h2>Pastāstiet par savu pasākumu</h2>
@@ -295,12 +296,29 @@ const productPickerItems = requestProducts.map(({ category, id, image, size, tit
 		title: string;
 	};
 
+	type CartImportItem = {
+		endDate?: string;
+		id: string;
+		priceCents?: number;
+		productId?: string;
+		quantity?: number;
+		size?: string;
+		startDate?: string;
+		title: string;
+		variant?: string;
+	};
+
+	const CART_STORAGE_KEY = 'liepajas-teltis-cart';
 	const productDataNode = document.querySelector<HTMLScriptElement>('#request-product-data');
+	const requestForm = document.querySelector<HTMLFormElement>('#nomas-pieteikums');
+	const requestDate = document.querySelector<HTMLInputElement>('#request-date');
+	const requestInventory = document.querySelector<HTMLTextAreaElement>('#request-inventory');
 	const productPicker = document.querySelector<HTMLElement>('[data-request-product-picker]');
 	const productSearch = document.querySelector<HTMLInputElement>('[data-request-product-search]');
 	const productResults = document.querySelector<HTMLElement>('[data-request-product-results]');
 	const productSelected = document.querySelector<HTMLElement>('[data-request-product-selected]');
 	const productHidden = document.querySelector<HTMLInputElement>('[data-request-product-hidden]');
+	const cartHidden = document.querySelector<HTMLInputElement>('[data-request-cart-hidden]');
 	const productChipTemplate = document.querySelector<HTMLTemplateElement>('[data-request-product-chip-template]');
 	const requestProducts: RequestProductOption[] = productDataNode?.textContent ? JSON.parse(productDataNode.textContent) : [];
 	let selectedRequestProducts: RequestProductOption[] = [];
@@ -314,12 +332,67 @@ const productPickerItems = requestProducts.map(({ category, id, image, size, tit
 	const formatRequestProductMeta = (product: RequestProductOption) =>
 		[product.category, product.size].filter(Boolean).join(' · ');
 
+	const readCartImportItems = () => {
+		try {
+			const parsed = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) ?? '[]');
+			return Array.isArray(parsed) ? (parsed as CartImportItem[]) : [];
+		} catch {
+			return [];
+		}
+	};
+
+	const formatCartImportPeriod = (item: CartImportItem) => {
+		if (!item.startDate && !item.endDate) return 'datums nav izvēlēts';
+
+		return `${item.startDate || '...'} - ${item.endDate || '...'}`;
+	};
+
+	const formatCartImportLine = (item: CartImportItem) => {
+		const details = [item.variant, item.size].filter(Boolean).join(', ');
+		const quantity = item.quantity ?? 1;
+		return `${quantity} × ${item.title}${details ? ` (${details})` : ''}; periods: ${formatCartImportPeriod(item)}`;
+	};
+
 	const updateSelectedProductField = () => {
 		if (productHidden) {
 			productHidden.value = selectedRequestProducts
 				.map((product) => `${product.title}${formatRequestProductMeta(product) ? ` (${formatRequestProductMeta(product)})` : ''}`)
 				.join('\n');
 		}
+	};
+
+	const importCartIntoRequestForm = () => {
+		const shouldImportCart = new URLSearchParams(window.location.search).get('from') === 'cart';
+		if (!shouldImportCart) return;
+
+		const cartItems = readCartImportItems();
+		if (!cartItems.length) {
+			requestForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			return;
+		}
+
+		const productById = new Map(requestProducts.map((product) => [product.id, product]));
+		const importedProducts = cartItems
+			.map((item) => (item.productId ? productById.get(item.productId) : undefined))
+			.filter((product): product is RequestProductOption => Boolean(product));
+
+		selectedRequestProducts = [
+			...selectedRequestProducts,
+			...importedProducts.filter((product) => !selectedRequestProducts.some((selected) => selected.id === product.id)),
+		];
+		renderSelectedProducts();
+
+		const cartSummary = cartItems.map(formatCartImportLine).join('\n');
+		if (cartHidden) cartHidden.value = cartSummary;
+		if (requestInventory && !requestInventory.value.trim()) requestInventory.value = cartSummary;
+
+		const firstStartDate = cartItems.find((item) => item.startDate)?.startDate;
+		if (requestDate && firstStartDate && !requestDate.value) requestDate.value = firstStartDate;
+
+		window.requestAnimationFrame(() => {
+			requestForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			requestForm?.querySelector<HTMLInputElement>('#request-name')?.focus({ preventScroll: true });
+		});
 	};
 
 	const renderSelectedProducts = () => {
@@ -431,6 +504,8 @@ const productPickerItems = requestProducts.map(({ category, id, image, size, tit
 			productResults.hidden = true;
 		}
 	});
+
+	importCartIntoRequestForm();
 </script>
 
 <style>

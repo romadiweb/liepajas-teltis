@@ -133,6 +133,21 @@ export async function getProductsByPageSlug(pageSlug: string) {
 	return products;
 }
 
+export const PRODUCT_PAGE_SLUGS = ['teltis', 'gridas-segumi', 'galdi-un-kresli', 'ara-silditaji', 'pufi'] as const;
+
+let productRouteMapPromise: Promise<Record<string, string>> | null = null;
+
+export function getProductRouteMap() {
+	productRouteMapPromise ??= Promise.all(
+		PRODUCT_PAGE_SLUGS.map(async (slug) => {
+			const products = await getProductsByPageSlug(slug);
+			return products.map((product) => [product.id, `/${slug}`] as const);
+		}),
+	).then((entries) => Object.fromEntries(entries.flat()));
+
+	return productRouteMapPromise;
+}
+
 export async function getAllActiveProducts() {
 	const tableName = import.meta.env.SUPABASE_PRODUCTS_TABLE || 'products';
 	const rows = await fetchSupabaseRows<ProductRow>(tableName, {

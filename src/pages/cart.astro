@@ -38,8 +38,8 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 						<span>Summa</span>
 						<strong data-cart-page-total>€0.00</strong>
 					</div>
-					<a href="/#pieteikums">
-						<span>Veikt rezervācijas pieprasījumu</span>
+					<a href="/pieteikt-nomu?from=cart#nomas-pieteikums">
+						<span>Turpināt rezervāciju</span>
 						<ArrowRight aria-hidden="true" />
 					</a>
 				</aside>
@@ -53,9 +53,13 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 
 <template data-cart-page-item-template>
 	<article class="cart-page__item">
-		<img data-cart-page-item-image src="" alt="" />
+		<button class="cart-page__item-image-button" data-cart-page-edit type="button">
+			<img data-cart-page-item-image src="" alt="" />
+		</button>
 		<div class="cart-page__item-body">
-			<h2 data-cart-page-item-title></h2>
+			<h2>
+				<button class="cart-page__item-title-button" data-cart-page-edit data-cart-page-item-title type="button"></button>
+			</h2>
 			<p data-cart-page-item-variant></p>
 			<span data-cart-page-item-price></span>
 		</div>
@@ -169,9 +173,29 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		align-items: center;
 	}
 
+	.cart-page__item-image-button {
+		padding: 0;
+		display: block;
+		background: transparent;
+		border: 0;
+		border-radius: 8px;
+		cursor: pointer;
+	}
+
+	.cart-page__item-image-button:disabled,
+	.cart-page__item-title-button:disabled {
+		cursor: default;
+	}
+
+	.cart-page__item-image-button:not(:disabled):hover img,
+	.cart-page__item-title-button:not(:disabled):hover {
+		opacity: 0.82;
+	}
+
 	.cart-page__item img {
 		width: 7rem;
 		height: 5.5rem;
+		display: block;
 		object-fit: cover;
 		border-radius: 8px;
 	}
@@ -182,6 +206,18 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		font-size: 1.05rem;
 		font-weight: 760;
 		letter-spacing: 0;
+	}
+
+	.cart-page__item-title-button {
+		padding: 0;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		font: inherit;
+		letter-spacing: inherit;
+		line-height: inherit;
+		text-align: left;
+		cursor: pointer;
 	}
 
 	.cart-page__item p {
@@ -305,19 +341,114 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 	}
 
 	@media (max-width: 560px) {
+		.cart-page__main {
+			padding: 1.5rem 1rem 3rem;
+		}
+
+		.cart-page__intro {
+			margin-bottom: 1.5rem;
+		}
+
+		.cart-page__intro p {
+			margin-bottom: 0.55rem;
+			font-size: 0.68rem;
+		}
+
+		.cart-page__intro h1 {
+			font-size: clamp(2.35rem, 11vw, 3.2rem);
+			line-height: 1.02;
+		}
+
+		.cart-page__intro span {
+			margin-top: 0.8rem;
+			font-size: 0.94rem;
+			line-height: 1.55;
+		}
+
+		.cart-page__items {
+			gap: 0.8rem;
+		}
+
 		.cart-page__item {
-			grid-template-columns: 5rem minmax(0, 1fr) auto;
+			position: relative;
+			padding: 0.85rem;
+			display: grid;
+			grid-template-columns: 5.25rem minmax(0, 1fr) 2.25rem;
+			grid-template-areas:
+				'image body remove'
+				'image stepper stepper';
+			column-gap: 0.85rem;
+			row-gap: 0.75rem;
 			align-items: start;
+			border-radius: 14px;
 		}
 
 		.cart-page__item img {
-			width: 5rem;
-			height: 5rem;
+			grid-area: image;
+			width: 5.25rem;
+			height: 5.25rem;
+			align-self: start;
+			border-radius: 10px;
+		}
+
+		.cart-page__item-image-button {
+			grid-area: image;
+			align-self: start;
+			border-radius: 10px;
+		}
+
+		.cart-page__item-body {
+			grid-area: body;
+			min-width: 0;
+			padding-top: 0.1rem;
+		}
+
+		.cart-page__item h2 {
+			padding-right: 0.2rem;
+			font-size: 0.98rem;
+			line-height: 1.25;
+		}
+
+		.cart-page__item p {
+			margin: 0.35rem 0;
+			font-size: 0.82rem;
+			line-height: 1.4;
+		}
+
+		.cart-page__item-body > span {
+			font-size: 0.9rem;
 		}
 
 		.cart-page__stepper {
-			grid-column: 2 / -1;
+			grid-area: stepper;
 			width: fit-content;
+			justify-self: start;
+			grid-template-columns: 2.1rem 2.2rem 2.1rem;
+		}
+
+		.cart-page__remove {
+			grid-area: remove;
+			justify-self: end;
+			align-self: start;
+			width: 2.1rem;
+			height: 2.1rem;
+		}
+
+		.cart-page__summary {
+			padding: 1.1rem;
+			border-radius: 14px;
+		}
+	}
+
+	@media (max-width: 380px) {
+		.cart-page__item {
+			grid-template-columns: 4.75rem minmax(0, 1fr) 2rem;
+			column-gap: 0.7rem;
+		}
+
+		.cart-page__item img {
+			width: 4.75rem;
+			height: 4.75rem;
 		}
 	}
 </style>
@@ -329,6 +460,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		image: string;
 		priceCents: number;
 		productId?: string;
+		productPath?: string;
 		quantity: number;
 		size?: string;
 		startDate?: string;
@@ -353,6 +485,17 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		}
 
 		return details.join(' - ');
+	};
+
+	const openPageProduct = (item: CartPageItem) => {
+		if (!item.productId) return;
+
+		if (window.LiepajasCart?.openEditor) {
+			window.LiepajasCart.openEditor(item.id);
+			return;
+		}
+
+		window.dispatchEvent(new CustomEvent('liepajas-cart-edit-request', { detail: { id: item.id } }));
 	};
 
 	const readPageCart = () => {
@@ -384,6 +527,7 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 			const decrease = fragment.querySelector<HTMLButtonElement>('[data-cart-page-decrease]');
 			const increase = fragment.querySelector<HTMLButtonElement>('[data-cart-page-increase]');
 			const remove = fragment.querySelector<HTMLButtonElement>('[data-cart-page-remove]');
+			const editButtons = fragment.querySelectorAll<HTMLButtonElement>('[data-cart-page-edit]');
 
 			if (image) {
 				image.src = item.image;
@@ -394,6 +538,14 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 			if (variant) variant.textContent = formatPageItemMeta(item);
 			if (price) price.textContent = formatter.format(item.priceCents / 100);
 			if (quantity) quantity.textContent = String(item.quantity);
+			editButtons.forEach((button) => {
+				button.disabled = !item.productId;
+				button.setAttribute(
+					'aria-label',
+					item.productId ? `Atvērt produktu: ${item.title}` : `Produktu nevar atvērt: ${item.title}`,
+				);
+				button.addEventListener('click', () => openPageProduct(item));
+			});
 			decrease?.addEventListener('click', () => updatePageQuantity(item.id, item.quantity - 1));
 			increase?.addEventListener('click', () => updatePageQuantity(item.id, item.quantity + 1));
 			remove?.addEventListener('click', () => removePageItem(item.id));
@@ -422,6 +574,15 @@ import SiteHeader from '../components/common/SiteHeader.astro';
 		writePageCart();
 		renderPageCart();
 	}
+
+	window.addEventListener('liepajas-cart-updated', (event) => {
+		const updatedItems = (event as CustomEvent<{ items?: CartPageItem[] }>).detail?.items;
+
+		if (updatedItems) {
+			pageItems = updatedItems;
+			renderPageCart();
+		}
+	});
 
 	pageItems = readPageCart();
 	renderPageCart();

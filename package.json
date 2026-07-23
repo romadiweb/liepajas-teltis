@@ -20,6 +20,7 @@
     "@types/react-dom": "^19.2.3",
     "astro": "^7.0.9",
     "daisyui": "^5.6.18",
+    "motion": "^12.42.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "simple-icons": "^16.26.0",

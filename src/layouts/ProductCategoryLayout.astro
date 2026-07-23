@@ -302,7 +302,7 @@ const modalProducts = products.map((product) => ({
 						</button>
 						<div class="product-modal__quantity" aria-label="Daudzums">
 							<button data-product-modal-quantity-decrease type="button" aria-label="Samazināt daudzumu">-</button>
-							<span data-product-modal-quantity>1</span>
+							<span data-product-modal-quantity>0</span>
 							<button data-product-modal-quantity-increase type="button" aria-label="Palielināt daudzumu">+</button>
 						</div>
 					</div>
@@ -1376,6 +1376,14 @@ const modalProducts = products.map((product) => ({
 		transform: translateY(-1px);
 	}
 
+	.product-modal__cta:disabled,
+	.product-modal__cta:disabled:hover {
+		cursor: default;
+		opacity: 0.48;
+		background: #6b7a4a;
+		transform: none;
+	}
+
 	.product-modal__cta svg {
 		width: 0.95rem;
 		height: 0.95rem;
@@ -1840,9 +1848,13 @@ const modalProducts = products.map((product) => ({
 		.product-modal__dates {
 			order: 4;
 			width: 100%;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 0.45rem;
+			grid-template-columns: 1fr;
+			gap: 0.55rem;
 			margin-top: 0.7rem;
+		}
+
+		.product-modal__dates label {
+			width: 100%;
 		}
 
 		.product-modal__dates span {
@@ -1851,6 +1863,7 @@ const modalProducts = products.map((product) => ({
 
 		.product-modal__dates input {
 			min-height: 2.35rem;
+			max-width: 100%;
 			padding-inline: 0.58rem;
 			font-size: 0.78rem;
 		}
@@ -1918,6 +1931,13 @@ const modalProducts = products.map((product) => ({
 		variant: string;
 	};
 
+	type ProductModalOpenOptions = {
+		cartItemId?: string;
+		endDate?: string;
+		quantity?: number;
+		startDate?: string;
+	};
+
 	const productFilterButtons = document.querySelectorAll<HTMLButtonElement>('[data-product-filter]');
 	const productFilterMenuToggles = document.querySelectorAll<HTMLButtonElement>('[data-product-filter-menu-toggle]');
 	const productFilterMenus = document.querySelectorAll<HTMLElement>('.product-category__filter-menu');
@@ -1967,8 +1987,9 @@ const modalProducts = products.map((product) => ({
 	const modalCurrencyFormatter = new Intl.NumberFormat('lv-LV', { currency: 'EUR', style: 'currency' });
 	let lastFocusedProductElement: HTMLElement | null = null;
 	let activeModalProduct: ProductModalItem | null = null;
+	let activeModalCartItemId: string | null = null;
 	let activeGalleryIndex = 0;
-	let activeModalQuantity = 1;
+	let activeModalQuantity = 0;
 	let activeProductCategoryFilter = 'all';
 	let activeProductSizeFilter = 'all';
 	let activeModalDateInput: HTMLInputElement | null = null;
@@ -2091,14 +2112,18 @@ const modalProducts = products.map((product) => ({
 	};
 
 	const setModalQuantity = (quantity: number) => {
-		activeModalQuantity = Math.min(99, Math.max(1, quantity));
+		activeModalQuantity = Math.min(99, Math.max(0, quantity));
 
 		if (productModalQuantity) {
 			productModalQuantity.textContent = String(activeModalQuantity);
 		}
 
 		if (productModalQuantityDecrease) {
-			productModalQuantityDecrease.disabled = activeModalQuantity <= 1;
+			productModalQuantityDecrease.disabled = activeModalQuantity <= 0;
+		}
+
+		if (productModalAdd) {
+			productModalAdd.disabled = activeModalQuantity <= 0;
 		}
 	};
 
@@ -2329,7 +2354,7 @@ const modalProducts = products.map((product) => ({
 		}, 180);
 	};
 
-	const openProductModal = (productIndex: number, trigger: HTMLElement) => {
+	const openProductModal = (productIndex: number, trigger: HTMLElement, options: ProductModalOpenOptions = {}) => {
 		const product = modalProducts[productIndex];
 
 		if (!product || !productModal) {
@@ -2337,9 +2362,10 @@ const modalProducts = products.map((product) => ({
 		}
 
 		activeModalProduct = product;
+		activeModalCartItemId = options.cartItemId ?? null;
 		activeGalleryIndex = 0;
 		viewedGalleryIndexes = new Set([0]);
-		setModalQuantity(1);
+		setModalQuantity(options.quantity ?? 0);
 		lastFocusedProductElement = trigger;
 		setProductModalTab('basic');
 		setText(productModalCategory, product.category);
@@ -2350,8 +2376,11 @@ const modalProducts = products.map((product) => ({
 		setText(productModalCapacity, formatModalCapacity(product.capacity));
 		setText(productModalInstall, product.installTime.replace(/^.*?:\s*/, ''));
 		setText(productModalPrice, modalCurrencyFormatter.format(product.priceCents / 100));
-		if (productModalDateStart) productModalDateStart.value = '';
-		if (productModalDateEnd) productModalDateEnd.value = '';
+		if (productModalDateStart) productModalDateStart.value = options.startDate ?? '';
+		if (productModalDateEnd) {
+			productModalDateEnd.value = options.endDate ?? '';
+			productModalDateEnd.min = options.startDate ?? '';
+		}
 		renderGalleryThumbs();
 		updateGalleryImage();
 
@@ -2375,6 +2404,36 @@ const modalProducts = products.map((product) => ({
 			}
 		});
 	});
+
+	window.addEventListener('liepajas-open-product', (event) => {
+		const detail = (event as CustomEvent<ProductModalOpenOptions & { productId?: string }>).detail;
+		if (!detail?.productId) return;
+
+		const productIndex = modalProducts.findIndex((product) => product.id === detail.productId);
+		if (productIndex < 0) return;
+
+		openProductModal(productIndex, document.body, detail);
+	});
+
+	window.LiepajasProductModal = {
+		openByProductId(productId: string, options: ProductModalOpenOptions = {}) {
+			const productIndex = modalProducts.findIndex((product) => product.id === productId);
+			if (productIndex < 0) return false;
+
+			openProductModal(productIndex, document.body, options);
+			return true;
+		},
+	};
+
+	try {
+		const pendingOpen = JSON.parse(sessionStorage.getItem('liepajas-pending-product') ?? 'null');
+
+		if (pendingOpen?.productId && window.LiepajasProductModal.openByProductId(pendingOpen.productId, pendingOpen)) {
+			sessionStorage.removeItem('liepajas-pending-product');
+		}
+	} catch {
+		sessionStorage.removeItem('liepajas-pending-product');
+	}
 
 	productModalCloseButtons.forEach((button) => {
 		button.addEventListener('click', closeProductModal);
@@ -2432,10 +2491,19 @@ const modalProducts = products.map((product) => ({
 	});
 
 	productModalAdd?.addEventListener('click', () => {
+		if (activeModalQuantity <= 0) {
+			return;
+		}
+
 		if (activeModalProduct && window.LiepajasCart) {
 			const startDate = productModalDateStart?.value || '';
 			const endDate = productModalDateEnd?.value || '';
 			const cartLineId = [activeModalProduct.id, startDate, endDate].filter(Boolean).join('::') || activeModalProduct.id;
+
+			if (activeModalCartItemId) {
+				window.LiepajasCart.removeItem(activeModalCartItemId);
+				activeModalCartItemId = null;
+			}
 
 			window.LiepajasCart.addItem(
 				{
@@ -2444,6 +2512,7 @@ const modalProducts = products.map((product) => ({
 					image: activeModalProduct.image,
 					priceCents: activeModalProduct.priceCents,
 					productId: activeModalProduct.id,
+					productPath: window.location.pathname,
 					quantity: activeModalQuantity,
 					size: activeModalProduct.size,
 					startDate,

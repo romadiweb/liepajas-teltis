@@ -1,0 +1,79 @@
+<script>
+	import { animate, inView } from 'motion';
+
+	function initialiseAnimations() {
+		const reduceMotion = window.matchMedia(
+			'(prefers-reduced-motion: reduce)'
+		).matches;
+
+		const elements =
+			document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+		elements.forEach((element) => {
+			if (element.dataset.revealInitialised === 'true') {
+				return;
+			}
+
+			element.dataset.revealInitialised = 'true';
+
+			if (reduceMotion) {
+				return;
+			}
+
+			const direction = element.dataset.reveal ?? 'up';
+
+			const initialX =
+				direction === 'left'
+					? -32
+					: direction === 'right'
+						? 32
+						: 0;
+
+			const initialY = direction === 'up' ? 24 : 0;
+
+			animate(
+				element,
+				{
+					opacity: 0,
+					x: initialX,
+					y: initialY,
+				},
+				{
+					duration: 0,
+				}
+			);
+
+			inView(
+				element,
+				() => {
+					animate(
+						element,
+						{
+							opacity: 1,
+							x: 0,
+							y: 0,
+						},
+						{
+							duration: 0.65,
+							ease: [0.22, 1, 0.36, 1],
+						}
+					);
+				},
+				{
+					amount: 0.15,
+					margin: '0px 0px -8% 0px',
+				}
+			);
+		});
+	}
+
+	initialiseAnimations();
+
+	document.addEventListener('astro:page-load', initialiseAnimations);
+</script>
+
+<style is:global>
+	[data-reveal] {
+		will-change: opacity, transform;
+	}
+</style>
