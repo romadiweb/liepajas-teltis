@@ -365,7 +365,9 @@
 			});
 		}
 
-		page.removeAttribute('data-landing-preview');
+		requestAnimationFrame(() => {
+			page.removeAttribute('data-landing-preview');
+		});
 	}
 
 	initialiseLandingAnimations();
