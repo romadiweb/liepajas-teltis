@@ -21,6 +21,21 @@ const deliveryFeatures = [
 
 const servicePoints = ['Profesionāla komanda', 'Kvalitatīvs inventārs', 'Uzticams serviss'];
 
+const deliveryTerms = [
+	{
+		title: 'Piebraukšana inventāra izkraušanai',
+		text: 'Norises vietai jābūt sasniedzamai kravas transportam, ar stabilu ceļa segumu un brīvu augstumu. Pirms piegādes lūdzam pārbaudīt zarus, vārtus, arkas un citus iespējamos šķēršļus.',
+	},
+	{
+		title: 'Izkraušanas zona pie pasākuma vietas',
+		text: 'Standarta piegādes cenā iekļauta izkraušana līdz 20 metriem no transportlīdzekļa. Ja inventārs jānes tālāk, par to vienojamies pasūtījuma saskaņošanas laikā.',
+	},
+	{
+		title: 'Nestandarta piekļuve',
+		text: 'Ja piegādes vietā ir kāpnes, lifts, šaura iebrauktuve vai inventārs jānes apkārt ēkai, lūdzam to norādīt pieteikumā. Šādos gadījumos var būt nepieciešams papildu laiks vai piemaksa.',
+	},
+];
+
 const mapPins = [
 	[18, 48],
 	[22, 39],
@@ -69,6 +84,31 @@ const mapPins = [
 			</div>
 			<div class="delivery-hero__media" aria-label="Liepājas Teltis piegādes transports">
 				<img src="/images/delivery-truck.svg" alt="Liepājas Teltis piegādes transports" />
+			</div>
+		</section>
+
+		<section class="delivery-info" aria-labelledby="delivery-info-title" data-reveal="up">
+			<div class="delivery-info__copy">
+				<p class="delivery-info__eyebrow">Svarīgi pirms piegādes</p>
+				<h2 id="delivery-info-title">Piegādes un transportēšanas nosacījumi</h2>
+				<div class="delivery-rule" aria-hidden="true"></div>
+				<p>
+					Lai telšu un inventāra piegāde noritētu raiti, lūdzam savlaicīgi pārliecināties, ka komanda var
+					piekļūt izkraušanas vietai un droši nogādāt inventāru līdz uzstādīšanas zonai.
+				</p>
+			</div>
+			<div class="delivery-info__list">
+				{
+					deliveryTerms.map(({ title, text }) => (
+						<article class="delivery-info__item">
+							<CheckCircle aria-hidden="true" />
+							<div>
+								<h3>{title}</h3>
+								<p>{text}</p>
+							</div>
+						</article>
+					))
+				}
 			</div>
 		</section>
 
@@ -137,6 +177,7 @@ const mapPins = [
 
 	.delivery-hero,
 	.delivery-coverage,
+	.delivery-info,
 	.delivery-service {
 		position: relative;
 		z-index: 1;
@@ -148,7 +189,7 @@ const mapPins = [
 		display: grid;
 		grid-template-columns: minmax(17rem, 0.44fr) minmax(0, 0.96fr);
 		align-items: start;
-		min-height: clamp(17rem, 27vw, 21.5rem);
+		min-height: clamp(15rem, 22vw, 18rem);
 	}
 
 	.delivery-hero__copy {
@@ -164,6 +205,7 @@ const mapPins = [
 
 	.delivery-hero h1,
 	.delivery-section-heading h2,
+	.delivery-info h2,
 	.delivery-service h2 {
 		margin: 0;
 		color: var(--color-bark);
@@ -185,6 +227,7 @@ const mapPins = [
 	}
 
 	.delivery-hero p,
+	.delivery-info__copy p,
 	.delivery-service p {
 		max-width: 23rem;
 		margin: 0;
@@ -217,6 +260,7 @@ const mapPins = [
 		z-index: 1;
 		width: 168%;
 		height: clamp(19rem, 31vw, 24.8rem);
+		margin-bottom: clamp(-6rem, -7vw, -3.5rem);
 		margin-left: -21%;
 		display: block;
 		object-fit: contain;
@@ -225,6 +269,7 @@ const mapPins = [
 	}
 
 	.delivery-coverage {
+		margin-top: 0;
 		padding: clamp(2.1rem, 4.5vw, 3.8rem) clamp(1.3rem, 4vw, 3rem) clamp(2rem, 4.8vw, 4rem);
 		background: rgba(255, 255, 255, 0.44);
 		border: 1px solid rgba(222, 212, 198, 0.78);
@@ -322,6 +367,83 @@ const mapPins = [
 		stroke-width: 2.2;
 	}
 
+	.delivery-info {
+		margin-top: clamp(1.1rem, 2.4vw, 2rem);
+		margin-bottom: clamp(1.4rem, 3vw, 2.4rem);
+		padding: clamp(1.6rem, 3.8vw, 3rem);
+		display: grid;
+		grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
+		gap: clamp(1.6rem, 4vw, 3.5rem);
+		align-items: start;
+		background: rgba(255, 255, 255, 0.44);
+		border: 1px solid rgba(222, 212, 198, 0.78);
+		border-radius: 8px;
+		box-shadow: 0 18px 46px rgba(75, 64, 56, 0.06);
+	}
+
+	.delivery-info + .delivery-coverage {
+		margin-top: clamp(1.4rem, 3vw, 2.4rem);
+	}
+
+	.delivery-info__copy .delivery-info__eyebrow {
+		max-width: none;
+		margin-bottom: 0.65rem;
+		color: var(--color-primary);
+		font-size: 0.72rem;
+		font-weight: 850;
+		letter-spacing: 0.08em;
+		line-height: 1.2;
+		text-transform: uppercase;
+	}
+
+	.delivery-info h2 {
+		max-width: 12em;
+		font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+		line-height: 1.1;
+	}
+
+	.delivery-info__list {
+		display: grid;
+		gap: 0.9rem;
+	}
+
+	.delivery-info__item {
+		display: grid;
+		grid-template-columns: 1.15rem minmax(0, 1fr);
+		gap: 0.85rem;
+		padding-bottom: 0.9rem;
+		border-bottom: 1px solid rgba(185, 167, 143, 0.3);
+	}
+
+	.delivery-info__item:last-child {
+		padding-bottom: 0;
+		border-bottom: 0;
+	}
+
+	.delivery-info__item > svg {
+		width: 1.05rem;
+		height: 1.05rem;
+		margin-top: 0.18rem;
+		color: var(--color-primary);
+		stroke-width: 1.9;
+	}
+
+	.delivery-info__item h3 {
+		margin: 0 0 0.28rem;
+		color: var(--color-bark);
+		font-size: 0.98rem;
+		font-weight: 760;
+		line-height: 1.3;
+	}
+
+	.delivery-info__item p {
+		margin: 0;
+		color: var(--color-text-muted);
+		font-size: 0.9rem;
+		font-weight: 540;
+		line-height: 1.62;
+	}
+
 	.delivery-service {
 		padding: clamp(4.2rem, 8vw, 6.4rem) 0 clamp(2.6rem, 4.8vw, 3.8rem);
 		display: grid;
@@ -393,6 +515,7 @@ const mapPins = [
 		}
 
 		.delivery-coverage__grid,
+		.delivery-info,
 		.delivery-service {
 			grid-template-columns: 1fr;
 		}
@@ -484,11 +607,12 @@ const mapPins = [
 		}
 
 		.delivery-coverage {
-			margin-top: 0.85rem;
+			margin-top: 0;
 			padding: 1.35rem 1rem 1.65rem;
 		}
 
 		.delivery-section-heading h2,
+		.delivery-info h2,
 		.delivery-service h2 {
 			font-size: clamp(1.65rem, 8vw, 2.15rem);
 		}
@@ -516,6 +640,27 @@ const mapPins = [
 
 		.delivery-map {
 			min-height: 17rem;
+		}
+
+		.delivery-info {
+			margin-top: 0.8rem;
+			margin-bottom: 1rem;
+			padding: 1.25rem 1rem;
+			gap: 1.2rem;
+		}
+
+		.delivery-info + .delivery-coverage {
+			margin-top: 1rem;
+		}
+
+		.delivery-info__copy p,
+		.delivery-info__item p {
+			font-size: 0.88rem;
+			line-height: 1.56;
+		}
+
+		.delivery-info__item {
+			gap: 0.68rem;
 		}
 
 		.delivery-service {

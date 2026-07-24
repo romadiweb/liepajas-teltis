@@ -151,13 +151,17 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 					<ShoppingBag aria-hidden="true" />
 					<span data-cart-count hidden>0</span>
 				</button>
-				<a class="site-header__contact" href="tel:+37129373231">
-				<Phone aria-hidden="true" />
-				<span>
-					<small>Sazināties</small>
-					<strong>+371 29 373 231</strong>
-				</span>
-				</a>
+				<div class="site-header__contact" aria-label="Tālruņa numuri">
+					<span class="site-header__contact-copy">
+						<small>Sazināties</small>
+						<span class="site-header__contact-numbers">
+							<a class="site-header__contact-number site-header__contact-number--primary" href="tel:+37129373231">
+								+371 29 373 231
+							</a>
+							<a class="site-header__contact-number" href="tel:+37126488094">+371 26 488 094</a>
+						</span>
+					</span>
+				</div>
 			</div>
 			<button class="site-header__mobile-cart" data-cart-open type="button" aria-label="Atvērt nomas sarakstu">
 				<ShoppingBag aria-hidden="true" />
@@ -213,6 +217,10 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 							<a href="tel:+37129373231">
 								<Phone aria-hidden="true" />
 								<span>+371 29 373 231</span>
+							</a>
+							<a href="tel:+37126488094">
+								<Phone aria-hidden="true" />
+								<span>+371 26 488 094</span>
 							</a>
 						</li>
 					</ul>
@@ -384,6 +392,7 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 
 	.site-header__logo,
 	.site-header__contact,
+	.site-header__contact a,
 	.site-header__cart,
 	.site-header__mobile-cart,
 	.site-header__menu-button,
@@ -578,10 +587,10 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 
 	.site-header__contact {
 		display: inline-flex;
-		min-height: 2.15rem;
+		min-height: 3rem;
 		align-items: center;
-		gap: 0.55rem;
-		padding: 0.34rem 0;
+		gap: 0.58rem;
+		padding: 0.28rem 0;
 		color: var(--color-surface);
 		opacity: 0.95;
 	}
@@ -590,7 +599,7 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		justify-self: end;
 		display: inline-flex;
 		align-items: center;
-		gap: 0.8rem;
+		gap: 1.05rem;
 	}
 
 	.site-header__cart {
@@ -676,37 +685,47 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		line-height: 1;
 	}
 
-	.site-header__contact svg {
-		width: 1rem;
-		height: 1rem;
-		flex: 0 0 auto;
-		stroke-width: 2.3;
-	}
-
-	.site-header__contact span {
+	.site-header__contact-copy {
 		display: grid;
-		gap: 0.03rem;
+		gap: 0.1rem;
 		line-height: 1.05;
 	}
 
 	.site-header__contact small {
 		color: rgba(255, 255, 255, 0.64);
-		font-size: 0.64rem;
-		font-weight: 650;
-		letter-spacing: 0.05em;
+		font-size: 0.58rem;
+		font-weight: 720;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
 	}
 
-	.site-header__contact strong {
+	.site-header__contact-numbers {
+		display: grid;
+		gap: 0.08rem;
+	}
+
+	.site-header__contact-number {
 		position: relative;
 		display: inline-flex;
 		color: var(--color-surface);
-		font-size: 0.86rem;
+		font-size: 0.74rem;
 		font-weight: 650;
+		line-height: 1.1;
+		opacity: 0.76;
+		text-decoration: none;
 		white-space: nowrap;
 	}
 
-	.site-header__contact strong::after {
+	.site-header__contact-number--primary {
+		font-size: 0.84rem;
+		opacity: 1;
+	}
+
+	.site-header__contact-number + .site-header__contact-number::before {
+		display: none;
+	}
+
+	.site-header__contact-number::after {
 		position: absolute;
 		right: 0;
 		bottom: -0.18rem;
@@ -732,11 +751,16 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 	}
 
 	.site-header__contact:hover {
+		color: var(--color-surface);
+		opacity: 1;
+	}
+
+	.site-header__contact-number:hover {
 		color: var(--color-background);
 		opacity: 1;
 	}
 
-	.site-header__contact:hover strong::after {
+	.site-header__contact-number:hover::after {
 		transform: scaleX(1);
 	}
 
@@ -1015,6 +1039,12 @@ const isRentalCategoryActive = categoryItems.some((item) => isActiveNavItem(item
 		display: flex;
 		align-items: center;
 		gap: 0.55rem;
+	}
+
+	.site-header__mobile-contact a + a {
+		min-height: 2.8rem;
+		margin-top: 0.18rem;
+		font-size: 0.98rem;
 	}
 
 	.site-header__mobile-contact svg {
